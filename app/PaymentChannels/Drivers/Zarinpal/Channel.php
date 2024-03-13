@@ -4,14 +4,13 @@ namespace App\PaymentChannels\Drivers\Zarinpal;
 
 use App\Models\Order;
 use App\Models\PaymentChannel;
-use App\PaymentChannels\BasePaymentChannel;
 use App\PaymentChannels\IChannel;
 use Illuminate\Http\Request;
 use Shetabit\Multipay\Exceptions\InvalidPaymentException;
 use Shetabit\Multipay\Invoice;
 use Shetabit\Payment\Facade\Payment as Paymenter;
 
-class Channel extends BasePaymentChannel implements IChannel
+class Channel implements IChannel
 {
     protected $currency;
 
@@ -26,7 +25,7 @@ class Channel extends BasePaymentChannel implements IChannel
 
     public function paymentRequest(Order $order)
     {
-        $invoice = (new Invoice)->amount($this->makeAmountByCurrency($order->total_amount, $this->currency))
+        $invoice = (new Invoice)->amount($order->total_amount)
             ->detail([
                 'description' => trans('public.paid_form_online_payment'),
                 'email' => $order->user->email,
@@ -59,7 +58,7 @@ class Channel extends BasePaymentChannel implements IChannel
 
         if (!empty($order)) {
             try {
-                $receipt = Paymenter::amount($this->makeAmountByCurrency($order->total_amount, $this->currency))->transactionId($transactionId)->verify();
+                $receipt = Paymenter::amount($order->total_amount)->transactionId($transactionId)->verify();
                 $referenceId = $receipt->getReferenceId();
 
                 if ($referenceId) {

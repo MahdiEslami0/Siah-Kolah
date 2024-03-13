@@ -18,7 +18,7 @@
                     <div class="login-card">
                         <h1 class="font-20 font-weight-bold mt-20">{{ $pageTitle }}</h1>
                         <p class="mt-3 font-12">
-                            رمز یکبار مصرف به {{ $user->mobile }} ارسال شده است تا به دست شما خواهد رسید
+                            رمز یکبار مصرف به {{ $user->mobile }} ارسال شده است و به دست شما خواهد رسید
                         </p>
                         <form class="mt-25" method="POST" action="/login/otp">
                             @csrf
@@ -26,7 +26,8 @@
                                 <label class="input-label" for="mobile">کد تایید :</label>
                                 <input required
                                     oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
-                                    type="number" name="code" class="form-control" maxlength="4">
+                                    type="number" name="code" class="form-control" maxlength="4"
+                                    value="{{ old('number') }}">
                             </div>
                             <button type="submit" class="btn btn-primary w-100">
                                 <span>بررسی</span>

@@ -15,7 +15,7 @@
     <link rel="stylesheet" href="/assets/default/vendors/sweetalert2/dist/sweetalert2.min.css">
     <link rel="stylesheet" href="/assets/default/vendors/toast/jquery.toast.min.css">
     <link rel="stylesheet" href="/assets/default/vendors/simplebar/simplebar.css">
-    <link rel="stylesheet" href="/assets/default/css/app.css">
+    <link rel="stylesheet" href="/assets/default/css/app.css?ver={{ filemtime(public_path('/assets/default/css/app.css')) }}">
 
     @if($isRtl)
         <link rel="stylesheet" href="/assets/default/css/rtl-app.css">

@@ -7,7 +7,7 @@
 
 @section('content')
 
-    @if(!empty($heroSectionData))
+    {{-- @if(!empty($heroSectionData))
 
         @if(!empty($heroSectionData['has_lottie']) and $heroSectionData['has_lottie'] == "1")
             @push('scripts_bottom')
@@ -69,11 +69,11 @@
                 @endif
             </div>
         </section>
-    @endif
+    @endif --}}
 
 
     {{-- Statistics --}}
-    @include('web.default.pages.includes.home_statistics')
+    {{-- @include('web.default.pages.includes.home_statistics') --}}
 
 
     @foreach($homeSections as $homeSection)

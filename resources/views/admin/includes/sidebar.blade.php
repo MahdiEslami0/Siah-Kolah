@@ -1119,7 +1119,7 @@
                 </li>
             @endcan
 
-            {{-- @can('admin_offline_payments_list')
+            @can('admin_offline_payments_list')
                 <li class="nav-item dropdown {{ (request()->is(getAdminPanelUrl('/financial/offline_payments*', false))) ? 'active' : '' }}">
                     <a href="#" class="nav-link has-dropdown"><i class="fas fa-university"></i> <span>{{ trans('admin/main.offline_payments') }}</span></a>
                     <ul class="dropdown-menu">
@@ -1136,7 +1136,7 @@
                         </li>
                     </ul>
                 </li>
-            @endcan --}}
+            @endcan
 
             {{-- @can('admin_subscribe')
                 <li class="nav-item dropdown {{ (request()->is(getAdminPanelUrl('/financial/subscribes*', false))) ? 'active' : '' }}">

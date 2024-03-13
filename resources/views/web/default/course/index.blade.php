@@ -212,7 +212,7 @@
 
                                     @if($canSale and !empty(getFeaturesSettings('direct_classes_payment_button_status')))
                                         <button type="button" class="btn btn-outline-danger mt-20 js-course-direct-payment">
-                                            {{ trans('update.buy_now') }}
+                                            پیش‌ واریز
                                         </button>
                                     @endif
 
@@ -228,12 +228,12 @@
 
                         </form>
 
-                        @if(!empty(getOthersPersonalizationSettings('show_guarantee_text')) and getOthersPersonalizationSettings('show_guarantee_text'))
+                        {{-- @if(!empty(getOthersPersonalizationSettings('show_guarantee_text')) and getOthersPersonalizationSettings('show_guarantee_text'))
                             <div class="mt-20 d-flex align-items-center justify-content-center text-gray">
                                 <i data-feather="thumbs-up" width="20" height="20"></i>
                                 <span class="ml-5 font-14">{{ getOthersPersonalizationSettings('guarantee_text') }}</span>
                             </div>
-                        @endif
+                        @endif --}}
 
                         <div class="mt-35">
                             <strong class="d-block text-secondary font-weight-bold">{{ trans('webinars.this_webinar_includes',['classes' => trans('webinars.'.$course->type)]) }}</strong>

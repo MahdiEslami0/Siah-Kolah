@@ -19589,3 +19589,21 @@ p {
 .custom-checkbox .custom-control-input:disabled:checked ~ .custom-control-label::before {
   opacity: 0.6 !important;
 }
+
+
+.jq-toast-heading{
+  font-family: var(--font-family-rtl) !important;
+}
+
+.jq-toast-single  {
+  font-family: var(--font-family-rtl) !important;
+}
+
+
+.form-control  {
+  font-family: var(--font-family-rtl) !important;
+}
+
+span{
+  font-family: var(--font-family-rtl) !important;
+}

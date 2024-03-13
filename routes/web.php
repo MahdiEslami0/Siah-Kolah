@@ -53,9 +53,13 @@ Route::get('/emergencyDatabaseUpdate', function () {
 Route::group(['namespace' => 'Auth', 'middleware' => ['check_mobile_app', 'share', 'check_maintenance']], function () {
     Route::get('/login', 'LoginController@showLoginForm');
     Route::post('/login', 'LoginController@login');
+    Route::get('/login/otp', 'LoginController@showOtpForm');
+    Route::post('/login/otp', 'LoginController@otp');
     Route::get('/logout', 'LoginController@logout');
     Route::get('/register', 'RegisterController@showRegistrationForm');
     Route::post('/register', 'RegisterController@register');
+    Route::get('/register/otp', 'RegisterController@showOtpForm');
+    Route::post('/register/otp', 'RegisterController@otp');
     Route::post('/register/form-fields', 'RegisterController@getFormFieldsByUserType');
     Route::get('/verification', 'VerificationController@index');
     Route::post('/verification', 'VerificationController@confirmCode');
