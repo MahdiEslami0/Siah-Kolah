@@ -104,8 +104,9 @@
                 </a>
             </div>
 
-            <div class="col-12 col-lg-3 mt-35">
-                <a href="/panel/support" class="dashboard-stats rounded-sm panel-shadow p-10 p-md-20 d-flex align-items-center">
+            <div class="col-12 col-lg-3 mt-1">
+{{-- 
+                <a href="/panel/support" class="dashboard-stats rounded-sm panel-shadow p-10 p-md-20 d-flex align-items-center" style="">
                     <div class="stat-icon support-messages">
                         <img src="/assets/default/img/icons/support.svg" alt="">
                     </div>
@@ -113,7 +114,7 @@
                         <span class="font-30 text-secondary">{{ !empty($supportsCount) ? $supportsCount : 0 }}</span>
                         <span class="font-16 text-gray font-weight-500">{{ trans('panel.support_messages') }}</span>
                     </div>
-                </a>
+                </a> --}}
 
                 <a href="@if($authUser->isUser()) /panel/webinars/my-comments @else /panel/webinars/comments @endif" class="dashboard-stats rounded-sm panel-shadow p-10 p-md-20 d-flex align-items-center mt-15 mt-md-30">
                     <div class="stat-icon comments">

@@ -10,6 +10,7 @@ use App\Models\Cart;
 use App\Models\Order;
 use App\Models\OrderItem;
 use App\Models\PaymentChannel;
+use App\Models\prepayment;
 use App\Models\Product;
 use App\Models\ProductOrder;
 use App\Models\ReserveMeeting;
@@ -17,7 +18,9 @@ use App\Models\Reward;
 use App\Models\RewardAccounting;
 use App\Models\Sale;
 use App\Models\TicketUser;
+use App\Models\Webinar;
 use App\PaymentChannels\ChannelManager;
+use Auth;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Redirect;
 
@@ -25,15 +28,33 @@ class PaymentController extends Controller
 {
     protected $order_session_key = 'payment.order_id';
 
-    public function paymentRequest(Request $request)
+
+
+    public function prepay(Request $request)
+    {
+        $Webinar = Webinar::where('id', $request->webinar_id)->first();
+        $order = order::create([
+            'user_id' => Auth::user()->id,
+            'status' => 'pending',
+            'payment_method' => 'payment_channel',
+            'amount' => $Webinar->price,
+            'total_amount' => $Webinar->price,
+            'webinar_id' => $request->webinar_id,
+            'prepay' => true,
+            'created_at' => time()
+        ]);
+        return $this->paymentRequest($request, $request->gateway, $order->id);
+    }
+
+    public function paymentRequest(Request $request, $gateway, $order_id)
     {
         $this->validate($request, [
             'gateway' => 'required'
         ]);
 
         $user = auth()->user();
-        $gateway = $request->input('gateway');
-        $orderId = $request->input('order_id');
+        $gateway = $request->input('gateway') ?? $gateway;
+        $orderId = $request->input('order_id') ?? $order_id;
 
         $order = Order::where('id', $orderId)
             ->where('user_id', $user->id)
@@ -96,7 +117,6 @@ class PaymentController extends Controller
             }
 
             return Redirect::away($redirect_url);
-
         } catch (\Exception $exception) {
 
             $toastData = [
@@ -113,13 +133,10 @@ class PaymentController extends Controller
         $paymentChannel = PaymentChannel::where('class_name', $gateway)
             ->where('status', 'active')
             ->first();
-
         try {
             $channelManager = ChannelManager::makeChannel($paymentChannel);
             $order = $channelManager->verify($request);
-
             return $this->paymentOrderAfterVerify($order);
-
         } catch (\Exception $exception) {
             $toastData = [
                 'title' => trans('cart.fail_purchase'),
@@ -147,7 +164,6 @@ class PaymentController extends Controller
             $order = $channelManager->verify($request);
 
             return $this->paymentOrderAfterVerify($order);
-
         } catch (\Exception $exception) {
             $toastData = [
                 'title' => trans('cart.fail_purchase'),
@@ -160,6 +176,7 @@ class PaymentController extends Controller
 
     private function paymentOrderAfterVerify($order)
     {
+
         if (!empty($order)) {
 
             if ($order->status == Order::$paying) {
@@ -269,12 +286,10 @@ class PaymentController extends Controller
     public function payStatus(Request $request)
     {
         $orderId = $request->get('order_id', null);
-
         if (!empty(session()->get($this->order_session_key, null))) {
             $orderId = session()->get($this->order_session_key, null);
             session()->forget($this->order_session_key);
         }
-
         $order = Order::where('id', $orderId)
             ->where('user_id', auth()->id())
             ->first();
@@ -284,7 +299,12 @@ class PaymentController extends Controller
                 'pageTitle' => trans('public.cart_page_title'),
                 'order' => $order,
             ];
-
+            prepayment::create([
+                'webinar_id' =>  $order->webinar_id,
+                'user_id' => Auth::user()->id,
+                'amount' =>  $order->total_amount,
+                'status' => 'pending',
+            ]);
             return view('web.default.cart.status_pay', $data);
         }
 
@@ -405,8 +425,6 @@ class PaymentController extends Controller
                 sendNotification("paid_installment_step", $notifyOptions, $installmentOrder->user_id);
                 sendNotification("paid_installment_step_for_admin", $notifyOptions, 1); // For Admin
             }
-
         }
     }
-
 }

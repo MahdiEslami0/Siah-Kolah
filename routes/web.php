@@ -12,6 +12,7 @@ use Illuminate\Support\Facades\Route;
 | contains the "web" middleware group. Now create something great!
 |
 */
+
 Route::group(['prefix' => 'my_api', 'namespace' => 'Api\Panel', 'middleware' => 'signed', 'as' => 'my_api.web.'], function () {
     Route::get('checkout/{user}', 'CartController@webCheckoutRender')->name('checkout');
     Route::get('/charge/{user}', 'PaymentsController@webChargeRender')->name('charge');
@@ -22,7 +23,6 @@ Route::group(['prefix' => 'my_api', 'namespace' => 'Api\Panel', 'middleware' => 
 Route::group(['prefix' => 'api_sessions'], function () {
     Route::get('/big_blue_button', ['uses' => 'Api\Panel\SessionsController@BigBlueButton'])->name('big_blue_button');
     Route::get('/agora', ['uses' => 'Api\Panel\SessionsController@agora'])->name('agora');
-
 });
 
 Route::get('/mobile-app', 'Web\MobileAppController@index')->middleware(['share'])->name('mobileAppRoute');
@@ -195,7 +195,6 @@ Route::group(['namespace' => 'Web', 'middleware' => ['check_mobile_app', 'impers
             Route::post('/', 'BecomeInstructorController@store');
             Route::post('/form-fields', 'BecomeInstructorController@getFormFieldsByUserType');
         });
-
     });
 
     Route::group(['prefix' => 'meetings'], function () {
@@ -209,6 +208,7 @@ Route::group(['namespace' => 'Web', 'middleware' => ['check_mobile_app', 'impers
     });
 
     Route::group(['prefix' => 'payments'], function () {
+        Route::post('/prepay', 'PaymentController@prepay');
         Route::post('/payment-request', 'PaymentController@paymentRequest');
         Route::get('/verify/{gateway}', ['as' => 'payment_verify', 'uses' => 'PaymentController@paymentVerify']);
         Route::post('/verify/{gateway}', ['as' => 'payment_verify_post', 'uses' => 'PaymentController@paymentVerify']);
@@ -393,5 +393,10 @@ Route::group(['namespace' => 'Web', 'middleware' => ['check_mobile_app', 'impers
     Route::get('/forms/{url}', 'FormsController@index');
     Route::post('/forms/{url}/store', 'FormsController@store');
 
-});
 
+    Route::group(['prefix' => 'prepay'], function () {
+        Route::group(['middleware' => 'web.auth'], function () {
+            Route::get('/{id}', 'PrePaymentController@index');
+        });
+    });
+});
