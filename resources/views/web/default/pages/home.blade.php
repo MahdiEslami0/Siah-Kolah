@@ -7,7 +7,7 @@
 
 @section('content')
 
-    {{-- @if(!empty($heroSectionData))
+    @if(!empty($heroSectionData))
 
         @if(!empty($heroSectionData['has_lottie']) and $heroSectionData['has_lottie'] == "1")
             @push('scripts_bottom')
@@ -69,7 +69,7 @@
                 @endif
             </div>
         </section>
-    @endif --}}
+    @endif
 
 
     {{-- Statistics --}}

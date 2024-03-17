@@ -20,6 +20,9 @@
             {{ csrf_field() }}
 
             <input type="text" name="webinar_id" value="{{ $webinar->id }}" hidden>
+            @isset($prepay_id)
+                <input type="text" name="prepay_id" value="{{ $prepay_id }}" hidden>
+            @endisset
             <div class="row">
                 @if (!empty($paymentChannels))
                     @foreach ($paymentChannels as $paymentChannel)

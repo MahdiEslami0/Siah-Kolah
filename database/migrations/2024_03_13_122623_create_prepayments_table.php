@@ -20,9 +20,10 @@ return new class extends Migration
             $table->integer('user_id')->unsigned()->nullable();
             $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
             $table->integer('amount')->unsigned();
-            $table->enum('status', ['pending', 'done']);
-            $table->integer('sale_id')->unsigned()->nullable();
-            $table->foreign('sale_id')->references('id')->on('sales')->onDelete('cascade');
+            $table->integer('pay')->unsigned()->nullable();
+            $table->enum('status', ['pending', 'done', 'refund_request', 'refunded']);
+            $table->integer('order_id')->unsigned()->nullable();
+            $table->foreign('order_id')->references('id')->on('orders')->onDelete('cascade');
             $table->timestamp('refund_at')->nullable();
             $table->timestamps();
         });

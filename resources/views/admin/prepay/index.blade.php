@@ -127,8 +127,8 @@
                                     <th>تاریخ ایجاد</th>
                                     <th>عملیات</th>
                                 </tr>
-                                <tr>
-                                    @foreach ($prepays as $prepay)
+                                @foreach ($prepays as $prepay)
+                                    <tr>
                                         @php
                                             $webinar = App\Models\Webinar::where('id', $prepay->webinar_id)->first();
                                             $have_pay = $webinar->price - $prepay->amount - $prepay->pay;
@@ -173,8 +173,9 @@
                                             <i class="fas fa-eye" style="cursor: pointer"
                                                 onclick="open_modal('{{ $prepay->id }}','{{ $prepay->user->full_name }}','{{ $prepay->status }}')"></i>
                                         </td>
-                                    @endforeach
-                                </tr>
+                                    </tr>
+                                @endforeach
+
                             </table>
                         </div>
                     </div>

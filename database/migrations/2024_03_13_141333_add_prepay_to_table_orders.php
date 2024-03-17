@@ -16,6 +16,7 @@ return new class extends Migration
         Schema::table('orders', function (Blueprint $table) {
             $table->integer('webinar_id')->nullable();
             $table->enum('prepay', ['true', 'false'])->nullable();
+            $table->integer('prepay_id')->nullable();
         });
     }
 

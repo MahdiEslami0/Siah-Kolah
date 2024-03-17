@@ -42,6 +42,10 @@
 
                                                 @if ($item->status == 'done')
                                                     ✅
+                                                @elseif($item->status == 'refunded')
+                                                    🔙
+                                                @elseif($item->status == 'refund_request')
+                                                    ⏳
                                                 @else
                                                     {{ $days_left }}
                                                     روز

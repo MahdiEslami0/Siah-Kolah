@@ -22,12 +22,15 @@
 
                             <div class="form-group d-flex align-items-center m-0">
                                 <div class="w-100">
-                                    <input type="text" name="newsletter_email" class="form-control border-0 @error('newsletter_email') is-invalid @enderror" placeholder="{{ trans('footer.enter_email_here') }}"/>
+                                    <input type="text" name="newsletter_email"
+                                        class="form-control border-0 @error('newsletter_email') is-invalid @enderror"
+                                        placeholder="{{ trans('footer.enter_email_here') }}" />
                                     @error('newsletter_email')
-                                    <div class="invalid-feedback">{{ $message }}</div>
+                                        <div class="invalid-feedback">{{ $message }}</div>
                                     @enderror
                                 </div>
-                                <button type="submit" class="btn btn-primary rounded-pill">{{ trans('footer.join') }}</button>
+                                <button type="submit"
+                                    class="btn btn-primary rounded-pill">{{ trans('footer.join') }}</button>
                             </div>
                         </form>
                     </div>
@@ -37,64 +40,74 @@
     </div>
 
     @php
-        $columns = ['first_column','second_column','third_column','forth_column'];
+        $columns = ['first_column', 'second_column', 'third_column', 'forth_column'];
     @endphp
 
     <div class="container">
         <div class="row">
-
-            @foreach($columns as $column)
+            {{-- 
+            @foreach ($columns as $column)
                 <div class="col-6 col-md-3">
-                    @if(!empty($footerColumns[$column]))
-                        @if(!empty($footerColumns[$column]['title']))
+                    @if (!empty($footerColumns[$column]))
+                        @if (!empty($footerColumns[$column]['title']))
                             <span class="header d-block text-white font-weight-bold">{{ $footerColumns[$column]['title'] }}</span>
                         @endif
 
-                        @if(!empty($footerColumns[$column]['value']))
+                        @if (!empty($footerColumns[$column]['value']))
                             <div class="mt-20">
                                 {!! $footerColumns[$column]['value'] !!}
                             </div>
                         @endif
                     @endif
                 </div>
-            @endforeach
+            @endforeach --}}
 
         </div>
 
-        <div class="mt-40 border-blue py-25 d-flex align-items-center justify-content-between">
+        <div class="mt-40 border-blue py-35 d-flex align-items-center justify-content-between">
             <div class="footer-logo">
                 <a href="/">
-                    @if(!empty($generalSettings['footer_logo']))
-                        <img src="{{ $generalSettings['footer_logo'] }}" class="img-cover" alt="footer logo">
+                    @if (!empty($generalSettings['footer_logo']))
+                        <img src="{{ $generalSettings['footer_logo'] }}" alt="footer logo" style="width:60px">
                     @endif
                 </a>
             </div>
             <div class="footer-social">
-                @if(!empty($socials) and count($socials))
-                    @foreach($socials as $social)
+                @if (!empty($socials) and count($socials))
+                    @foreach ($socials as $social)
                         <a href="{{ $social['link'] }}">
                             <img src="{{ $social['image'] }}" alt="{{ $social['title'] }}" class="mr-15">
                         </a>
                     @endforeach
                 @endif
             </div>
+            <div>
+                <p class="text-white mt-3 mr-3">
+                    آکادمی سیاه‌کلاه فعالیتش را با تمرکز بر روی رشد کسب‌وکارها در بازارهای داخل ایران و جهان شروع کرد.
+                    در
+                    اواخر سال 1398 علی سیاه‌کلاه تصمیم گرفت که اولین دوره این آکادمی را با عنوان «فریلنسینگ دلاری 1»،
+                    ارائه کند. این دوره از دل تجربیات حرفه‌ای آقای سیاه‌کلاه در بازارهای بین المللی می‌آمد و هدف آن
+                    توانمندسازی افراد در جهت استفاده از پتانسیل پلتفرم‌های فریلنسینگ جهانی و کسب درآمد ارزی بود.
+                </p>
+
+            </div>
         </div>
     </div>
 
-    @if(getOthersPersonalizationSettings('platform_phone_and_email_position') == 'footer')
+    @if (getOthersPersonalizationSettings('platform_phone_and_email_position') == 'footer')
         <div class="footer-copyright-card">
             <div class="container d-flex align-items-center justify-content-between py-15">
                 <div class="font-14 text-white">{{ trans('update.platform_copyright_hint') }}</div>
 
                 <div class="d-flex align-items-center justify-content-center">
-                    @if(!empty($generalSettings['site_phone']))
+                    @if (!empty($generalSettings['site_phone']))
                         <div class="d-flex align-items-center text-white font-14">
                             <i data-feather="phone" width="20" height="20" class="mr-10"></i>
                             {{ $generalSettings['site_phone'] }}
                         </div>
                     @endif
 
-                    @if(!empty($generalSettings['site_email']))
+                    @if (!empty($generalSettings['site_email']))
                         <div class="border-left mx-5 mx-lg-15 h-100"></div>
 
                         <div class="d-flex align-items-center text-white font-14">

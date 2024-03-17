@@ -20,7 +20,6 @@ use App\Models\Sale;
 use App\Models\TicketUser;
 use App\Models\Webinar;
 use App\PaymentChannels\ChannelManager;
-use Auth;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Redirect;
 
@@ -29,13 +28,11 @@ class PaymentController extends Controller
     protected $order_session_key = 'payment.order_id';
 
 
-
-
     public function prepay(Request $request)
     {
         $Webinar = Webinar::where('id', $request->webinar_id)->first();
         $order = order::create([
-            'user_id' => Auth::user()->id,
+            'user_id' => auth()->user()->id,
             'status' => 'pending',
             'payment_method' => $request->gateway,
             'amount' => $Webinar->price,
@@ -51,13 +48,14 @@ class PaymentController extends Controller
     {
         $Webinar = Webinar::where('id', $request->webinar_id)->first();
         $order = order::create([
-            'user_id' => Auth::user()->id,
+            'user_id' => auth()->user()->id,
             'status' => 'pending',
             'payment_method' => $request->gateway,
             'amount' => $Webinar->price - ($Webinar->price * 0.1),
             'total_amount' => $Webinar->price - ($Webinar->price * 0.1),
             'webinar_id' => $request->webinar_id,
             'prepay' => 'complete',
+            'prepay_id' => $request->prepay_id,
             'created_at' => time()
         ]);
         return $this->paymentRequest($request, $request->gateway, $order->id);
@@ -319,13 +317,14 @@ class PaymentController extends Controller
             if ($order->prepay == 'pending') {
                 prepayment::create([
                     'webinar_id' =>  $order->webinar_id,
-                    'user_id' => Auth::user()->id,
+                    'user_id' => auth()->user()->id,
                     'amount' =>  $order->total_amount,
                     'status' => 'pending',
+                    'order_id' => $order->id
                 ]);
                 if ($order->payment_method == 'credit') {
                     Accounting::create([
-                        'user_id' => Auth::user()->id,
+                        'user_id' => auth()->user()->id,
                         'amount' => $order->total_amount,
                         'type_account' => 'asset',
                         'type' => 'deduction',
@@ -336,7 +335,7 @@ class PaymentController extends Controller
                 }
             }
             if ($order->prepay == 'complete') {
-                $prepayment = prepayment::where('webinar_id', $order->webinar_id)->first();
+                $prepayment = prepayment::where('id', $order->prepay_id)->first();
                 $prepayment->status = 'done';
                 $prepayment->pay =  $order->total_amount;
                 $prepayment->save();
@@ -347,12 +346,14 @@ class PaymentController extends Controller
                     'type' => 'webinar',
                     'amount' => $total_amount,
                     'total_amount' => $total_amount,
-                    'buyer_id' => Auth::user()->id,
+                    'buyer_id' => auth()->user()->id,
                     'created_at' => time()
                 ]);
+
+
                 if ($order->payment_method == 'credit') {
                     Accounting::create([
-                        'user_id' => Auth::user()->id,
+                        'user_id' => auth()->user()->id,
                         'amount' => $order->total_amount,
                         'type_account' => 'asset',
                         'type' => 'deduction',

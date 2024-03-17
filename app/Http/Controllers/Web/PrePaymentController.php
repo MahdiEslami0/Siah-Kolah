@@ -7,7 +7,8 @@ use App\Models\PaymentChannel;
 use App\Models\prepayment;
 use App\Models\Webinar;
 use Auth;
-use Illuminate\Http\Request;
+// use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth as FacadesAuth;
 
 class PrePaymentController extends Controller
 {
@@ -36,7 +37,7 @@ class PrePaymentController extends Controller
     {
         // dd($prepayment);
         $webinar = Webinar::where('id', $prepayment->webinar_id)->first();
-        $user = Auth::user();
+        $user = FacadesAuth::user();
         $paymentChannels = PaymentChannel::where('status', 'active')->get();
         foreach ($paymentChannels as $paymentChannel) {
             if ($paymentChannel->class_name == 'Razorpay' and (!$isMultiCurrency or in_array(currency(), $paymentChannel->currencies))) {
@@ -49,6 +50,7 @@ class PrePaymentController extends Controller
             'userCharge' => $user->getAccountingCharge(),
             'paymentChannels' =>  $paymentChannels,
             'action' => 'complete_prepay',
+            'prepay_id' => $prepayment->id,
             'price' => $webinar->price - ($webinar->price * 0.1)
         ];
         return view(getTemplate() . '.prepay.index', $data);
