@@ -54,6 +54,10 @@
                 @endforeach
             @endif
 
+            <div id="installmentStepsMainRow" class="d-none">
+                @include('admin.financial.installments.create.includes.installment_step_inputs')
+            </div>
+
         </div>
 
     </div>

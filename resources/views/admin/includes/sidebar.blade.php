@@ -2,7 +2,7 @@
     <aside id="sidebar-wrapper">
         <div class="sidebar-brand">
             <a href="/">
-                @if(!empty($generalSettings['site_name']))
+                @if (!empty($generalSettings['site_name']))
                     {{ strtoupper($generalSettings['site_name']) }}
                 @else
                     Platform Title
@@ -11,15 +11,15 @@
         </div>
         <div class="sidebar-brand sidebar-brand-sm">
             <a href="/">
-                @if(!empty($generalSettings['site_name']))
-                    {{ strtoupper(substr($generalSettings['site_name'],0,2)) }}
+                @if (!empty($generalSettings['site_name']))
+                    {{ strtoupper(substr($generalSettings['site_name'], 0, 2)) }}
                 @endif
             </a>
         </div>
 
         <ul class="sidebar-menu">
             @can('admin_general_dashboard_show')
-                <li class="{{ (request()->is(getAdminPanelUrl('/'))) ? 'active' : '' }}">
+                <li class="{{ request()->is(getAdminPanelUrl('/')) ? 'active' : '' }}">
                     <a href="{{ getAdminPanelUrl('') }}" class="nav-link">
                         <i class="fas fa-fire"></i>
                         <span>{{ trans('admin/main.dashboard') }}</span>
@@ -36,50 +36,59 @@
                 </li>
             @endcan --}}
 
-            @if($authUser->can('admin_webinars') or
-                $authUser->can('admin_bundles') or
-                $authUser->can('admin_categories') or
-                $authUser->can('admin_filters') or
-                $authUser->can('admin_quizzes') or
-                $authUser->can('admin_certificate') or
-                $authUser->can('admin_reviews_lists') or
-                $authUser->can('admin_webinar_assignments') or
-                $authUser->can('admin_enrollment') or
-                $authUser->can('admin_waitlists')
-            )
+            @if (
+                $authUser->can('admin_webinars') or
+                    $authUser->can('admin_bundles') or
+                    $authUser->can('admin_categories') or
+                    $authUser->can('admin_filters') or
+                    $authUser->can('admin_quizzes') or
+                    $authUser->can('admin_certificate') or
+                    $authUser->can('admin_reviews_lists') or
+                    $authUser->can('admin_webinar_assignments') or
+                    $authUser->can('admin_enrollment') or
+                    $authUser->can('admin_waitlists'))
                 <li class="menu-header">{{ trans('site.education') }}</li>
             @endif
 
             @can('admin_webinars')
-                <li class="nav-item dropdown {{ (request()->is(getAdminPanelUrl('/webinars*', false)) and !request()->is(getAdminPanelUrl('/webinars/comments*', false))) ? 'active' : '' }}">
+                <li
+                    class="nav-item dropdown {{ (request()->is(getAdminPanelUrl('/webinars*', false)) and !request()->is(getAdminPanelUrl('/webinars/comments*', false))) ? 'active' : '' }}">
                     <a href="#" class="nav-link has-dropdown" data-toggle="dropdown">
                         <i class="fas fa-graduation-cap"></i>
                         <span>{{ trans('panel.classes') }}</span>
                     </a>
                     <ul class="dropdown-menu">
                         @can('admin_webinars_list')
-                            <li class="{{ (request()->is(getAdminPanelUrl('/webinars', false)) and request()->get('type') == 'course') ? 'active' : '' }}">
-                                <a class="nav-link @if(!empty($sidebarBeeps['courses']) and $sidebarBeeps['courses']) beep beep-sidebar @endif" href="{{ getAdminPanelUrl() }}/webinars?type=course">{{ trans('admin/main.courses') }}</a>
+                            <li
+                                class="{{ (request()->is(getAdminPanelUrl('/webinars', false)) and request()->get('type') == 'course') ? 'active' : '' }}">
+                                <a class="nav-link @if (!empty($sidebarBeeps['courses']) and $sidebarBeeps['courses']) beep beep-sidebar @endif"
+                                    href="{{ getAdminPanelUrl() }}/webinars?type=course">{{ trans('admin/main.courses') }}</a>
                             </li>
 
-                            <li class="{{ (request()->is(getAdminPanelUrl('/webinars', false)) and request()->get('type') == 'webinar') ? 'active' : '' }}">
-                                <a class="nav-link @if(!empty($sidebarBeeps['webinars']) and $sidebarBeeps['webinars']) beep beep-sidebar @endif" href="{{ getAdminPanelUrl() }}/webinars?type=webinar">{{ trans('admin/main.live_classes') }}</a>
+                            <li
+                                class="{{ (request()->is(getAdminPanelUrl('/webinars', false)) and request()->get('type') == 'webinar') ? 'active' : '' }}">
+                                <a class="nav-link @if (!empty($sidebarBeeps['webinars']) and $sidebarBeeps['webinars']) beep beep-sidebar @endif"
+                                    href="{{ getAdminPanelUrl() }}/webinars?type=webinar">{{ trans('admin/main.live_classes') }}</a>
                             </li>
 
-                            <li class="{{ (request()->is(getAdminPanelUrl('/webinars', false)) and request()->get('type') == 'text_lesson') ? 'active' : '' }}">
-                                <a class="nav-link @if(!empty($sidebarBeeps['textLessons']) and $sidebarBeeps['textLessons']) beep beep-sidebar @endif" href="{{ getAdminPanelUrl() }}/webinars?type=text_lesson">{{ trans('admin/main.text_courses') }}</a>
+                            <li
+                                class="{{ (request()->is(getAdminPanelUrl('/webinars', false)) and request()->get('type') == 'text_lesson') ? 'active' : '' }}">
+                                <a class="nav-link @if (!empty($sidebarBeeps['textLessons']) and $sidebarBeeps['textLessons']) beep beep-sidebar @endif"
+                                    href="{{ getAdminPanelUrl() }}/webinars?type=text_lesson">{{ trans('admin/main.text_courses') }}</a>
                             </li>
                         @endcan()
 
                         @can('admin_webinars_create')
-                            <li class="{{ (request()->is(getAdminPanelUrl('/webinars/create', false))) ? 'active' : '' }}">
-                                <a class="nav-link" href="{{ getAdminPanelUrl() }}/webinars/create">{{ trans('admin/main.new') }}</a>
+                            <li class="{{ request()->is(getAdminPanelUrl('/webinars/create', false)) ? 'active' : '' }}">
+                                <a class="nav-link"
+                                    href="{{ getAdminPanelUrl() }}/webinars/create">{{ trans('admin/main.new') }}</a>
                             </li>
                         @endcan()
 
                         @can('admin_agora_history_list')
-                            <li class="{{ (request()->is(getAdminPanelUrl('/agora_history', false))) ? 'active' : '' }}">
-                                <a class="nav-link" href="{{ getAdminPanelUrl() }}/agora_history">{{ trans('update.agora_history') }}</a>
+                            <li class="{{ request()->is(getAdminPanelUrl('/agora_history', false)) ? 'active' : '' }}">
+                                <a class="nav-link"
+                                    href="{{ getAdminPanelUrl() }}/agora_history">{{ trans('update.agora_history') }}</a>
                             </li>
                         @endcan
 
@@ -96,7 +105,7 @@
                     <ul class="dropdown-menu">
                         @can('admin_bundles_list')
                             <li class="{{ (request()->is(getAdminPanelUrl('/bundles', false)) and request()->get('type') == 'course') ? 'active' : '' }}">
-                                <a href="{{ getAdminPanelUrl() }}/bundles" class="nav-link @if(!empty($sidebarBeeps['bundles']) and $sidebarBeeps['bundles']) beep beep-sidebar @endif">{{ trans('admin/main.lists') }}</a>
+                                <a href="{{ getAdminPanelUrl() }}/bundles" class="nav-link @if (!empty($sidebarBeeps['bundles']) and $sidebarBeeps['bundles']) beep beep-sidebar @endif">{{ trans('admin/main.lists') }}</a>
                             </li>
                         @endcan()
 
@@ -131,7 +140,7 @@
                     </ul>
                 </li>
             @endcan() --}}
-{{-- 
+            {{-- 
             @can('admin_quizzes')
                 <li class="{{ (request()->is(getAdminPanelUrl('/quizzes*', false))) ? 'active' : '' }}">
                     <a class="nav-link " href="{{ getAdminPanelUrl() }}/quizzes">
@@ -216,7 +225,7 @@
                     </ul>
                 </li>
             @endcan --}}
-{{-- 
+            {{-- 
             @can('admin_enrollment')
                 <li class="nav-item dropdown {{ (request()->is(getAdminPanelUrl('/enrollments*', false))) ? 'active' : '' }}">
                     <a href="#" class="nav-link has-dropdown" data-toggle="dropdown">
@@ -249,25 +258,28 @@
             @endcan --}}
 
             @can('admin_categories')
-                <li class="nav-item dropdown {{ (request()->is(getAdminPanelUrl('/categories*', false))) ? 'active' : '' }}">
+                <li class="nav-item dropdown {{ request()->is(getAdminPanelUrl('/categories*', false)) ? 'active' : '' }}">
                     <a href="#" class="nav-link has-dropdown" data-toggle="dropdown">
                         <i class="fas fa-th"></i>
                         <span>{{ trans('admin/main.categories') }}</span>
                     </a>
                     <ul class="dropdown-menu">
                         @can('admin_categories_list')
-                            <li class="{{ (request()->is(getAdminPanelUrl('/categories', false))) ? 'active' : '' }}">
-                                <a class="nav-link" href="{{ getAdminPanelUrl() }}/categories">{{ trans('admin/main.lists') }}</a>
+                            <li class="{{ request()->is(getAdminPanelUrl('/categories', false)) ? 'active' : '' }}">
+                                <a class="nav-link"
+                                    href="{{ getAdminPanelUrl() }}/categories">{{ trans('admin/main.lists') }}</a>
                             </li>
                         @endcan()
                         @can('admin_categories_create')
-                            <li class="{{ (request()->is(getAdminPanelUrl('/categories/create', false))) ? 'active' : '' }}">
-                                <a class="nav-link" href="{{ getAdminPanelUrl() }}/categories/create">{{ trans('admin/main.new') }}</a>
+                            <li class="{{ request()->is(getAdminPanelUrl('/categories/create', false)) ? 'active' : '' }}">
+                                <a class="nav-link"
+                                    href="{{ getAdminPanelUrl() }}/categories/create">{{ trans('admin/main.new') }}</a>
                             </li>
                         @endcan()
                         @can('admin_trending_categories')
-                            <li class="{{ (request()->is(getAdminPanelUrl('/categories/trends', false))) ? 'active' : '' }}">
-                                <a class="nav-link" href="{{ getAdminPanelUrl() }}/categories/trends">{{ trans('admin/main.trends') }}</a>
+                            <li class="{{ request()->is(getAdminPanelUrl('/categories/trends', false)) ? 'active' : '' }}">
+                                <a class="nav-link"
+                                    href="{{ getAdminPanelUrl() }}/categories/trends">{{ trans('admin/main.trends') }}</a>
                             </li>
                         @endcan()
                     </ul>
@@ -275,20 +287,22 @@
             @endcan()
 
             @can('admin_filters')
-                <li class="nav-item dropdown {{ (request()->is(getAdminPanelUrl('/filters*', false))) ? 'active' : '' }}">
+                <li class="nav-item dropdown {{ request()->is(getAdminPanelUrl('/filters*', false)) ? 'active' : '' }}">
                     <a href="#" class="nav-link has-dropdown" data-toggle="dropdown">
                         <i class="fas fa-filter"></i>
                         <span>{{ trans('admin/main.filters') }}</span>
                     </a>
                     <ul class="dropdown-menu">
                         @can('admin_filters_list')
-                            <li class="{{ (request()->is(getAdminPanelUrl('/filters', false))) ? 'active' : '' }}">
-                                <a class="nav-link" href="{{ getAdminPanelUrl() }}/filters">{{ trans('admin/main.lists') }}</a>
+                            <li class="{{ request()->is(getAdminPanelUrl('/filters', false)) ? 'active' : '' }}">
+                                <a class="nav-link"
+                                    href="{{ getAdminPanelUrl() }}/filters">{{ trans('admin/main.lists') }}</a>
                             </li>
                         @endcan()
                         @can('admin_filters_create')
-                            <li class="{{ (request()->is(getAdminPanelUrl('/filters/create', false))) ? 'active' : '' }}">
-                                <a class="nav-link" href="{{ getAdminPanelUrl() }}/filters/create">{{ trans('admin/main.new') }}</a>
+                            <li class="{{ request()->is(getAdminPanelUrl('/filters/create', false)) ? 'active' : '' }}">
+                                <a class="nav-link"
+                                    href="{{ getAdminPanelUrl() }}/filters/create">{{ trans('admin/main.new') }}</a>
                             </li>
                         @endcan()
                     </ul>
@@ -296,8 +310,9 @@
             @endcan()
 
             @can('admin_reviews_lists')
-                <li class="{{ (request()->is(getAdminPanelUrl('/reviews', false))) ? 'active' : '' }}">
-                    <a href="{{ getAdminPanelUrl() }}/reviews" class="nav-link @if(!empty($sidebarBeeps['reviews']) and $sidebarBeeps['reviews']) beep beep-sidebar @endif">
+                <li class="{{ request()->is(getAdminPanelUrl('/reviews', false)) ? 'active' : '' }}">
+                    <a href="{{ getAdminPanelUrl() }}/reviews"
+                        class="nav-link @if (!empty($sidebarBeeps['reviews']) and $sidebarBeeps['reviews']) beep beep-sidebar @endif">
                         <i class="fas fa-star"></i>
                         <span>{{ trans('admin/main.reviews') }}</span>
                     </a>
@@ -308,10 +323,8 @@
 
 
 
-{{-- 
-            @if($authUser->can('admin_consultants_lists') or
-                $authUser->can('admin_appointments_lists')
-            )
+            {{-- 
+            @if ($authUser->can('admin_consultants_lists') or $authUser->can('admin_appointments_lists'))
                 <li class="menu-header">{{ trans('site.appointments') }}</li>
             @endif
 
@@ -333,19 +346,20 @@
                 </li>
             @endcan --}}
 
-            @if($authUser->can('admin_users') or
-                $authUser->can('admin_roles') or
-                $authUser->can('admin_users_not_access_content') or
-                $authUser->can('admin_group') or
-                $authUser->can('admin_users_badges') or
-                $authUser->can('admin_become_instructors_list') or
-                $authUser->can('admin_delete_account_requests')
-            )
+            @if (
+                $authUser->can('admin_users') or
+                    $authUser->can('admin_roles') or
+                    $authUser->can('admin_users_not_access_content') or
+                    $authUser->can('admin_group') or
+                    $authUser->can('admin_users_badges') or
+                    $authUser->can('admin_become_instructors_list') or
+                    $authUser->can('admin_delete_account_requests'))
                 <li class="menu-header">{{ trans('panel.users') }}</li>
             @endif
 
             @can('admin_users')
-                <li class="nav-item dropdown {{ (request()->is(getAdminPanelUrl('/staffs', false)) or request()->is(getAdminPanelUrl('/students', false)) or request()->is(getAdminPanelUrl('/instructors', false)) or request()->is(getAdminPanelUrl('/organizations', false))) ? 'active' : '' }}">
+                <li
+                    class="nav-item dropdown {{ (request()->is(getAdminPanelUrl('/staffs', false)) or request()->is(getAdminPanelUrl('/students', false)) or request()->is(getAdminPanelUrl('/instructors', false)) or request()->is(getAdminPanelUrl('/organizations', false))) ? 'active' : '' }}">
                     <a href="#" class="nav-link has-dropdown" data-toggle="dropdown">
                         <i class="fas fa-users"></i>
                         <span>{{ trans('admin/main.users_list') }}</span>
@@ -353,23 +367,25 @@
 
                     <ul class="dropdown-menu">
                         @can('admin_staffs_list')
-                            <li class="{{ (request()->is(getAdminPanelUrl('/staffs', false))) ? 'active' : '' }}">
+                            <li class="{{ request()->is(getAdminPanelUrl('/staffs', false)) ? 'active' : '' }}">
                                 <a class="nav-link" href="{{ getAdminPanelUrl() }}/staffs">{{ trans('admin/main.staff') }}</a>
                             </li>
                         @endcan()
 
                         @can('admin_users_list')
-                            <li class="{{ (request()->is(getAdminPanelUrl('/students', false))) ? 'active' : '' }}">
-                                <a class="nav-link" href="{{ getAdminPanelUrl() }}/students">{{ trans('public.students') }}</a>
+                            <li class="{{ request()->is(getAdminPanelUrl('/students', false)) ? 'active' : '' }}">
+                                <a class="nav-link"
+                                    href="{{ getAdminPanelUrl() }}/students">{{ trans('public.students') }}</a>
                             </li>
                         @endcan()
 
                         @can('admin_instructors_list')
-                            <li class="{{ (request()->is(getAdminPanelUrl('/instructors', false))) ? 'active' : '' }}">
-                                <a class="nav-link" href="{{ getAdminPanelUrl() }}/instructors">{{ trans('home.instructors') }}</a>
+                            <li class="{{ request()->is(getAdminPanelUrl('/instructors', false)) ? 'active' : '' }}">
+                                <a class="nav-link"
+                                    href="{{ getAdminPanelUrl() }}/instructors">{{ trans('home.instructors') }}</a>
                             </li>
                         @endcan()
-{{-- 
+                        {{-- 
                         @can('admin_organizations_list')
                             <li class="{{ (request()->is(getAdminPanelUrl('/organizations', false))) ? 'active' : '' }}">
                                 <a class="nav-link" href="{{ getAdminPanelUrl() }}/organizations">{{ trans('admin/main.organizations') }}</a>
@@ -377,8 +393,9 @@
                         @endcan() --}}
 
                         @can('admin_users_create')
-                            <li class="{{ (request()->is(getAdminPanelUrl('/users/create', false))) ? 'active' : '' }}">
-                                <a class="nav-link" href="{{ getAdminPanelUrl() }}/users/create">{{ trans('admin/main.new') }}</a>
+                            <li class="{{ request()->is(getAdminPanelUrl('/users/create', false)) ? 'active' : '' }}">
+                                <a class="nav-link"
+                                    href="{{ getAdminPanelUrl() }}/users/create">{{ trans('admin/main.new') }}</a>
                             </li>
                         @endcan()
                     </ul>
@@ -395,7 +412,8 @@
             @endcan --}}
 
             @can('admin_delete_account_requests')
-                <li class="nav-item {{ (request()->is(getAdminPanelUrl('/users/delete-account-requests*', false))) ? 'active' : '' }}">
+                <li
+                    class="nav-item {{ request()->is(getAdminPanelUrl('/users/delete-account-requests*', false)) ? 'active' : '' }}">
                     <a href="{{ getAdminPanelUrl() }}/users/delete-account-requests" class="nav-link">
                         <i class="fa fa-user-times"></i>
                         <span>{{ trans('update.delete-account-requests') }}</span>
@@ -404,19 +422,21 @@
             @endcan
 
             @can('admin_roles')
-                <li class="nav-item dropdown {{ (request()->is(getAdminPanelUrl('/roles*', false))) ? 'active' : '' }}">
+                <li class="nav-item dropdown {{ request()->is(getAdminPanelUrl('/roles*', false)) ? 'active' : '' }}">
                     <a href="#" class="nav-link has-dropdown" data-toggle="dropdown">
                         <i class="fas fa-user-circle"></i> <span>{{ trans('admin/main.roles') }}</span>
                     </a>
                     <ul class="dropdown-menu">
                         @can('admin_roles_list')
-                            <li class="{{ (request()->is(getAdminPanelUrl('/roles', false))) ? 'active' : '' }}">
-                                <a class="nav-link active" href="{{ getAdminPanelUrl() }}/roles">{{ trans('admin/main.lists') }}</a>
+                            <li class="{{ request()->is(getAdminPanelUrl('/roles', false)) ? 'active' : '' }}">
+                                <a class="nav-link active"
+                                    href="{{ getAdminPanelUrl() }}/roles">{{ trans('admin/main.lists') }}</a>
                             </li>
                         @endcan()
                         @can('admin_roles_create')
-                            <li class="{{ (request()->is(getAdminPanelUrl('/roles/create', false))) ? 'active' : '' }}">
-                                <a class="nav-link" href="{{ getAdminPanelUrl() }}/roles/create">{{ trans('admin/main.new') }}</a>
+                            <li class="{{ request()->is(getAdminPanelUrl('/roles/create', false)) ? 'active' : '' }}">
+                                <a class="nav-link"
+                                    href="{{ getAdminPanelUrl() }}/roles/create">{{ trans('admin/main.new') }}</a>
                             </li>
                         @endcan()
                     </ul>
@@ -424,20 +444,23 @@
             @endcan()
 
             @can('admin_group')
-                <li class="nav-item dropdown {{ (request()->is(getAdminPanelUrl('/users/groups*', false))) ? 'active' : '' }}">
+                <li
+                    class="nav-item dropdown {{ request()->is(getAdminPanelUrl('/users/groups*', false)) ? 'active' : '' }}">
                     <a href="#" class="nav-link has-dropdown" data-toggle="dropdown">
                         <i class="fas fa-sitemap"></i>
                         <span>{{ trans('admin/main.groups') }}</span>
                     </a>
                     <ul class="dropdown-menu">
                         @can('admin_group_list')
-                            <li class="{{ (request()->is(getAdminPanelUrl('/users/groups', false))) ? 'active' : '' }}">
-                                <a class="nav-link" href="{{ getAdminPanelUrl() }}/users/groups">{{ trans('admin/main.lists') }}</a>
+                            <li class="{{ request()->is(getAdminPanelUrl('/users/groups', false)) ? 'active' : '' }}">
+                                <a class="nav-link"
+                                    href="{{ getAdminPanelUrl() }}/users/groups">{{ trans('admin/main.lists') }}</a>
                             </li>
                         @endcan
                         @can('admin_group_create')
-                            <li class="{{ (request()->is(getAdminPanelUrl('/users/groups/create', false))) ? 'active' : '' }}">
-                                <a class="nav-link" href="{{ getAdminPanelUrl() }}/users/groups/create">{{ trans('admin/main.new') }}</a>
+                            <li class="{{ request()->is(getAdminPanelUrl('/users/groups/create', false)) ? 'active' : '' }}">
+                                <a class="nav-link"
+                                    href="{{ getAdminPanelUrl() }}/users/groups/create">{{ trans('admin/main.new') }}</a>
                             </li>
                         @endcan
                     </ul>
@@ -445,7 +468,7 @@
             @endcan
 
             @can('admin_users_badges')
-                <li class="{{ (request()->is(getAdminPanelUrl('/users/badges', false))) ? 'active' : '' }}">
+                <li class="{{ request()->is(getAdminPanelUrl('/users/badges', false)) ? 'active' : '' }}">
                     <a class="nav-link" href="{{ getAdminPanelUrl() }}/users/badges">
                         <i class="fas fa-trophy"></i>
                         <span>{{ trans('admin/main.badges') }}</span>
@@ -456,19 +479,22 @@
 
 
             @can('admin_become_instructors_list')
-                <li class="nav-item dropdown {{ (request()->is(getAdminPanelUrl('/users/become-instructors*', false))) ? 'active' : '' }}">
+                <li
+                    class="nav-item dropdown {{ request()->is(getAdminPanelUrl('/users/become-instructors*', false)) ? 'active' : '' }}">
                     <a href="#" class="nav-link has-dropdown" data-toggle="dropdown">
                         <i class="fas fa-list-alt"></i>
                         <span>{{ trans('admin/main.instructor_requests') }}</span>
                     </a>
                     <ul class="dropdown-menu">
-                        <li class="{{ (request()->is(getAdminPanelUrl('/users/become-instructors/instructors', false))) ? 'active' : '' }}">
+                        <li
+                            class="{{ request()->is(getAdminPanelUrl('/users/become-instructors/instructors', false)) ? 'active' : '' }}">
                             <a class="nav-link" href="{{ getAdminPanelUrl() }}/users/become-instructors/instructors">
                                 <span>{{ trans('admin/main.instructors') }}</span>
                             </a>
                         </li>
 
-                        <li class="{{ (request()->is(getAdminPanelUrl('/users/become-instructors/organizations', false))) ? 'active' : '' }}">
+                        <li
+                            class="{{ request()->is(getAdminPanelUrl('/users/become-instructors/organizations', false)) ? 'active' : '' }}">
                             <a class="nav-link" href="{{ getAdminPanelUrl() }}/users/become-instructors/organizations">
                                 <span>{{ trans('admin/main.organizations') }}</span>
                             </a>
@@ -477,10 +503,7 @@
                 </li>
             @endcan()
 
-            {{-- @if(
-                $authUser->can('admin_forum') or
-                $authUser->can('admin_featured_topics')
-                )
+            {{-- @if ($authUser->can('admin_forum') or $authUser->can('admin_featured_topics'))
                 <li class="menu-header">{{ trans('update.forum') }}</li>
             @endif
 
@@ -525,7 +548,7 @@
                     </ul>
                 </li>
             @endcan() --}}
-{{-- 
+            {{-- 
             @can('admin_recommended_topics')
                 <li class="nav-item dropdown {{ (request()->is(getAdminPanelUrl('/recommended-topics*', false))) ? 'active' : '' }}">
                     <a href="#" class="nav-link has-dropdown" data-toggle="dropdown">
@@ -547,13 +570,13 @@
                 </li>
             @endcan() --}}
 
-            @if($authUser->can('admin_supports') or
-                $authUser->can('admin_comments') or
-                $authUser->can('admin_reports') or
-                $authUser->can('admin_contacts') or
-                $authUser->can('admin_noticeboards') or
-                $authUser->can('admin_notifications')
-            )
+            @if (
+                $authUser->can('admin_supports') or
+                    $authUser->can('admin_comments') or
+                    $authUser->can('admin_reports') or
+                    $authUser->can('admin_contacts') or
+                    $authUser->can('admin_noticeboards') or
+                    $authUser->can('admin_notifications'))
                 <li class="menu-header">{{ trans('admin/main.crm') }}</li>
             @endif
 
@@ -596,30 +619,36 @@
             @endcan --}}
 
             @can('admin_comments')
-                <li class="nav-item dropdown {{ (!request()->is(getAdminPanelUrl('admin/comments/products, false')) and (request()->is(getAdminPanelUrl('/comments*', false)) and !request()->is(getAdminPanelUrl('/comments/webinars/reports', false)))) ? 'active' : '' }}">
-                    <a href="#" class="nav-link has-dropdown"><i class="fas fa-comments"></i> <span>{{ trans('admin/main.comments') }}</span></a>
+                <li
+                    class="nav-item dropdown {{ (!request()->is(getAdminPanelUrl('admin/comments/products, false')) and (request()->is(getAdminPanelUrl('/comments*', false)) and !request()->is(getAdminPanelUrl('/comments/webinars/reports', false)))) ? 'active' : '' }}">
+                    <a href="#" class="nav-link has-dropdown"><i class="fas fa-comments"></i>
+                        <span>{{ trans('admin/main.comments') }}</span></a>
                     <ul class="dropdown-menu">
                         @can('admin_webinar_comments')
-                            <li class="{{ (request()->is(getAdminPanelUrl('/comments/webinars', false))) ? 'active' : '' }}">
-                                <a class="nav-link @if(!empty($sidebarBeeps['classesComments']) and $sidebarBeeps['classesComments']) beep beep-sidebar @endif" href="{{ getAdminPanelUrl() }}/comments/webinars">{{ trans('admin/main.classes_comments') }}</a>
+                            <li class="{{ request()->is(getAdminPanelUrl('/comments/webinars', false)) ? 'active' : '' }}">
+                                <a class="nav-link @if (!empty($sidebarBeeps['classesComments']) and $sidebarBeeps['classesComments']) beep beep-sidebar @endif"
+                                    href="{{ getAdminPanelUrl() }}/comments/webinars">{{ trans('admin/main.classes_comments') }}</a>
                             </li>
                         @endcan
 
                         @can('admin_bundle_comments')
-                            <li class="{{ (request()->is(getAdminPanelUrl('/comments/bundles', false))) ? 'active' : '' }}">
-                                <a class="nav-link @if(!empty($sidebarBeeps['bundleComments']) and $sidebarBeeps['bundleComments']) beep beep-sidebar @endif" href="{{ getAdminPanelUrl() }}/comments/bundles">{{ trans('update.bundle_comments') }}</a>
+                            <li class="{{ request()->is(getAdminPanelUrl('/comments/bundles', false)) ? 'active' : '' }}">
+                                <a class="nav-link @if (!empty($sidebarBeeps['bundleComments']) and $sidebarBeeps['bundleComments']) beep beep-sidebar @endif"
+                                    href="{{ getAdminPanelUrl() }}/comments/bundles">{{ trans('update.bundle_comments') }}</a>
                             </li>
                         @endcan
 
                         @can('admin_blog_comments')
-                            <li class="{{ (request()->is(getAdminPanelUrl('/comments/blog', false))) ? 'active' : '' }}">
-                                <a class="nav-link @if(!empty($sidebarBeeps['blogComments']) and $sidebarBeeps['blogComments']) beep beep-sidebar @endif" href="{{ getAdminPanelUrl() }}/comments/blog">{{ trans('admin/main.blog_comments') }}</a>
+                            <li class="{{ request()->is(getAdminPanelUrl('/comments/blog', false)) ? 'active' : '' }}">
+                                <a class="nav-link @if (!empty($sidebarBeeps['blogComments']) and $sidebarBeeps['blogComments']) beep beep-sidebar @endif"
+                                    href="{{ getAdminPanelUrl() }}/comments/blog">{{ trans('admin/main.blog_comments') }}</a>
                             </li>
                         @endcan
 
                         @can('admin_product_comments')
-                            <li class="{{ (request()->is(getAdminPanelUrl('/comments/products', false))) ? 'active' : '' }}">
-                                <a class="nav-link @if(!empty($sidebarBeeps['productComments']) and $sidebarBeeps['productComments']) beep beep-sidebar @endif" href="{{ getAdminPanelUrl() }}/comments/products">{{ trans('update.product_comments') }}</a>
+                            <li class="{{ request()->is(getAdminPanelUrl('/comments/products', false)) ? 'active' : '' }}">
+                                <a class="nav-link @if (!empty($sidebarBeeps['productComments']) and $sidebarBeeps['productComments']) beep beep-sidebar @endif"
+                                    href="{{ getAdminPanelUrl() }}/comments/products">{{ trans('update.product_comments') }}</a>
                             </li>
                         @endcan
                     </ul>
@@ -627,31 +656,39 @@
             @endcan
 
             @can('admin_reports')
-                <li class="nav-item dropdown {{ (request()->is(getAdminPanelUrl('/reports*', false)) or request()->is(getAdminPanelUrl('/comments/webinars/reports', false)) or request()->is(getAdminPanelUrl('/comments/blog/reports', false))) ? 'active' : '' }}">
-                    <a href="#" class="nav-link has-dropdown"><i class="fas fa-info-circle"></i> <span>{{ trans('admin/main.reports') }}</span></a>
+                <li
+                    class="nav-item dropdown {{ (request()->is(getAdminPanelUrl('/reports*', false)) or request()->is(getAdminPanelUrl('/comments/webinars/reports', false)) or request()->is(getAdminPanelUrl('/comments/blog/reports', false))) ? 'active' : '' }}">
+                    <a href="#" class="nav-link has-dropdown"><i class="fas fa-info-circle"></i>
+                        <span>{{ trans('admin/main.reports') }}</span></a>
 
                     <ul class="dropdown-menu">
                         @can('admin_webinar_reports')
-                            <li class="{{ (request()->is(getAdminPanelUrl('/reports/webinars', false))) ? 'active' : '' }}">
-                                <a class="nav-link" href="{{ getAdminPanelUrl() }}/reports/webinars">{{ trans('panel.classes') }}</a>
+                            <li class="{{ request()->is(getAdminPanelUrl('/reports/webinars', false)) ? 'active' : '' }}">
+                                <a class="nav-link"
+                                    href="{{ getAdminPanelUrl() }}/reports/webinars">{{ trans('panel.classes') }}</a>
                             </li>
                         @endcan
 
                         @can('admin_webinar_comments_reports')
-                            <li class="{{ (request()->is(getAdminPanelUrl('/comments/webinars/reports', false))) ? 'active' : '' }}">
-                                <a class="nav-link" href="{{ getAdminPanelUrl() }}/comments/webinars/reports">{{ trans('admin/main.classes_comments_reports') }}</a>
+                            <li
+                                class="{{ request()->is(getAdminPanelUrl('/comments/webinars/reports', false)) ? 'active' : '' }}">
+                                <a class="nav-link"
+                                    href="{{ getAdminPanelUrl() }}/comments/webinars/reports">{{ trans('admin/main.classes_comments_reports') }}</a>
                             </li>
                         @endcan
 
                         @can('admin_blog_comments_reports')
-                            <li class="{{ (request()->is(getAdminPanelUrl('/comments/blog/reports', false))) ? 'active' : '' }}">
-                                <a class="nav-link" href="{{ getAdminPanelUrl() }}/comments/blog/reports">{{ trans('admin/main.blog_comments_reports') }}</a>
+                            <li
+                                class="{{ request()->is(getAdminPanelUrl('/comments/blog/reports', false)) ? 'active' : '' }}">
+                                <a class="nav-link"
+                                    href="{{ getAdminPanelUrl() }}/comments/blog/reports">{{ trans('admin/main.blog_comments_reports') }}</a>
                             </li>
                         @endcan
 
                         @can('admin_report_reasons')
-                            <li class="{{ (request()->is(getAdminPanelUrl('/reports/reasons', false))) ? 'active' : '' }}">
-                                <a class="nav-link" href="{{ getAdminPanelUrl() }}/reports/reasons">{{ trans('admin/main.report_reasons') }}</a>
+                            <li class="{{ request()->is(getAdminPanelUrl('/reports/reasons', false)) ? 'active' : '' }}">
+                                <a class="nav-link"
+                                    href="{{ getAdminPanelUrl() }}/reports/reasons">{{ trans('admin/main.report_reasons') }}</a>
                             </li>
                         @endcan()
 
@@ -665,7 +702,7 @@
             @endcan
 
             @can('admin_contacts')
-                <li class="{{ (request()->is(getAdminPanelUrl('/contacts*', false))) ? 'active' : '' }}">
+                <li class="{{ request()->is(getAdminPanelUrl('/contacts*', false)) ? 'active' : '' }}">
                     <a class="nav-link" href="{{ getAdminPanelUrl() }}/contacts">
                         <i class="fas fa-phone-square"></i>
                         <span>{{ trans('admin/main.contacts') }}</span>
@@ -693,7 +730,8 @@
             @endcan --}}
 
             @can('admin_notifications')
-                <li class="nav-item dropdown {{ (request()->is(getAdminPanelUrl('/notifications*', false))) ? 'active' : '' }}">
+                <li
+                    class="nav-item dropdown {{ request()->is(getAdminPanelUrl('/notifications*', false)) ? 'active' : '' }}">
                     <a href="#" class="nav-link has-dropdown" data-toggle="dropdown">
                         <i class="fas fa-bell"></i>
                         <span>{{ trans('admin/main.notifications') }}</span>
@@ -701,48 +739,56 @@
 
                     <ul class="dropdown-menu">
                         @can('admin_notifications_list')
-                            <li class="{{ (request()->is(getAdminPanelUrl('/notifications', false))) ? 'active' : '' }}">
-                                <a class="nav-link" href="{{ getAdminPanelUrl() }}/notifications">{{ trans('public.history') }}</a>
+                            <li class="{{ request()->is(getAdminPanelUrl('/notifications', false)) ? 'active' : '' }}">
+                                <a class="nav-link"
+                                    href="{{ getAdminPanelUrl() }}/notifications">{{ trans('public.history') }}</a>
                             </li>
                         @endcan
 
                         @can('admin_notifications_posted_list')
-                            <li class="{{ (request()->is(getAdminPanelUrl('/notifications/posted', false))) ? 'active' : '' }}">
-                                <a class="nav-link" href="{{ getAdminPanelUrl() }}/notifications/posted">{{ trans('admin/main.posted') }}</a>
+                            <li
+                                class="{{ request()->is(getAdminPanelUrl('/notifications/posted', false)) ? 'active' : '' }}">
+                                <a class="nav-link"
+                                    href="{{ getAdminPanelUrl() }}/notifications/posted">{{ trans('admin/main.posted') }}</a>
                             </li>
                         @endcan
 
                         @can('admin_notifications_send')
-                            <li class="{{ (request()->is(getAdminPanelUrl('/notifications/send', false))) ? 'active' : '' }}">
-                                <a class="nav-link" href="{{ getAdminPanelUrl() }}/notifications/send">{{ trans('admin/main.new') }}</a>
+                            <li class="{{ request()->is(getAdminPanelUrl('/notifications/send', false)) ? 'active' : '' }}">
+                                <a class="nav-link"
+                                    href="{{ getAdminPanelUrl() }}/notifications/send">{{ trans('admin/main.new') }}</a>
                             </li>
                         @endcan
 
                         @can('admin_notifications_templates')
-                            <li class="{{ (request()->is(getAdminPanelUrl('/notifications/templates', false))) ? 'active' : '' }}">
-                                <a class="nav-link" href="{{ getAdminPanelUrl() }}/notifications/templates">{{ trans('admin/main.templates') }}</a>
+                            <li
+                                class="{{ request()->is(getAdminPanelUrl('/notifications/templates', false)) ? 'active' : '' }}">
+                                <a class="nav-link"
+                                    href="{{ getAdminPanelUrl() }}/notifications/templates">{{ trans('admin/main.templates') }}</a>
                             </li>
                         @endcan
 
                         @can('admin_notifications_template_create')
-                            <li class="{{ (request()->is(getAdminPanelUrl('/notifications/templates/create', false))) ? 'active' : '' }}">
-                                <a class="nav-link" href="{{ getAdminPanelUrl() }}/notifications/templates/create">{{ trans('admin/main.new_template') }}</a>
+                            <li
+                                class="{{ request()->is(getAdminPanelUrl('/notifications/templates/create', false)) ? 'active' : '' }}">
+                                <a class="nav-link"
+                                    href="{{ getAdminPanelUrl() }}/notifications/templates/create">{{ trans('admin/main.new_template') }}</a>
                             </li>
                         @endcan
                     </ul>
                 </li>
             @endcan
 
-            @if($authUser->can('admin_blog') or
-                $authUser->can('admin_pages') or
-                $authUser->can('admin_additional_pages') or
-                $authUser->can('admin_testimonials') or
-                $authUser->can('admin_tags') or
-                $authUser->can('admin_regions') or
-                $authUser->can('admin_store') or
-                $authUser->can('admin_forms') or
-                $authUser->can('admin_ai_contents')
-            )
+            @if (
+                $authUser->can('admin_blog') or
+                    $authUser->can('admin_pages') or
+                    $authUser->can('admin_additional_pages') or
+                    $authUser->can('admin_testimonials') or
+                    $authUser->can('admin_tags') or
+                    $authUser->can('admin_regions') or
+                    $authUser->can('admin_store') or
+                    $authUser->can('admin_forms') or
+                    $authUser->can('admin_ai_contents'))
                 <li class="menu-header">{{ trans('admin/main.content') }}</li>
             @endif
 
@@ -842,27 +888,30 @@
             @endcan --}}
 
             @can('admin_blog')
-                <li class="nav-item dropdown {{ (request()->is(getAdminPanelUrl('/blog*', false)) and !request()->is(getAdminPanelUrl('/blog/comments', false))) ? 'active' : '' }}">
+                <li
+                    class="nav-item dropdown {{ (request()->is(getAdminPanelUrl('/blog*', false)) and !request()->is(getAdminPanelUrl('/blog/comments', false))) ? 'active' : '' }}">
                     <a href="#" class="nav-link has-dropdown" data-toggle="dropdown">
                         <i class="fas fa-rss-square"></i>
                         <span>{{ trans('admin/main.blog') }}</span>
                     </a>
                     <ul class="dropdown-menu">
                         @can('admin_blog_lists')
-                            <li class="{{ (request()->is(getAdminPanelUrl('/blog', false))) ? 'active' : '' }}">
+                            <li class="{{ request()->is(getAdminPanelUrl('/blog', false)) ? 'active' : '' }}">
                                 <a class="nav-link" href="{{ getAdminPanelUrl() }}/blog">{{ trans('site.posts') }}</a>
                             </li>
                         @endcan
 
                         @can('admin_blog_create')
-                            <li class="{{ (request()->is(getAdminPanelUrl('/blog/create', false))) ? 'active' : '' }}">
-                                <a class="nav-link" href="{{ getAdminPanelUrl() }}/blog/create">{{ trans('admin/main.new_post') }}</a>
+                            <li class="{{ request()->is(getAdminPanelUrl('/blog/create', false)) ? 'active' : '' }}">
+                                <a class="nav-link"
+                                    href="{{ getAdminPanelUrl() }}/blog/create">{{ trans('admin/main.new_post') }}</a>
                             </li>
                         @endcan
 
                         @can('admin_blog_categories')
-                            <li class="{{ (request()->is(getAdminPanelUrl('/blog/categories', false))) ? 'active' : '' }}">
-                                <a class="nav-link" href="{{ getAdminPanelUrl() }}/blog/categories">{{ trans('admin/main.categories') }}</a>
+                            <li class="{{ request()->is(getAdminPanelUrl('/blog/categories', false)) ? 'active' : '' }}">
+                                <a class="nav-link"
+                                    href="{{ getAdminPanelUrl() }}/blog/categories">{{ trans('admin/main.categories') }}</a>
                             </li>
                         @endcan
                     </ul>
@@ -870,7 +919,7 @@
             @endcan()
 
             @can('admin_pages')
-                <li class="nav-item dropdown {{ (request()->is(getAdminPanelUrl('/pages*', false))) ? 'active' : '' }}">
+                <li class="nav-item dropdown {{ request()->is(getAdminPanelUrl('/pages*', false)) ? 'active' : '' }}">
                     <a href="#" class="nav-link has-dropdown" data-toggle="dropdown">
                         <i class="fas fa-pager"></i>
                         <span>{{ trans('admin/main.pages') }}</span>
@@ -878,14 +927,16 @@
 
                     <ul class="dropdown-menu">
                         @can('admin_pages_list')
-                            <li class="{{ (request()->is(getAdminPanelUrl('/pages', false))) ? 'active' : '' }}">
-                                <a class="nav-link" href="{{ getAdminPanelUrl() }}/pages">{{ trans('admin/main.lists') }}</a>
+                            <li class="{{ request()->is(getAdminPanelUrl('/pages', false)) ? 'active' : '' }}">
+                                <a class="nav-link"
+                                    href="{{ getAdminPanelUrl() }}/pages">{{ trans('admin/main.lists') }}</a>
                             </li>
                         @endcan()
 
                         @can('admin_pages_create')
-                            <li class="{{ (request()->is(getAdminPanelUrl('/pages/create', false))) ? 'active' : '' }}">
-                                <a class="nav-link" href="{{ getAdminPanelUrl() }}/pages/create">{{ trans('admin/main.new_page') }}</a>
+                            <li class="{{ request()->is(getAdminPanelUrl('/pages/create', false)) ? 'active' : '' }}">
+                                <a class="nav-link"
+                                    href="{{ getAdminPanelUrl() }}/pages/create">{{ trans('admin/main.new_page') }}</a>
                             </li>
                         @endcan()
                     </ul>
@@ -893,31 +944,40 @@
             @endcan
 
             @can('admin_additional_pages')
-                <li class="nav-item dropdown {{ (request()->is(getAdminPanelUrl('/additional_page*', false))) ? 'active' : '' }}">
-                    <a href="#" class="nav-link has-dropdown"><i class="fas fa-plus-circle"></i> <span>{{ trans('admin/main.additional_pages_title') }}</span></a>
+                <li
+                    class="nav-item dropdown {{ request()->is(getAdminPanelUrl('/additional_page*', false)) ? 'active' : '' }}">
+                    <a href="#" class="nav-link has-dropdown"><i class="fas fa-plus-circle"></i>
+                        <span>{{ trans('admin/main.additional_pages_title') }}</span></a>
                     <ul class="dropdown-menu">
 
                         @can('admin_additional_pages_404')
-                            <li class="{{ (request()->is(getAdminPanelUrl('/additional_page/404', false))) ? 'active' : '' }}">
-                                <a class="nav-link" href="{{ getAdminPanelUrl() }}/additional_page/404">{{ trans('admin/main.error_404') }}</a>
+                            <li class="{{ request()->is(getAdminPanelUrl('/additional_page/404', false)) ? 'active' : '' }}">
+                                <a class="nav-link"
+                                    href="{{ getAdminPanelUrl() }}/additional_page/404">{{ trans('admin/main.error_404') }}</a>
                             </li>
                         @endcan()
 
                         @can('admin_additional_pages_contact_us')
-                            <li class="{{ (request()->is(getAdminPanelUrl('/additional_page/contact_us', false))) ? 'active' : '' }}">
-                                <a class="nav-link" href="{{ getAdminPanelUrl() }}/additional_page/contact_us">{{ trans('admin/main.contact_us') }}</a>
+                            <li
+                                class="{{ request()->is(getAdminPanelUrl('/additional_page/contact_us', false)) ? 'active' : '' }}">
+                                <a class="nav-link"
+                                    href="{{ getAdminPanelUrl() }}/additional_page/contact_us">{{ trans('admin/main.contact_us') }}</a>
                             </li>
                         @endcan()
 
                         @can('admin_additional_pages_footer')
-                            <li class="{{ (request()->is(getAdminPanelUrl('/additional_page/footer', false))) ? 'active' : '' }}">
-                                <a class="nav-link" href="{{ getAdminPanelUrl() }}/additional_page/footer">{{ trans('admin/main.footer') }}</a>
+                            <li
+                                class="{{ request()->is(getAdminPanelUrl('/additional_page/footer', false)) ? 'active' : '' }}">
+                                <a class="nav-link"
+                                    href="{{ getAdminPanelUrl() }}/additional_page/footer">{{ trans('admin/main.footer') }}</a>
                             </li>
                         @endcan()
 
                         @can('admin_additional_pages_navbar_links')
-                            <li class="{{ (request()->is(getAdminPanelUrl('/additional_page/navbar_links', false))) ? 'active' : '' }}">
-                                <a class="nav-link" href="{{ getAdminPanelUrl() }}/additional_page/navbar_links">{{ trans('admin/main.top_navbar') }}</a>
+                            <li
+                                class="{{ request()->is(getAdminPanelUrl('/additional_page/navbar_links', false)) ? 'active' : '' }}">
+                                <a class="nav-link"
+                                    href="{{ getAdminPanelUrl() }}/additional_page/navbar_links">{{ trans('admin/main.top_navbar') }}</a>
                             </li>
                         @endcan()
                     </ul>
@@ -925,21 +985,24 @@
             @endcan
 
             @can('admin_testimonials')
-                <li class="nav-item dropdown {{ (request()->is(getAdminPanelUrl('/testimonials*', false))) ? 'active' : '' }}">
+                <li
+                    class="nav-item dropdown {{ request()->is(getAdminPanelUrl('/testimonials*', false)) ? 'active' : '' }}">
                     <a href="#" class="nav-link has-dropdown" data-toggle="dropdown">
                         <i class="fas fa-address-card"></i>
                         <span>{{ trans('admin/main.testimonials') }}</span>
                     </a>
                     <ul class="dropdown-menu">
                         @can('admin_testimonials_list')
-                            <li class="{{ (request()->is(getAdminPanelUrl('/testimonials', false))) ? 'active' : '' }}">
-                                <a class="nav-link" href="{{ getAdminPanelUrl() }}/testimonials">{{ trans('admin/main.lists') }}</a>
+                            <li class="{{ request()->is(getAdminPanelUrl('/testimonials', false)) ? 'active' : '' }}">
+                                <a class="nav-link"
+                                    href="{{ getAdminPanelUrl() }}/testimonials">{{ trans('admin/main.lists') }}</a>
                             </li>
                         @endcan()
 
                         @can('admin_testimonials_create')
-                            <li class="{{ (request()->is(getAdminPanelUrl('/testimonials/create', false))) ? 'active' : '' }}">
-                                <a class="nav-link" href="{{ getAdminPanelUrl() }}/testimonials/create">{{ trans('admin/main.new') }}</a>
+                            <li class="{{ request()->is(getAdminPanelUrl('/testimonials/create', false)) ? 'active' : '' }}">
+                                <a class="nav-link"
+                                    href="{{ getAdminPanelUrl() }}/testimonials/create">{{ trans('admin/main.new') }}</a>
                             </li>
                         @endcan()
                     </ul>
@@ -947,7 +1010,7 @@
             @endcan
 
             @can('admin_tags')
-                <li class="{{ (request()->is(getAdminPanelUrl('/tags', false))) ? 'active' : '' }}">
+                <li class="{{ request()->is(getAdminPanelUrl('/tags', false)) ? 'active' : '' }}">
                     <a href="{{ getAdminPanelUrl() }}/tags" class="nav-link">
                         <i class="fas fa-tags"></i>
                         <span>{{ trans('admin/main.tags') }}</span>
@@ -988,7 +1051,7 @@
                     </ul>
                 </li>
             @endcan --}}
-{{-- 
+            {{-- 
             @can('admin_forms')
                 <li class="nav-item dropdown {{ (request()->is(getAdminPanelUrl('/forms*', false))) ? 'active' : '' }}">
                     <a href="#" class="nav-link has-dropdown" data-toggle="dropdown">
@@ -1053,19 +1116,20 @@
                 </li>
             @endcan --}}
 
-            @if($authUser->can('admin_documents') or
-                $authUser->can('admin_sales_list') or
-                $authUser->can('admin_payouts') or
-                $authUser->can('admin_offline_payments_list') or
-                $authUser->can('admin_subscribe') or
-                $authUser->can('admin_registration_packages') or
-                $authUser->can('admin_installments')
-            )
+            @if (
+                $authUser->can('admin_documents') or
+                    $authUser->can('admin_sales_list') or
+                    $authUser->can('admin_payouts') or
+                    $authUser->can('admin_offline_payments_list') or
+                    $authUser->can('admin_subscribe') or
+                    $authUser->can('admin_registration_packages') or
+                    $authUser->can('admin_installments'))
                 <li class="menu-header">{{ trans('admin/main.financial') }}</li>
             @endif
 
             @can('admin_documents')
-                <li class="nav-item dropdown {{ (request()->is(getAdminPanelUrl('/financial/documents*', false))) ? 'active' : '' }}">
+                <li
+                    class="nav-item dropdown {{ request()->is(getAdminPanelUrl('/financial/documents*', false)) ? 'active' : '' }}">
                     <a href="#" class="nav-link has-dropdown" data-toggle="dropdown">
                         <i class="fas fa-file-invoice-dollar"></i>
                         <span>{{ trans('admin/main.balances') }}</span>
@@ -1073,14 +1137,17 @@
                     <ul class="dropdown-menu">
 
                         @can('admin_documents_list')
-                            <li class="{{ (request()->is(getAdminPanelUrl('/financial/documents', false))) ? 'active' : '' }}">
-                                <a class="nav-link" href="{{ getAdminPanelUrl() }}/financial/documents">{{ trans('admin/main.list') }}</a>
+                            <li class="{{ request()->is(getAdminPanelUrl('/financial/documents', false)) ? 'active' : '' }}">
+                                <a class="nav-link"
+                                    href="{{ getAdminPanelUrl() }}/financial/documents">{{ trans('admin/main.list') }}</a>
                             </li>
                         @endcan
 
                         @can('admin_documents_create')
-                            <li class="{{ (request()->is(getAdminPanelUrl('/financial/documents/new', false))) ? 'active' : '' }}">
-                                <a class="nav-link" href="{{ getAdminPanelUrl() }}/financial/documents/new">{{ trans('admin/main.new') }}</a>
+                            <li
+                                class="{{ request()->is(getAdminPanelUrl('/financial/documents/new', false)) ? 'active' : '' }}">
+                                <a class="nav-link"
+                                    href="{{ getAdminPanelUrl() }}/financial/documents/new">{{ trans('admin/main.new') }}</a>
                             </li>
                         @endcan
                     </ul>
@@ -1088,28 +1155,40 @@
             @endcan
 
             @can('admin_sales_list')
-                <li class="{{ (request()->is(getAdminPanelUrl('/financial/sales*', false))) ? 'active' : '' }}">
+                <li class="{{ request()->is(getAdminPanelUrl('/financial/sales*', false)) ? 'active' : '' }}">
                     <a href="{{ getAdminPanelUrl() }}/financial/sales" class="nav-link">
                         <i class="fas fa-list-ul"></i>
                         <span>{{ trans('admin/main.sales_list') }}</span>
                     </a>
                 </li>
+
+                <li class="{{ request()->is(getAdminPanelUrl('/prepay*', false)) ? 'active' : '' }}">
+                    <a href="{{ getAdminPanelUrl() }}/prepay" class="nav-link">
+                        <i class="fas fa-dollar-sign	"></i>
+                        <span>پیش واریز ها</span>
+                    </a>
+                </li>
             @endcan
 
             @can('admin_payouts')
-                <li class="nav-item dropdown {{ (request()->is(getAdminPanelUrl('/financial/payouts*', false))) ? 'active' : '' }}">
-                    <a href="#" class="nav-link has-dropdown"><i class="fas fa-credit-card"></i> <span>{{ trans('admin/main.payout') }}</span></a>
+                <li
+                    class="nav-item dropdown {{ request()->is(getAdminPanelUrl('/financial/payouts*', false)) ? 'active' : '' }}">
+                    <a href="#" class="nav-link has-dropdown"><i class="fas fa-credit-card"></i>
+                        <span>{{ trans('admin/main.payout') }}</span></a>
                     <ul class="dropdown-menu">
                         @can('admin_payouts_list')
-                            <li class="{{ (request()->is(getAdminPanelUrl('/financial/payouts', false)) and request()->get('payout') == 'requests') ? 'active' : '' }}">
-                                <a href="{{ getAdminPanelUrl() }}/financial/payouts?payout=requests" class="nav-link @if(!empty($sidebarBeeps['payoutRequest']) and $sidebarBeeps['payoutRequest']) beep beep-sidebar @endif">
+                            <li
+                                class="{{ (request()->is(getAdminPanelUrl('/financial/payouts', false)) and request()->get('payout') == 'requests') ? 'active' : '' }}">
+                                <a href="{{ getAdminPanelUrl() }}/financial/payouts?payout=requests"
+                                    class="nav-link @if (!empty($sidebarBeeps['payoutRequest']) and $sidebarBeeps['payoutRequest']) beep beep-sidebar @endif">
                                     <span>{{ trans('panel.requests') }}</span>
                                 </a>
                             </li>
                         @endcan
 
                         @can('admin_payouts_list')
-                            <li class="{{ (request()->is(getAdminPanelUrl('/financial/payouts', false)) and request()->get('payout') == 'history') ? 'active' : '' }}">
+                            <li
+                                class="{{ (request()->is(getAdminPanelUrl('/financial/payouts', false)) and request()->get('payout') == 'history') ? 'active' : '' }}">
                                 <a href="{{ getAdminPanelUrl() }}/financial/payouts?payout=history" class="nav-link">
                                     <span>{{ trans('public.history') }}</span>
                                 </a>
@@ -1120,17 +1199,23 @@
             @endcan
 
             @can('admin_offline_payments_list')
-                <li class="nav-item dropdown {{ (request()->is(getAdminPanelUrl('/financial/offline_payments*', false))) ? 'active' : '' }}">
-                    <a href="#" class="nav-link has-dropdown"><i class="fas fa-university"></i> <span>{{ trans('admin/main.offline_payments') }}</span></a>
+                <li
+                    class="nav-item dropdown {{ request()->is(getAdminPanelUrl('/financial/offline_payments*', false)) ? 'active' : '' }}">
+                    <a href="#" class="nav-link has-dropdown"><i class="fas fa-university"></i>
+                        <span>{{ trans('admin/main.offline_payments') }}</span></a>
                     <ul class="dropdown-menu">
-                        <li class="{{ (request()->is(getAdminPanelUrl('/financial/offline_payments', false)) and request()->get('page_type') == 'requests') ? 'active' : '' }}">
-                            <a href="{{ getAdminPanelUrl() }}/financial/offline_payments?page_type=requests" class="nav-link @if(!empty($sidebarBeeps['offlinePayments']) and $sidebarBeeps['offlinePayments']) beep beep-sidebar @endif">
+                        <li
+                            class="{{ (request()->is(getAdminPanelUrl('/financial/offline_payments', false)) and request()->get('page_type') == 'requests') ? 'active' : '' }}">
+                            <a href="{{ getAdminPanelUrl() }}/financial/offline_payments?page_type=requests"
+                                class="nav-link @if (!empty($sidebarBeeps['offlinePayments']) and $sidebarBeeps['offlinePayments']) beep beep-sidebar @endif">
                                 <span>{{ trans('panel.requests') }}</span>
                             </a>
                         </li>
 
-                        <li class="{{ (request()->is(getAdminPanelUrl('/financial/offline_payments', false)) and request()->get('page_type') == 'history') ? 'active' : '' }}">
-                            <a href="{{ getAdminPanelUrl() }}/financial/offline_payments?page_type=history" class="nav-link">
+                        <li
+                            class="{{ (request()->is(getAdminPanelUrl('/financial/offline_payments', false)) and request()->get('page_type') == 'history') ? 'active' : '' }}">
+                            <a href="{{ getAdminPanelUrl() }}/financial/offline_payments?page_type=history"
+                                class="nav-link">
                                 <span>{{ trans('public.history') }}</span>
                             </a>
                         </li>
@@ -1186,7 +1271,7 @@
                     </ul>
                 </li>
             @endcan --}}
-{{-- 
+            {{-- 
             @can('admin_registration_packages')
                 <li class="nav-item dropdown {{ (request()->is(getAdminPanelUrl('/financial/registration-packages*', false))) ? 'active' : '' }}">
                     <a href="#" class="nav-link has-dropdown" data-toggle="dropdown">
@@ -1221,7 +1306,7 @@
                 </li>
             @endcan --}}
 
-            {{-- @can('admin_installments')
+            @can('admin_installments')
                 <li class="nav-item dropdown {{ (request()->is(getAdminPanelUrl('/financial/installments*', false))) ? 'active' : '' }}">
                     <a href="#" class="nav-link has-dropdown" data-toggle="dropdown">
                         <i class="fa fa-money-bill-wave"></i>
@@ -1278,38 +1363,42 @@
 
                     </ul>
                 </li>
-            @endcan --}}
+            @endcan
 
-            @if($authUser->can('admin_discount_codes') or
-                $authUser->can('admin_product_discount') or
-                $authUser->can('admin_feature_webinars') or
-                $authUser->can('admin_gift') or
-                $authUser->can('admin_promotion') or
-                $authUser->can('admin_advertising') or
-                $authUser->can('admin_newsletters') or
-                $authUser->can('admin_advertising_modal') or
-                $authUser->can('admin_registration_bonus') or
-                $authUser->can('admin_floating_bar_create')
-            )
+            @if (
+                $authUser->can('admin_discount_codes') or
+                    $authUser->can('admin_product_discount') or
+                    $authUser->can('admin_feature_webinars') or
+                    $authUser->can('admin_gift') or
+                    $authUser->can('admin_promotion') or
+                    $authUser->can('admin_advertising') or
+                    $authUser->can('admin_newsletters') or
+                    $authUser->can('admin_advertising_modal') or
+                    $authUser->can('admin_registration_bonus') or
+                    $authUser->can('admin_floating_bar_create'))
                 <li class="menu-header">{{ trans('admin/main.marketing') }}</li>
             @endif
 
             @can('admin_discount_codes')
-                <li class="nav-item dropdown {{ (request()->is(getAdminPanelUrl('/financial/discounts*', false))) ? 'active' : '' }}">
+                <li
+                    class="nav-item dropdown {{ request()->is(getAdminPanelUrl('/financial/discounts*', false)) ? 'active' : '' }}">
                     <a href="#" class="nav-link has-dropdown" data-toggle="dropdown">
                         <i class="fas fa-percent"></i>
                         <span>{{ trans('admin/main.discount_codes') }}</span>
                     </a>
                     <ul class="dropdown-menu">
                         @can('admin_discount_codes_list')
-                            <li class="{{ (request()->is(getAdminPanelUrl('/financial/discounts', false))) ? 'active' : '' }}">
-                                <a class="nav-link" href="{{ getAdminPanelUrl() }}/financial/discounts">{{ trans('admin/main.lists') }}</a>
+                            <li class="{{ request()->is(getAdminPanelUrl('/financial/discounts', false)) ? 'active' : '' }}">
+                                <a class="nav-link"
+                                    href="{{ getAdminPanelUrl() }}/financial/discounts">{{ trans('admin/main.lists') }}</a>
                             </li>
                         @endcan
 
                         @can('admin_discount_codes_create')
-                            <li class="{{ (request()->is(getAdminPanelUrl('/financial/discounts/new', false))) ? 'active' : '' }}">
-                                <a class="nav-link" href="{{ getAdminPanelUrl() }}/financial/discounts/new">{{ trans('admin/main.new') }}</a>
+                            <li
+                                class="{{ request()->is(getAdminPanelUrl('/financial/discounts/new', false)) ? 'active' : '' }}">
+                                <a class="nav-link"
+                                    href="{{ getAdminPanelUrl() }}/financial/discounts/new">{{ trans('admin/main.new') }}</a>
                             </li>
                         @endcan
                     </ul>
@@ -1317,21 +1406,26 @@
             @endcan
 
             @can('admin_product_discount')
-                <li class="nav-item dropdown {{ (request()->is(getAdminPanelUrl('/financial/special_offers*', false))) ? 'active' : '' }}">
+                <li
+                    class="nav-item dropdown {{ request()->is(getAdminPanelUrl('/financial/special_offers*', false)) ? 'active' : '' }}">
                     <a href="#" class="nav-link has-dropdown" data-toggle="dropdown">
                         <i class="fa fa-fire"></i>
                         <span>{{ trans('admin/main.special_offers') }}</span>
                     </a>
                     <ul class="dropdown-menu">
                         @can('admin_product_discount_list')
-                            <li class="{{ (request()->is(getAdminPanelUrl('/financial/special_offers', false))) ? 'active' : '' }}">
-                                <a class="nav-link" href="{{ getAdminPanelUrl() }}/financial/special_offers">{{ trans('admin/main.lists') }}</a>
+                            <li
+                                class="{{ request()->is(getAdminPanelUrl('/financial/special_offers', false)) ? 'active' : '' }}">
+                                <a class="nav-link"
+                                    href="{{ getAdminPanelUrl() }}/financial/special_offers">{{ trans('admin/main.lists') }}</a>
                             </li>
                         @endcan
 
                         @can('admin_product_discount_create')
-                            <li class="{{ (request()->is(getAdminPanelUrl('/financial/special_offers/new', false))) ? 'active' : '' }}">
-                                <a class="nav-link" href="{{ getAdminPanelUrl() }}/financial/special_offers/new">{{ trans('admin/main.new') }}</a>
+                            <li
+                                class="{{ request()->is(getAdminPanelUrl('/financial/special_offers/new', false)) ? 'active' : '' }}">
+                                <a class="nav-link"
+                                    href="{{ getAdminPanelUrl() }}/financial/special_offers/new">{{ trans('admin/main.new') }}</a>
                             </li>
                         @endcan
                     </ul>
@@ -1339,21 +1433,25 @@
             @endcan
 
             @can('admin_feature_webinars')
-                <li class="nav-item dropdown {{ (request()->is(getAdminPanelUrl('/webinars/features*', false))) ? 'active' : '' }}">
+                <li
+                    class="nav-item dropdown {{ request()->is(getAdminPanelUrl('/webinars/features*', false)) ? 'active' : '' }}">
                     <a href="#" class="nav-link has-dropdown" data-toggle="dropdown">
                         <i class="fas fa-star"></i>
                         <span>{{ trans('admin/main.feature_webinars') }}</span>
                     </a>
                     <ul class="dropdown-menu">
                         @can('admin_feature_webinars')
-                            <li class="{{ (request()->is(getAdminPanelUrl('/webinars/features', false))) ? 'active' : '' }}">
-                                <a class="nav-link" href="{{ getAdminPanelUrl() }}/webinars/features">{{ trans('admin/main.lists') }}</a>
+                            <li class="{{ request()->is(getAdminPanelUrl('/webinars/features', false)) ? 'active' : '' }}">
+                                <a class="nav-link"
+                                    href="{{ getAdminPanelUrl() }}/webinars/features">{{ trans('admin/main.lists') }}</a>
                             </li>
                         @endcan()
 
                         @can('admin_feature_webinars_create')
-                            <li class="{{ (request()->is(getAdminPanelUrl('/webinars/features/create', false))) ? 'active' : '' }}">
-                                <a class="nav-link" href="{{ getAdminPanelUrl() }}/webinars/features/create">{{ trans('admin/main.new') }}</a>
+                            <li
+                                class="{{ request()->is(getAdminPanelUrl('/webinars/features/create', false)) ? 'active' : '' }}">
+                                <a class="nav-link"
+                                    href="{{ getAdminPanelUrl() }}/webinars/features/create">{{ trans('admin/main.new') }}</a>
                             </li>
                         @endcan
                     </ul>
@@ -1393,7 +1491,7 @@
                     </ul>
                 </li>
             @endcan --}}
-{{-- 
+            {{-- 
             @can('admin_gift')
                 <li class="nav-item dropdown {{ (request()->is(getAdminPanelUrl('/gifts*', false))) ? 'active' : '' }}">
                     <a href="#" class="nav-link has-dropdown" data-toggle="dropdown">
@@ -1466,33 +1564,37 @@
             @endcan --}}
 
             @can('admin_newsletters')
-                <li class="nav-item dropdown {{ (request()->is(getAdminPanelUrl('/newsletters*', false))) ? 'active' : '' }}">
+                <li
+                    class="nav-item dropdown {{ request()->is(getAdminPanelUrl('/newsletters*', false)) ? 'active' : '' }}">
                     <a href="#" class="nav-link has-dropdown" data-toggle="dropdown">
                         <i class="fas fa-newspaper"></i>
                         <span>{{ trans('admin/main.newsletters') }}</span>
                     </a>
                     <ul class="dropdown-menu">
                         @can('admin_newsletters_lists')
-                            <li class="{{ (request()->is(getAdminPanelUrl('/newsletters', false))) ? 'active' : '' }}">
-                                <a class="nav-link" href="{{ getAdminPanelUrl() }}/newsletters">{{ trans('admin/main.list') }}</a>
+                            <li class="{{ request()->is(getAdminPanelUrl('/newsletters', false)) ? 'active' : '' }}">
+                                <a class="nav-link"
+                                    href="{{ getAdminPanelUrl() }}/newsletters">{{ trans('admin/main.list') }}</a>
                             </li>
                         @endcan
 
                         @can('admin_newsletters_send')
-                            <li class="{{ (request()->is(getAdminPanelUrl('/newsletters/send', false))) ? 'active' : '' }}">
-                                <a class="nav-link" href="{{ getAdminPanelUrl() }}/newsletters/send">{{ trans('admin/main.send') }}</a>
+                            <li class="{{ request()->is(getAdminPanelUrl('/newsletters/send', false)) ? 'active' : '' }}">
+                                <a class="nav-link"
+                                    href="{{ getAdminPanelUrl() }}/newsletters/send">{{ trans('admin/main.send') }}</a>
                             </li>
                         @endcan
 
                         @can('admin_newsletters_history')
-                            <li class="{{ (request()->is(getAdminPanelUrl('/newsletters/history', false))) ? 'active' : '' }}">
-                                <a class="nav-link" href="{{ getAdminPanelUrl() }}/newsletters/history">{{ trans('public.history') }}</a>
+                            <li class="{{ request()->is(getAdminPanelUrl('/newsletters/history', false)) ? 'active' : '' }}">
+                                <a class="nav-link"
+                                    href="{{ getAdminPanelUrl() }}/newsletters/history">{{ trans('public.history') }}</a>
                             </li>
                         @endcan
                     </ul>
                 </li>
             @endcan
-{{-- 
+            {{-- 
             @can('admin_referrals')
                 <li class="nav-item dropdown {{ (request()->is(getAdminPanelUrl('/referrals*', false))) ? 'active' : '' }}">
                     <a href="#" class="nav-link has-dropdown" data-toggle="dropdown">
@@ -1541,7 +1643,7 @@
             @endcan --}}
 
             @can('admin_advertising_modal_config')
-                <li class="nav-item {{ (request()->is(getAdminPanelUrl('/advertising_modal*', false))) ? 'active' : '' }}">
+                <li class="nav-item {{ request()->is(getAdminPanelUrl('/advertising_modal*', false)) ? 'active' : '' }}">
                     <a href="{{ getAdminPanelUrl() }}/advertising_modal" class="nav-link">
                         <i class="fa fa-ad"></i>
                         <span>{{ trans('update.advertising_modal') }}</span>
@@ -1550,7 +1652,7 @@
             @endcan
 
             @can('admin_floating_bar_create')
-                <li class="nav-item {{ (request()->is(getAdminPanelUrl('/floating_bars*', false))) ? 'active' : '' }}">
+                <li class="nav-item {{ request()->is(getAdminPanelUrl('/floating_bars*', false)) ? 'active' : '' }}">
                     <a href="{{ getAdminPanelUrl() }}/floating_bars" class="nav-link">
                         <i class="fa fa-pager"></i>
                         <span>{{ trans('update.top_bottom_bar') }}</span>
@@ -1558,24 +1660,25 @@
                 </li>
             @endcan
 
-            @if($authUser->can('admin_settings'))
+            @if ($authUser->can('admin_settings'))
                 <li class="menu-header">{{ trans('admin/main.settings') }}</li>
             @endif
 
             @can('admin_settings')
                 @php
-                    $settingClass ='';
+                    $settingClass = '';
 
-                    if (request()->is(getAdminPanelUrl('/settings*', false)) and
-                            !(
-                                request()->is(getAdminPanelUrl('/settings/404', false)) or
-                                request()->is(getAdminPanelUrl('/settings/contact_us', false)) or
-                                request()->is(getAdminPanelUrl('/settings/footer', false)) or
-                                request()->is(getAdminPanelUrl('/settings/navbar_links', false))
-                            )
-                        ) {
-                            $settingClass = 'active';
-                        }
+                    if (
+                        request()->is(getAdminPanelUrl('/settings*', false)) and
+                        !(
+                            request()->is(getAdminPanelUrl('/settings/404', false)) or
+                            request()->is(getAdminPanelUrl('/settings/contact_us', false)) or
+                            request()->is(getAdminPanelUrl('/settings/footer', false)) or
+                            request()->is(getAdminPanelUrl('/settings/navbar_links', false))
+                        )
+                    ) {
+                        $settingClass = 'active';
+                    }
                 @endphp
 
                 <li class="nav-item {{ $settingClass ?? '' }}">

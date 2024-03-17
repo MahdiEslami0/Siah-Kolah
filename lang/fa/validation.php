@@ -9,7 +9,7 @@ return [
     |
     |
     */
-
+    'mobile' => 'شماره همراه',
     'accepted' => ':attribute باید پذیرفته شود.',
     'active_url' => ':attribute یک URL معتبر نیست.',
     'after' => ':attribute باید یک تاریخ پس از :date  باشد.',

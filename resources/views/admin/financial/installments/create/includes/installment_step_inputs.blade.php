@@ -2,14 +2,14 @@
     <div class="col-4">
         <div class="form-group ">
             <label class="input-label">{{ trans('admin/main.title') }}</label>
-            <input type="text" name="steps[{{ !empty($step) ? $step->id : 'record' }}][title]" required="required" value="{{ (!empty($step) and !empty($step->translate($selectedLocale))) ? $step->translate($selectedLocale)->title : '' }}" class="form-control"/>
+            <input type="text" name="steps[{{ !empty($step) ? $step->id : 'record' }}][title]" value="{{ (!empty($step) and !empty($step->translate($selectedLocale))) ? $step->translate($selectedLocale)->title : '' }}" class="form-control"/>
         </div>
     </div>
 
     <div class="col-3">
         <div class="form-group ">
             <label class="input-label">{{ trans('update.deadline') }}</label>
-            <input type="number" name="steps[{{ !empty($step) ? $step->id : 'record' }}][deadline]" min="0" value="{{ !empty($step) ? $step->deadline : '' }}" class="form-control"/>
+            <input type="number" name="steps[{{ !empty($step) ? $step->id : 'record' }}][deadline]" value="{{ !empty($step) ? $step->deadline : '' }}" class="form-control"/>
         </div>
     </div>
 
@@ -18,7 +18,7 @@
             <div class="col-6">
                 <div class="form-group ">
                     <label class="input-label">{{ trans('admin/main.amount') }}</label>
-                    <input type="number" name="steps[{{ !empty($step) ? $step->id : 'record' }}][amount]" min="1" value="{{ !empty($step) ? $step->amount : '' }}" class="form-control"/>
+                    <input type="number" name="steps[{{ !empty($step) ? $step->id : 'record' }}][amount]" value="{{ !empty($step) ? $step->amount : '' }}" class="form-control"/>
                 </div>
             </div>
 

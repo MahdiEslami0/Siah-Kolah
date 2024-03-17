@@ -209,6 +209,7 @@ Route::group(['namespace' => 'Web', 'middleware' => ['check_mobile_app', 'impers
 
     Route::group(['prefix' => 'payments'], function () {
         Route::post('/prepay', 'PaymentController@prepay');
+        Route::post('/complete_prepay', 'PaymentController@complete_prepay');
         Route::post('/payment-request', 'PaymentController@paymentRequest');
         Route::get('/verify/{gateway}', ['as' => 'payment_verify', 'uses' => 'PaymentController@paymentVerify']);
         Route::post('/verify/{gateway}', ['as' => 'payment_verify_post', 'uses' => 'PaymentController@paymentVerify']);
@@ -397,6 +398,7 @@ Route::group(['namespace' => 'Web', 'middleware' => ['check_mobile_app', 'impers
     Route::group(['prefix' => 'prepay'], function () {
         Route::group(['middleware' => 'web.auth'], function () {
             Route::get('/{id}', 'PrePaymentController@index');
+            Route::get('/{prepayment:id}/pay', 'PrePaymentController@pay');
         });
     });
 });

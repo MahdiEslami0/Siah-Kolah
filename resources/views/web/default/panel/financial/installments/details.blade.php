@@ -94,7 +94,7 @@
 
                                     <td class="text-center">-</td>
 
-                                    <td class="text-center">{{ !empty($upfrontPayment) ? dateTimeFormat($upfrontPayment->created_at, 'j M Y H:i') : '-' }}</td>
+                                    <td class="text-center">{{ !empty($upfrontPayment) ? dateTimeFormat($upfrontPayment->created_at, 'Y/M/j(H:i)',true,true,"UTC",true) : '-' }}</td>
 
                                     <td class="text-center">
                                         @if(!empty($upfrontPayment))
@@ -111,7 +111,7 @@
 
                             @foreach($installment->steps as $step)
                                 @php
-                                    $stepPayment = $payments->where('selected_installment_step_id', $step->id)->where('status', 'paid')->first();
+                                    $stepPayment = $payments->where('step_id', $step->id)->where('status', 'paid')->first();
                                     $dueAt = ($step->deadline * 86400) + $order->created_at;
                                     $isOverdue = ($dueAt < time() and empty($stepPayment));
                                 @endphp
@@ -131,10 +131,10 @@
                                     <td class="text-center">{{ handlePrice($step->getPrice($itemPrice)) }}</td>
 
                                     <td class="text-center">
-                                        <span class="{{ $isOverdue ? 'text-danger' : '' }}">{{ dateTimeFormat($dueAt, 'j M Y') }}</span>
+                                        <span class="{{ $isOverdue ? 'text-danger' : '' }}">{{ dateTimeFormat($dueAt, 'Y/M/j',true,true,"UTC",true) }}</span>
                                     </td>
 
-                                    <td class="text-center">{{ !empty($stepPayment) ? dateTimeFormat($stepPayment->created_at, 'j M Y H:i') : '-' }}</td>
+                                    <td class="text-center">{{ !empty($stepPayment) ? dateTimeFormat($stepPayment->created_at, 'Y/M/j(H:i)',true,true,"UTC",true) : '-' }}</td>
 
                                     <td class="text-center">
                                         @if(!empty($stepPayment))

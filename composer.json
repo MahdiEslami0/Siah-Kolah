@@ -43,6 +43,7 @@
         "mews/captcha": "^3.3",
         "mews/purifier": "^3.4",
         "midtrans/midtrans-php": "^2.5",
+        "morilog/jalali": "3.*",
         "myonlinestore/omnipay-klarna-checkout": "^5.0",
         "omnipay/braintree": "~4.0@dev",
         "omnipay/mollie": "^5.5",

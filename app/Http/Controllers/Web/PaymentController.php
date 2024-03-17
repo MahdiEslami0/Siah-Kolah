@@ -30,23 +30,40 @@ class PaymentController extends Controller
 
 
 
+
     public function prepay(Request $request)
     {
         $Webinar = Webinar::where('id', $request->webinar_id)->first();
         $order = order::create([
             'user_id' => Auth::user()->id,
             'status' => 'pending',
-            'payment_method' => 'payment_channel',
+            'payment_method' => $request->gateway,
             'amount' => $Webinar->price,
-            'total_amount' => $Webinar->price,
+            'total_amount' => $Webinar->price * 0.1,
             'webinar_id' => $request->webinar_id,
-            'prepay' => true,
+            'prepay' => 'pending',
             'created_at' => time()
         ]);
         return $this->paymentRequest($request, $request->gateway, $order->id);
     }
 
-    public function paymentRequest(Request $request, $gateway, $order_id)
+    public function complete_prepay(Request $request)
+    {
+        $Webinar = Webinar::where('id', $request->webinar_id)->first();
+        $order = order::create([
+            'user_id' => Auth::user()->id,
+            'status' => 'pending',
+            'payment_method' => $request->gateway,
+            'amount' => $Webinar->price - ($Webinar->price * 0.1),
+            'total_amount' => $Webinar->price - ($Webinar->price * 0.1),
+            'webinar_id' => $request->webinar_id,
+            'prepay' => 'complete',
+            'created_at' => time()
+        ]);
+        return $this->paymentRequest($request, $request->gateway, $order->id);
+    }
+
+    public function paymentRequest(Request $request, ?string $gateway = null, ?int $order_id = null)
     {
         $this->validate($request, [
             'gateway' => 'required'
@@ -299,12 +316,52 @@ class PaymentController extends Controller
                 'pageTitle' => trans('public.cart_page_title'),
                 'order' => $order,
             ];
-            prepayment::create([
-                'webinar_id' =>  $order->webinar_id,
-                'user_id' => Auth::user()->id,
-                'amount' =>  $order->total_amount,
-                'status' => 'pending',
-            ]);
+            if ($order->prepay == 'pending') {
+                prepayment::create([
+                    'webinar_id' =>  $order->webinar_id,
+                    'user_id' => Auth::user()->id,
+                    'amount' =>  $order->total_amount,
+                    'status' => 'pending',
+                ]);
+                if ($order->payment_method == 'credit') {
+                    Accounting::create([
+                        'user_id' => Auth::user()->id,
+                        'amount' => $order->total_amount,
+                        'type_account' => 'asset',
+                        'type' => 'deduction',
+                        'store_type' => 'automatic',
+                        'description' => 'پرداخت پیش واریز',
+                        'created_at' => time()
+                    ]);
+                }
+            }
+            if ($order->prepay == 'complete') {
+                $prepayment = prepayment::where('webinar_id', $order->webinar_id)->first();
+                $prepayment->status = 'done';
+                $prepayment->pay =  $order->total_amount;
+                $prepayment->save();
+                $total_amount = $prepayment->amount + $order->total_amount;
+                Sale::create([
+                    'order_id' => $order->id,
+                    'webinar_id' => $order->webinar_id,
+                    'type' => 'webinar',
+                    'amount' => $total_amount,
+                    'total_amount' => $total_amount,
+                    'buyer_id' => Auth::user()->id,
+                    'created_at' => time()
+                ]);
+                if ($order->payment_method == 'credit') {
+                    Accounting::create([
+                        'user_id' => Auth::user()->id,
+                        'amount' => $order->total_amount,
+                        'type_account' => 'asset',
+                        'type' => 'deduction',
+                        'store_type' => 'automatic',
+                        'description' => 'تکمیل پرداخت پیش واریز',
+                        'created_at' => time()
+                    ]);
+                }
+            }
             return view('web.default.cart.status_pay', $data);
         }
 

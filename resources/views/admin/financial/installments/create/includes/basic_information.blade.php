@@ -66,15 +66,14 @@
                         <i class="fa fa-eye"></i>
                     </button>
                 </div>
-
+                
                 @error('banner')
                 <div class="invalid-feedback">
                     {{ $message }}
                 </div>
                 @enderror
+                <div class="text-muted text-small mt-1">{{ trans('update.installment_banner_hint') }}</div>
             </div>
-
-            <div class="text-muted text-small mt-1">{{ trans('update.installment_banner_hint') }}</div>
         </div>
 
 
@@ -163,8 +162,8 @@
                 <input type="text" name="start_date" class="form-control text-center datetimepicker"
                        aria-describedby="dateRangeLabel" autocomplete="off"
                        value="{{ (!empty($installment) and !empty($installment->start_date)) ? dateTimeFormat($installment->start_date, 'Y-m-d H:i', false) : old('start_date') }}"/>
-
-
+                
+                
                @error('start_date')
                 <div class="invalid-feedback">
                     {{ $message }}
@@ -186,8 +185,8 @@
                 <input type="text" name="end_date" class="form-control text-center datetimepicker"
                        aria-describedby="dateRangeLabel" autocomplete="off"
                        value="{{ (!empty($installment) and !empty($installment->end_date)) ? dateTimeFormat($installment->end_date, 'Y-m-d H:i', false) : old('end_date') }}"/>
-
-
+        
+                
                @error('end_date')
                 <div class="invalid-feedback">
                     {{ $message }}

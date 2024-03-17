@@ -12,7 +12,7 @@
                 <p class="mt-10 font-16 text-gray">{{ trans('update.verify_your_installments_hint') }}</p>
             @else
                 <h1 class="font-36">{{ trans('update.verify_your_installments2') }}</h1>
-                <p class="mt-10 font-16 text-gray">{{ trans('update.verify_your_installments_hint2') }}</p>
+                <p class="mt-10 font-16 text-gray">{{ trans('update.verify_your_installments2_hint') }}</p>
             @endif
         </div>
 
@@ -38,7 +38,7 @@
 
                     <div class="d-flex align-items-center mt-20">
                         <i data-feather="menu" width="20" height="20" class="text-gray"></i>
-                        <span class="font-14 text-gray ml-5">{{ $installment->steps_count }} {{ trans('update.installments') }} ({{ handlePrice($installment->totalPayments($itemPrice, false)) }})</span>
+                        <span class="font-14 text-gray ml-5">{{ $installment->steps_count }} {{ trans('update.installment') }} ({{ handlePrice($installment->totalPayments($itemPrice, false)) }})</span>
                     </div>
 
                     <div class="d-flex align-items-center mt-20">

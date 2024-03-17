@@ -117,7 +117,7 @@ return [
     'created_date' => 'Created Date',
     'delete_confirm_msg' => 'Are you sure? | Do you want to continue?',
     'view_rates_details' => 'Rating Details',
-    'show_results' => 'Show Results',
+    'show_results' => 'نمایش نتایج',
     'export_xls' => 'Export Excel',
     'filter_items' => 'Filter Items',
     'items' => 'Item',

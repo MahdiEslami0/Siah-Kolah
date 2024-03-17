@@ -86,6 +86,7 @@
                 <select name="value[installment_plans_position]" class="form-control">
                     <option value="top_of_page" {{ (!empty($basicValue) and !empty($basicValue['installment_plans_position']) and $basicValue['installment_plans_position'] == "top_of_page") ? 'selected' : '' }}>{{ trans('update.top_of_page') }}</option>
                     <option value="bottom_of_page" {{ (!empty($basicValue) and !empty($basicValue['installment_plans_position']) and $basicValue['installment_plans_position'] == "bottom_of_page") ? 'selected' : '' }}>{{ trans('update.bottom_of_page') }}</option>
+                    <option value="none_of_page" {{ (!empty($basicValue) and !empty($basicValue['installment_plans_position']) and $basicValue['installment_plans_position'] == "none_of_page") ? 'selected' : '' }}>{{ trans('update.none_of_page') }}</option>
                 </select>
                 <div class="text-muted text-small mt-1">{{ trans('update.installment_plans_position_hint') }}</div>
             </div>

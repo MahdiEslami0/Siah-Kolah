@@ -68,11 +68,14 @@ class LoginController extends Controller
 
     public function login(Request $request)
     {
+        $request->validate([
+            'mobile' => ['required', 'numeric', 'regex:/^[0][9][0-9]{9}$/'],
+        ]);
         $user =  user::where('mobile', $request->mobile)->first();
-        $otp =  otp::where('user_id',  $user->id)->first();
-        $key = uuid_create();
-        $code = rand(1000, 9999);
         if (isset($user)) {
+            $otp =  otp::where('user_id',  $user->id)->first();
+            $key = uuid_create();
+            $code = rand(1000, 9999);
             if ($otp && $otp->created_at->diffInMinutes(now()) < 3) {
                 $toastData = [
                     'title' => 'کد قبلا ارسال شده است',

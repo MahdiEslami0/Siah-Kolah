@@ -153,17 +153,17 @@
 
                                         <div class="d-flex align-items-start flex-column mt-20 mr-15">
                                             <span class="stat-title">{{ trans('panel.purchase_date') }}:</span>
-                                            <span class="stat-value">{{ dateTimeFormat($order->created_at, 'j M Y H:i') }}</span>
+                                            <span class="stat-value">{{ dateTimeFormat($order->created_at, 'Y/M/j H:i' , $useAdminSetting = true, $applyTimezone = true, $timezone = "UTC", $usedefault = true) }}</span>
                                         </div>
 
                                         <div class="d-flex align-items-start flex-column mt-20 mr-15">
                                             <span class="stat-title">{{ trans('update.upfront') }}:</span>
-                                            <span class="stat-value">{{ !empty($order->selectedInstallment->upfront) ? handlePrice($order->selectedInstallment->getUpfront($itemPrice)) : '-' }}</span>
+                                            <span class="stat-value">{{ !empty($order->installment->upfront) ? handlePrice($order->installment->getUpfront($itemPrice)) : '-' }}</span>
                                         </div>
 
                                         <div class="d-flex align-items-start flex-column mt-20 mr-15">
                                             <span class="stat-title">{{ trans('update.total_installments') }}:</span>
-                                            <span class="stat-value">{{ trans('update.total_parts_count', ['count' => $order->selectedInstallment->steps_count]) }} ({{ handlePrice($order->selectedInstallment->totalPayments($itemPrice, false)) }})</span>
+                                            <span class="stat-value">{{ trans('update.total_parts_count', ['count' => $order->installment->steps_count]) }} ({{ handlePrice($order->installment->totalPayments($itemPrice, false)) }})</span>
                                         </div>
 
                                         @if($order->status == "open" or $order->status == "pending_verification")
@@ -175,7 +175,7 @@
                                             @if(!empty($order->upcoming_installment))
                                                 <div class="d-flex align-items-start flex-column mt-20 mr-15">
                                                     <span class="stat-title">{{ trans('update.upcoming_installment') }}:</span>
-                                                    <span class="stat-value">{{ dateTimeFormat((($order->upcoming_installment->deadline * 86400) + $order->created_at), 'j M Y') }} ({{ handlePrice($order->upcoming_installment->getPrice($itemPrice)) }})</span>
+                                                    <span class="stat-value">{{ dateTimeFormat((($order->upcoming_installment->deadline * 86400) + $order->created_at), 'Y/M/j' , $useAdminSetting = true, $applyTimezone = true, $timezone = "UTC", $usedefault = true) }} ({{ handlePrice($order->upcoming_installment->getPrice($itemPrice)) }})</span>
                                                 </div>
                                             @endif
 

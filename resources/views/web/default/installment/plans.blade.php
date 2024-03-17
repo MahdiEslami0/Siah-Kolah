@@ -30,12 +30,15 @@
                         <i data-feather="menu" width="20" height="20" class="text-gray"></i>
                         <span class="font-14 text-gray ml-5">{{ $plansCount }} {{ trans('update.installment_plans') }}</span>
                     </div>
-
+<!-- 
                     <div class="d-flex align-items-center mt-20">
                         <i data-feather="dollar-sign" width="20" height="20" class="text-gray"></i>
                         <span class="font-14 text-gray ml-5">{{ handlePrice($minimumAmount) }} {{ trans('update.minimum_installment_amount') }}</span>
+                    </div> -->
+                    <div class="d-flex align-items-center mt-20">
+                        <i data-feather="file" width="20" height="20" class="text-gray"></i>
+                        <span class="font-14 text-gray ml-5"> {{ trans('update.warranty_installment_verifiy') }}</span>
                     </div>
-
                 </div>
             </div>
         </div>

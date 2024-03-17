@@ -21,8 +21,13 @@
                             @csrf
                             <div class="form-group">
                                 <label class="input-label" for="mobile">شماره همراه :</label>
-                                <input required type="number" placeholder="*********09" class="form-control"
+                                <input required type="number" placeholder="*********09" class="form-control @error('mobile') is-invalid @enderror"
                                     name="mobile">
+                                @error('mobile')
+                                    <div class="invalid-feedback">
+                                        {{ $message }}
+                                    </div>
+                                @enderror
                             </div>
                             <button type="submit" class="btn btn-primary w-100">
                                 <span>{{ trans('auth.login') }}</span>

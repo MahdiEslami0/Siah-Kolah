@@ -5,8 +5,8 @@
 
 @section('content')
     <section class="cart-banner position-relative text-center">
-        <h1 class="font-30 text-white font-weight-bold">پیش واریز برای {{ $webinar->title }}</h1>
-        <span class="payment-hint font-20 text-white d-block">{{ handlePrice($webinar->price * 0.1) }}
+        <h1 class="font-30 text-white font-weight-bold"> برای {{ $pageTitle }} {{ $webinar->title }}</h1>
+        <span class="payment-hint font-20 text-white d-block">{{ handlePrice($price) }}
         </span>
     </section>
     <section class="container mt-45">
@@ -16,7 +16,7 @@
         <h2 class="section-title">یک پرتال پرداخت انتخاب کنید</h2>
 
 
-        <form action="/payments/prepay" method="post" class=" mt-25">
+        <form action="/payments/{{ $action }}" method="post" class=" mt-25">
             {{ csrf_field() }}
 
             <input type="text" name="webinar_id" value="{{ $webinar->id }}" hidden>
@@ -41,7 +41,7 @@
                 @endif
 
                 <div class="col-6 col-lg-4 mb-40 charge-account-radio">
-                    <input type="radio" @if (empty($userCharge) or $webinar->price > $userCharge) disabled @endif name="gateway" id="offline"
+                    <input type="radio" @if (empty($userCharge) or $price > $userCharge) disabled @endif name="gateway" id="offline"
                         value="credit">
                     <label for="offline"
                         class="rounded-sm p-20 p-lg-45 d-flex flex-column align-items-center justify-content-center"
@@ -92,7 +92,7 @@
 
             <div class="d-flex align-items-center justify-content-between mt-45">
                 <span class="font-16 font-weight-500 text-gray">{{ trans('financial.total_amount') }}
-                    {{ handlePrice($webinar->price) }}</span>
+                    {{ handlePrice($price) }}</span>
                 <button type="button" id="paymentSubmit" disabled
                     class="btn btn-sm btn-primary">{{ trans('public.start_payment') }}</button>
             </div>

@@ -17,7 +17,7 @@
 
     @stack('libraries_top')
 
-    <link rel="stylesheet" href="/assets/admin/css/style.css">
+    <link rel="stylesheet" href="/assets/admin/css/style.css?ver={{ filemtime(public_path('/assets/admin/css/style.css')) }}">
     <link rel="stylesheet" href="/assets/admin/css/custom.css">
     <link rel="stylesheet" href="/assets/admin/css/components.css">
     @if($isRtl)

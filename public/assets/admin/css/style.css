@@ -4131,3 +4131,21 @@ body:not(.sidebar-mini) .sidebar-style-2 .sidebar-menu li.active ul.dropdown-men
         opacity: 0.0;
     }
 }
+
+
+.jq-toast-heading{
+    font-family: var(--font-family-rtl) !important;
+  }
+  
+  .jq-toast-single  {
+    font-family: var(--font-family-rtl) !important;
+  }
+  
+  
+  .form-control  {
+    font-family: var(--font-family-rtl) !important;
+  }
+  
+  span{
+    font-family: var(--font-family-rtl) !important;
+  }

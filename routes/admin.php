@@ -44,6 +44,11 @@ Route::group(['prefix' => $prefix, 'namespace' => 'Admin', 'middleware' => ['web
             Route::post('/getNetProfitChart', 'DashboardController@getNetProfitChartAjax');
         });
 
+        Route::group(['prefix' => 'prepay'], function () {
+            Route::get('/', 'PrepayController@index');
+            Route::post('/{prepayment:id}', 'PrepayController@update');
+        });
+
         Route::group(['prefix' => 'roles'], function () {
             Route::get('/', 'RoleController@index');
             Route::get('/create', 'RoleController@create');
@@ -437,7 +442,6 @@ Route::group(['prefix' => $prefix, 'namespace' => 'Admin', 'middleware' => ['web
         Route::group(['prefix' => 'consultants'], function () {
             Route::get('/', 'ConsultantsController@index');
             Route::get('/excel', 'ConsultantsController@exportExcel');
-
         });
 
         Route::group(['prefix' => 'appointments'], function () {
@@ -1085,7 +1089,6 @@ Route::group(['prefix' => $prefix, 'namespace' => 'Admin', 'middleware' => ['web
             });
 
             Route::post("/{form_id}/submissions/{id}/update", 'FormSubmissionsController@update');
-
         });
 
         Route::group(['prefix' => 'ai-contents'], function () {
@@ -1103,7 +1106,6 @@ Route::group(['prefix' => $prefix, 'namespace' => 'Admin', 'middleware' => ['web
                 Route::get('/{id}/delete', 'AIContentTemplatesController@delete');
                 Route::get('/{id}/statusToggle', 'AIContentTemplatesController@statusToggle');
             });
-
         });
 
         /* End Admin Middleware */

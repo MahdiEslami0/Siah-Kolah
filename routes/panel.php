@@ -48,6 +48,10 @@ Route::group(['namespace' => 'Panel', 'prefix' => 'panel', 'middleware' => ['che
             Route::post('/getJoinInfo', 'WebinarController@getJoinInfo');
         });
 
+        Route::group(['prefix' => 'prepay'], function () {
+            Route::get('/', 'PrepayController@index');
+        });
+
         Route::post('/search', 'WebinarController@search');
 
         Route::group(['prefix' => 'comments'], function () {
@@ -114,8 +118,6 @@ Route::group(['namespace' => 'Panel', 'prefix' => 'panel', 'middleware' => ['che
 
         Route::get('/{quizResultId}/edit-result', 'QuizController@editResult');
         Route::post('/{quizResultId}/update-result', 'QuizController@updateResult');
-
-
     });
 
     Route::group(['prefix' => 'quizzes-questions'], function () {
@@ -463,7 +465,4 @@ Route::group(['namespace' => 'Panel', 'prefix' => 'panel', 'middleware' => ['che
         Route::get('/', 'AiContentController@index');
         Route::post('/generate', 'AiContentController@generate');
     });
-
 });
-
-

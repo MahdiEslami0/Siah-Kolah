@@ -162,6 +162,10 @@
                         <a href="/panel/webinars/purchases">{{ trans('panel.my_purchases') }}</a>
                     </li>
 
+                    <li class="mt-5 {{ request()->is('panel/webinars/prepay') ? 'active' : '' }}">
+                        <a href="/panel/webinars/prepay">پیش واریز ها</a>
+                    </li>
+
                     @if ($authUser->isOrganization() || $authUser->isTeacher())
                         <li class="mt-5 {{ request()->is('panel/webinars/comments') ? 'active' : '' }}">
                             <a href="/panel/webinars/comments">{{ trans('panel.my_class_comments') }}</a>
@@ -336,7 +340,7 @@
             </div>
         </li> --}}
 
-        <li
+        {{-- <li
             class="sidenav-item {{ (request()->is('panel/certificates') or request()->is('panel/certificates/*')) ? 'sidenav-item-active' : '' }}">
             <a class="d-flex align-items-center" data-toggle="collapse" href="#certificatesCollapse" role="button"
                 aria-expanded="false" aria-controls="certificatesCollapse">
@@ -369,7 +373,7 @@
 
                 </ul>
             </div>
-        </li>
+        </li> --}}
 
         @if ($authUser->checkCanAccessToStore())
             <li
