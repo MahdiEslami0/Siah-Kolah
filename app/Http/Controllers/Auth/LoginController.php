@@ -14,6 +14,7 @@ use Http;
 use Illuminate\Foundation\Auth\AuthenticatesUsers;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth as FacadesAuth;
 use Illuminate\Validation\ValidationException;
 use Session;
 
@@ -68,53 +69,69 @@ class LoginController extends Controller
 
     public function login(Request $request)
     {
-        $request->validate([
-            'mobile' => ['required', 'numeric', 'regex:/^[0][9][0-9]{9}$/'],
-        ]);
-        $user =  user::where('mobile', $request->mobile)->first();
-        if (isset($user)) {
-            $otp =  otp::where('user_id',  $user->id)->first();
-            $key = uuid_create();
-            $code = rand(1000, 9999);
-            if ($otp && $otp->created_at->diffInMinutes(now()) < 3) {
+        if ($request->login_method == 'by_mobile') {
+            $request->validate([
+                'mobile' => ['required', 'numeric', 'regex:/^[0][9][0-9]{9}$/'],
+            ]);
+            $user =  user::where('mobile', $request->mobile)->first();
+            if (isset($user)) {
+                $otp =  otp::where('user_id',  $user->id)->first();
+                $key = uuid_create();
+                $code = rand(1000, 9999);
+                if ($otp && $otp->created_at->diffInMinutes(now()) < 3) {
+                    $toastData = [
+                        'title' => 'کد قبلا ارسال شده است',
+                        'msg' => ($otp->created_at->diffInMinutes(now()) - 3) * -1 . ' دقیقه دیگر دوباره تلاش کنید ',
+                        'status' => 'error'
+                    ];
+                    return redirect(url('login/otp'))->with(['toast' => $toastData]);
+                } else {
+                    if (isset($otp)) {
+                        $otp->delete();
+                    }
+                    otp::create([
+                        'code' =>  $code,
+                        'key' => $key,
+                        'user_id' => $user->id,
+                        'try' => 0
+                    ]);
+                    Http::get('http://api.kavenegar.com/v1/2F4E5079575663783031503968356E4E516851634C2F566C6B435A5A7254532B434E3676596443563068733D/verify/lookup.json', [
+                        'receptor' => $user->mobile,
+                        'token' => $code,
+                        'template' => 'verify'
+                    ]);
+                    Session::put('otp_key', $key);
+                    $toastData = [
+                        'title' => "موفق",
+                        'msg' => 'کد تایید برای شما پیامک شد',
+                        'status' => 'success'
+                    ];
+                    return redirect(url('login/otp'))->with(['toast' => $toastData]);
+                }
+            } else {
                 $toastData = [
-                    'title' => 'کد قبلا ارسال شده است',
-                    'msg' => ($otp->created_at->diffInMinutes(now()) - 3) * -1 . ' دقیقه دیگر دوباره تلاش کنید ',
+                    'title' => trans('public.request_failed'),
+                    'msg' => 'کاربری یافت نشد',
                     'status' => 'error'
                 ];
-                return redirect(url('login/otp'))->with(['toast' => $toastData]);
-            } else {
-                if (isset($otp)) {
-                    $otp->delete();
-                }
-                otp::create([
-                    'code' =>  $code,
-                    'key' => $key,
-                    'user_id' => $user->id,
-                    'try' => 0
-                ]);
-                Http::get('http://api.kavenegar.com/v1/2F4E5079575663783031503968356E4E516851634C2F566C6B435A5A7254532B434E3676596443563068733D/verify/lookup.json', [
-                    'receptor' => $user->mobile,
-                    'token' => $code,
-                    'template' => 'verify'
-                ]);
-                Session::put('otp_key', $key);
+                return redirect()->back()->with(['toast' => $toastData]);
+            }
+        } elseif ($request->login_method == 'by_password') {
+            $credentials = $request->only('email', 'password');
+            if (FacadesAuth::attempt($credentials)) {
+                return redirect()->intended('/');
                 $toastData = [
                     'title' => "موفق",
-                    'msg' => 'کد تایید برای شما پیامک شد',
+                    'msg' => 'با موفقیت وارد شدید',
                     'status' => 'success'
                 ];
-                return redirect(url('login/otp'))->with(['toast' => $toastData]);
+                return redirect(url('/'))->with(['toast' => $toastData]);
             }
-        } else {
-            $toastData = [
-                'title' => trans('public.request_failed'),
-                'msg' => 'کاربری یافت نشد',
-                'status' => 'error'
-            ];
-            return redirect()->back()->with(['toast' => $toastData]);
+            return redirect()->back()->withInput($request->only('email'))->withErrors(['email' => 'کاربری با این مشخصات یافت نشد'])->with(['login_method' => 'password']);
         }
     }
+
+
 
     public function showOtpForm()
     {

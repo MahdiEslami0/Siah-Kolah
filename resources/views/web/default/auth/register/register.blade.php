@@ -60,6 +60,16 @@
                                 @enderror
                             </div>
 
+                            <div class="form-group">
+                                <label class="input-label" for="password">{{ trans('auth.password') }}:</label>
+                                <input name="password" type="password" value="{{ old('password') }}"
+                                    class="form-control @error('password') is-invalid @enderror">
+                                @error('password')
+                                    <div class="invalid-feedback">
+                                        {{ $message }}
+                                    </div>
+                                @enderror
+                            </div>
 
 
 

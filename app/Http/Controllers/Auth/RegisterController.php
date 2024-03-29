@@ -77,6 +77,7 @@ class RegisterController extends Controller
         $rules = [
             'full_name' => 'required',
             'email' => 'required|email|unique:users',
+            'password' => 'required|min:8',
             'mobile' => 'required|numeric|unique:users|regex:/^[0][9][0-9]{9,9}$/',
         ];
         $Validator =  Validator::make($request->all(), $rules);
@@ -88,6 +89,7 @@ class RegisterController extends Controller
             'full_name' => $request->full_name,
             'email' => $request->email,
             'mobile' => $request->mobile,
+            'password' => hash::make($request->password),
             'role_id' => 1,
             'role_name' => 'user',
             'status' => 'active',
