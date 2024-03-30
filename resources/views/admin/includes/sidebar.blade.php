@@ -96,6 +96,21 @@
                 </li>
             @endcan()
 
+            <li class="nav-item dropdown {{ request()->is(getAdminPanelUrl('/link*', false)) ? 'active' : '' }}">
+                <a href="#" class="nav-link has-dropdown" data-toggle="dropdown">
+                    <i class="fas fa-link"></i>
+                    <span>لینک فروش</span>
+                </a>
+                <ul class="dropdown-menu">
+                    <li class="{{ request()->is(getAdminPanelUrl('/link/create', false)) ? 'active' : '' }}">
+                        <a class="nav-link" href="{{ getAdminPanelUrl() }}/link/create">جدید</a>
+                    </li>
+                    <li class="{{ request()->is(getAdminPanelUrl('/link/list', false)) ? 'active' : '' }}">
+                        <a class="nav-link" href="{{ getAdminPanelUrl() }}/link/list">لیست</a>
+                    </li>
+                </ul>
+            </li>
+
             {{-- @can('admin_bundles')
                 <li class="nav-item dropdown {{ (request()->is(getAdminPanelUrl('/bundles*', false)) and !request()->is(getAdminPanelUrl('/bundles/comments*', false))) ? 'active' : '' }}">
                     <a href="#" class="nav-link has-dropdown" data-toggle="dropdown">
@@ -1223,6 +1238,9 @@
                 </li>
             @endcan
 
+
+
+
             {{-- @can('admin_subscribe')
                 <li class="nav-item dropdown {{ (request()->is(getAdminPanelUrl('/financial/subscribes*', false))) ? 'active' : '' }}">
                     <a href="#" class="nav-link has-dropdown" data-toggle="dropdown">
@@ -1307,57 +1325,74 @@
             @endcan --}}
 
             @can('admin_installments')
-                <li class="nav-item dropdown {{ (request()->is(getAdminPanelUrl('/financial/installments*', false))) ? 'active' : '' }}">
+                <li
+                    class="nav-item dropdown {{ request()->is(getAdminPanelUrl('/financial/installments*', false)) ? 'active' : '' }}">
                     <a href="#" class="nav-link has-dropdown" data-toggle="dropdown">
                         <i class="fa fa-money-bill-wave"></i>
                         <span>{{ trans('update.installments') }}</span>
                     </a>
                     <ul class="dropdown-menu">
                         @can('admin_installments_create')
-                            <li class="{{ (request()->is(getAdminPanelUrl('/financial/installments/create', false))) ? 'active' : '' }}">
-                                <a class="nav-link" href="{{ getAdminPanelUrl('/financial/installments/create') }}">{{ trans('update.new_plan') }}</a>
+                            <li
+                                class="{{ request()->is(getAdminPanelUrl('/financial/installments/create', false)) ? 'active' : '' }}">
+                                <a class="nav-link"
+                                    href="{{ getAdminPanelUrl('/financial/installments/create') }}">{{ trans('update.new_plan') }}</a>
                             </li>
                         @endcan
 
                         @can('admin_installments_list')
-                            <li class="{{ (request()->is(getAdminPanelUrl('/financial/installments', false))) ? 'active' : '' }}">
-                                <a class="nav-link" href="{{ getAdminPanelUrl('/financial/installments') }}">{{ trans('update.plans') }}</a>
+                            <li
+                                class="{{ request()->is(getAdminPanelUrl('/financial/installments', false)) ? 'active' : '' }}">
+                                <a class="nav-link"
+                                    href="{{ getAdminPanelUrl('/financial/installments') }}">{{ trans('update.plans') }}</a>
                             </li>
                         @endcan
 
                         @can('admin_installments_purchases')
-                            <li class="{{ (request()->is(getAdminPanelUrl('/financial/installments/purchases', false))) ? 'active' : '' }}">
-                                <a class="nav-link" href="{{ getAdminPanelUrl('/financial/installments/purchases') }}">{{ trans('update.purchases') }}</a>
+                            <li
+                                class="{{ request()->is(getAdminPanelUrl('/financial/installments/purchases', false)) ? 'active' : '' }}">
+                                <a class="nav-link"
+                                    href="{{ getAdminPanelUrl('/financial/installments/purchases') }}">{{ trans('update.purchases') }}</a>
                             </li>
                         @endcan
 
                         @can('admin_installments_overdue_lists')
-                            <li class="{{ (request()->is(getAdminPanelUrl('/financial/installments/overdue', false))) ? 'active' : '' }}">
-                                <a class="nav-link" href="{{ getAdminPanelUrl('/financial/installments/overdue') }}">{{ trans('update.overdue') }}</a>
+                            <li
+                                class="{{ request()->is(getAdminPanelUrl('/financial/installments/overdue', false)) ? 'active' : '' }}">
+                                <a class="nav-link"
+                                    href="{{ getAdminPanelUrl('/financial/installments/overdue') }}">{{ trans('update.overdue') }}</a>
                             </li>
                         @endcan
 
                         @can('admin_installments_overdue_history')
-                            <li class="{{ (request()->is(getAdminPanelUrl('/financial/installments/overdue_history', false))) ? 'active' : '' }}">
-                                <a class="nav-link" href="{{ getAdminPanelUrl('/financial/installments/overdue_history') }}">{{ trans('update.overdue_history') }}</a>
+                            <li
+                                class="{{ request()->is(getAdminPanelUrl('/financial/installments/overdue_history', false)) ? 'active' : '' }}">
+                                <a class="nav-link"
+                                    href="{{ getAdminPanelUrl('/financial/installments/overdue_history') }}">{{ trans('update.overdue_history') }}</a>
                             </li>
                         @endcan
 
                         @can('admin_installments_verification_requests')
-                            <li class="{{ (request()->is(getAdminPanelUrl('/financial/installments/verification_requests', false))) ? 'active' : '' }}">
-                                <a class="nav-link" href="{{ getAdminPanelUrl('/financial/installments/verification_requests') }}">{{ trans('update.verification_requests') }}</a>
+                            <li
+                                class="{{ request()->is(getAdminPanelUrl('/financial/installments/verification_requests', false)) ? 'active' : '' }}">
+                                <a class="nav-link"
+                                    href="{{ getAdminPanelUrl('/financial/installments/verification_requests') }}">{{ trans('update.verification_requests') }}</a>
                             </li>
                         @endcan
 
                         @can('admin_installments_verified_users')
-                            <li class="{{ (request()->is(getAdminPanelUrl('/financial/installments/verified_users', false))) ? 'active' : '' }}">
-                                <a class="nav-link" href="{{ getAdminPanelUrl('/financial/installments/verified_users') }}">{{ trans('update.verified_users') }}</a>
+                            <li
+                                class="{{ request()->is(getAdminPanelUrl('/financial/installments/verified_users', false)) ? 'active' : '' }}">
+                                <a class="nav-link"
+                                    href="{{ getAdminPanelUrl('/financial/installments/verified_users') }}">{{ trans('update.verified_users') }}</a>
                             </li>
                         @endcan
 
                         @can('admin_installments_settings')
-                            <li class="{{ (request()->is(getAdminPanelUrl('/financial/installments/settings', false))) ? 'active' : '' }}">
-                                <a class="nav-link" href="{{ getAdminPanelUrl('/financial/installments/settings') }}">{{ trans('admin/main.settings') }}</a>
+                            <li
+                                class="{{ request()->is(getAdminPanelUrl('/financial/installments/settings', false)) ? 'active' : '' }}">
+                                <a class="nav-link"
+                                    href="{{ getAdminPanelUrl('/financial/installments/settings') }}">{{ trans('admin/main.settings') }}</a>
                             </li>
                         @endcan
 

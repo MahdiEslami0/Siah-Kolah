@@ -54,7 +54,6 @@
         "ptuchik/omnipay-yandex": "^1.0",
         "razorpay/razorpay": "^2.8",
         "sebacarrasco93/laravel-payku": "^1.0",
-        "semyonchetvertnyh/omnipay-paysera": "^0.1.0",
         "shetabit/payment": "^5.4",
         "spatie/calendar-links": "^1.8",
         "spatie/laravel-google-calendar": "^3.6",

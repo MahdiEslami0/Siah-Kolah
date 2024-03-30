@@ -13,6 +13,8 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
+
+
 Route::group(['prefix' => 'my_api', 'namespace' => 'Api\Panel', 'middleware' => 'signed', 'as' => 'my_api.web.'], function () {
     Route::get('checkout/{user}', 'CartController@webCheckoutRender')->name('checkout');
     Route::get('/charge/{user}', 'PaymentsController@webChargeRender')->name('charge');
@@ -93,6 +95,14 @@ Route::group(['namespace' => 'Web', 'middleware' => ['check_mobile_app', 'impers
     Route::get('/', 'HomeController@index');
 
     Route::get('/getDefaultAvatar', 'DefaultAvatarController@make');
+
+
+    Route::group(['prefix' => 'list_pay'], function () {
+        Route::get('/{id}', 'PayListController@index');
+        Route::POST('/pay/{id}', 'PaymentController@list_pay');
+    });
+
+
 
     Route::group(['prefix' => 'course'], function () {
         Route::get('/{slug}', 'WebinarController@course');

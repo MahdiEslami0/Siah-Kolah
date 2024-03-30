@@ -49,6 +49,15 @@ Route::group(['prefix' => $prefix, 'namespace' => 'Admin', 'middleware' => ['web
             Route::post('/{prepayment:id}', 'PrepayController@update');
         });
 
+        Route::group(['prefix' => 'link'], function () {
+            Route::get('/list', 'SaleLinkController@index');
+            Route::get('/create', 'SaleLinkController@create');
+            Route::post('/create', 'SaleLinkController@store');
+            Route::get('/{id}', 'SaleLinkController@edit');
+            Route::post('/update/{id}', 'SaleLinkController@update');
+            Route::get('/delete/{id}', 'SaleLinkController@delete');
+        });
+
         Route::group(['prefix' => 'roles'], function () {
             Route::get('/', 'RoleController@index');
             Route::get('/create', 'RoleController@create');

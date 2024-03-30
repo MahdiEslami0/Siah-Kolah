@@ -17,11 +17,17 @@ use App\Models\ReserveMeeting;
 use App\Models\Reward;
 use App\Models\RewardAccounting;
 use App\Models\Sale;
+use App\Models\sale_link;
 use App\Models\TicketUser;
 use App\Models\Webinar;
 use App\PaymentChannels\ChannelManager;
+use App\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Redirect;
+use Illuminate\Support\Facades\Validator;
+use Illuminate\Validation\ValidationException;
 
 class PaymentController extends Controller
 {
@@ -57,6 +63,56 @@ class PaymentController extends Controller
             'prepay' => 'complete',
             'prepay_id' => $request->prepay_id,
             'created_at' => time()
+        ]);
+        return $this->paymentRequest($request, $request->gateway, $order->id);
+    }
+
+    public function list_pay($id, Request $request)
+    {
+        $sale_link = sale_link::where('id', $id)->first();
+        $products = json_decode($sale_link->products);
+        $prices = [];
+        foreach ($products as $product) {
+            $Webinar = Webinar::where('id', $product)->first();
+            $prices[] = $Webinar->price;
+        }
+        $amount = 0;
+        foreach ($prices as  $price) {
+            $amount += $price;
+        }
+        if (auth()->user()) {
+            $user_id = auth()->user()->id;
+        } else {
+            $rules = [
+                'full_name' => 'required',
+                'email' => 'required|email|unique:users',
+                'password' => 'required|min:8',
+                'mobile' => 'required|numeric|unique:users|regex:/^[0][9][0-9]{9,9}$/',
+            ];
+            $Validator =  Validator::make($request->all(), $rules);
+            if ($Validator->fails()) {
+                throw new ValidationException($Validator);
+            }
+            $user =  User::create([
+                'full_name' => $request->full_name,
+                'email' => $request->email,
+                'mobile' => $request->mobile,
+                'role_id' => 1,
+                'role_name' => 'user',
+                'password' => Hash::make($request->passwork),
+                'created_at' => time()
+            ]);
+            Auth::login($user);
+            $user_id = $user->id;
+        }
+        $order = order::create([
+            'user_id' => $user_id,
+            'status' => 'pending',
+            'payment_method' => $request->gateway,
+            'amount' => $amount,
+            'total_amount' => $amount,
+            'created_at' => time(),
+            'list_id' => $id
         ]);
         return $this->paymentRequest($request, $request->gateway, $order->id);
     }
@@ -191,9 +247,7 @@ class PaymentController extends Controller
 
     private function paymentOrderAfterVerify($order)
     {
-
         if (!empty($order)) {
-
             if ($order->status == Order::$paying) {
                 $this->setPaymentAccounting($order);
 
@@ -201,19 +255,15 @@ class PaymentController extends Controller
             } else {
                 if ($order->type === Order::$meeting) {
                     $orderItem = OrderItem::where('order_id', $order->id)->first();
-
                     if ($orderItem && $orderItem->reserve_meeting_id) {
                         $reserveMeeting = ReserveMeeting::where('id', $orderItem->reserve_meeting_id)->first();
-
                         if ($reserveMeeting) {
                             $reserveMeeting->update(['locked_at' => null]);
                         }
                     }
                 }
             }
-
             session()->put($this->order_session_key, $order->id);
-
             return redirect('/payments/status');
         } else {
             $toastData = [
@@ -221,7 +271,6 @@ class PaymentController extends Controller
                 'msg' => trans('cart.gateway_error'),
                 'status' => 'error'
             ];
-
             return redirect('cart')->with($toastData);
         }
     }
@@ -314,7 +363,22 @@ class PaymentController extends Controller
                 'pageTitle' => trans('public.cart_page_title'),
                 'order' => $order,
             ];
-            if ($order->prepay == 'pending') {
+            if (isset($order->list_id)) {
+                $list_pay = sale_link::where('id', $order->list_id)->first();
+                $products = json_decode($list_pay->products);
+                foreach ($products as $product) {
+                    $Webinar = Webinar::where('id', $product)->first();
+                    Sale::create([
+                        'order_id' => $order->id,
+                        'webinar_id' => $Webinar->id,
+                        'type' => 'webinar',
+                        'amount' =>  $Webinar->price,
+                        'total_amount' => $Webinar->price,
+                        'buyer_id' => auth()->user()->id,
+                        'created_at' => time()
+                    ]);
+                }
+            } elseif ($order->prepay == 'pending') {
                 prepayment::create([
                     'webinar_id' =>  $order->webinar_id,
                     'user_id' => auth()->user()->id,
@@ -333,8 +397,7 @@ class PaymentController extends Controller
                         'created_at' => time()
                     ]);
                 }
-            }
-            if ($order->prepay == 'complete') {
+            } elseif ($order->prepay == 'complete') {
                 $prepayment = prepayment::where('id', $order->prepay_id)->first();
                 $prepayment->status = 'done';
                 $prepayment->pay =  $order->total_amount;
@@ -349,8 +412,6 @@ class PaymentController extends Controller
                     'buyer_id' => auth()->user()->id,
                     'created_at' => time()
                 ]);
-
-
                 if ($order->payment_method == 'credit') {
                     Accounting::create([
                         'user_id' => auth()->user()->id,
@@ -362,6 +423,16 @@ class PaymentController extends Controller
                         'created_at' => time()
                     ]);
                 }
+            } else {
+                Sale::create([
+                    'order_id' => $order->id,
+                    'webinar_id' => $order->webinar_id,
+                    'type' => 'webinar',
+                    'amount' =>  $order->total_amount,
+                    'total_amount' => $order->total_amount,
+                    'buyer_id' => auth()->user()->id,
+                    'created_at' => time()
+                ]);
             }
             return view('web.default.cart.status_pay', $data);
         }
