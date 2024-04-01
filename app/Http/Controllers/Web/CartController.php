@@ -7,6 +7,7 @@ use App\Http\Controllers\Web\traits\RegionsDataByUser;
 use App\Mixins\Cashback\CashbackRules;
 use App\Models\Cart;
 use App\Models\Discount;
+use App\Models\OfflineBank;
 use App\Models\Order;
 use App\Models\OrderItem;
 use App\Models\PaymentChannel;
@@ -50,7 +51,8 @@ class CartController extends Controller
 
             if (!empty($hasPhysicalProduct) and count($hasPhysicalProduct)) {
                 foreach ($hasPhysicalProduct as $physicalProductCart) {
-                    if (!empty($physicalProductCart->productOrder) and
+                    if (
+                        !empty($physicalProductCart->productOrder) and
                         !empty($physicalProductCart->productOrder->product) and
                         !empty($physicalProductCart->productOrder->product->delivery_estimated_time) and
                         $physicalProductCart->productOrder->product->delivery_estimated_time > $deliveryEstimateTime
@@ -465,6 +467,8 @@ class CartController extends Controller
 
                 $totalCashbackAmount = $this->getTotalCashbackAmount($carts, $user, $calculate["sub_total"]);
 
+                $banks = OfflineBank::get();
+
                 $data = [
                     'pageTitle' => trans('public.checkout_page_title'),
                     'paymentChannels' => $paymentChannels,
@@ -481,6 +485,7 @@ class CartController extends Controller
                     'razorpay' => $razorpay,
                     'totalCashbackAmount' => $totalCashbackAmount,
                     'previousUrl' => url()->previous(),
+                    'offlineBanks' => $banks
                 ];
 
                 return view(getTemplate() . '.cart.payment', $data);

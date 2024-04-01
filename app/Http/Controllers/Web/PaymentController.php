@@ -7,6 +7,7 @@ use App\Mixins\Cashback\CashbackAccounting;
 use App\Models\Accounting;
 use App\Models\BecomeInstructor;
 use App\Models\Cart;
+use App\Models\OfflinePayment;
 use App\Models\Order;
 use App\Models\OrderItem;
 use App\Models\PaymentChannel;
@@ -28,35 +29,94 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\ValidationException;
+use Illuminate\Support\Facades\Cookie;
 
 class PaymentController extends Controller
 {
     protected $order_session_key = 'payment.order_id';
 
+    protected function offline($request, $amount, $type, $type_id)
+    {
+        $rules = [
+            // 'amount' => 'required|numeric|min:0',
+            'gateway' => 'required',
+            'account' => 'required',
+            'referral_code' => 'required',
+            'date' => 'required',
+        ];
+
+        if (!empty($request->file('attachment'))) {
+            $rules['attachment'] = 'image|mimes:jpeg,png,jpg|max:10240';
+        }
+
+        $this->validate($request, $rules);
+
+        $attachment = null;
+        $userAuth = auth()->user();
+        if (!empty($request->file('attachment'))) {
+            $attachment = $this->handleUploadAttachment($userAuth, $request->file('attachment'));
+        }
+        $date = $request->date;
+        $date = convertTimeToUTCzone($date, getTimezone());
+        OfflinePayment::create([
+            'user_id' => $userAuth->id,
+            'amount' => $amount,
+            'offline_bank_id' => $request->account,
+            'reference_number' => $request->referral_code,
+            'status' => OfflinePayment::$waiting,
+            'pay_date' => $date->getTimestamp(),
+            'attachment' => $attachment,
+            'created_at' => time(),
+            'type' => $type,
+            'type_id' => $type_id
+        ]);
+        $notifyOptions = [
+            '[amount]' => handlePrice($amount),
+            '[u.name]' => $userAuth->full_name
+        ];
+        sendNotification('offline_payment_request', $notifyOptions, $userAuth->id);
+        sendNotification('new_offline_payment_request', $notifyOptions, 1);
+        $sweetAlertData = [
+            'msg' => trans('financial.offline_payment_request_success_store'),
+            'status' => 'success'
+        ];
+        return back()->with(['sweetalert' => $sweetAlertData]);
+    }
 
     public function prepay(Request $request)
     {
         $Webinar = Webinar::where('id', $request->webinar_id)->first();
+        if ($request->gateway == 'cart') {
+            $gateway = 'payment_channel';
+        } else {
+            $gateway = $request->gateway;
+        }
         $order = order::create([
             'user_id' => auth()->user()->id,
             'status' => 'pending',
-            'payment_method' => $request->gateway,
+            'payment_method' => $gateway,
             'amount' => $Webinar->price,
             'total_amount' => $Webinar->price * 0.1,
             'webinar_id' => $request->webinar_id,
             'prepay' => 'pending',
             'created_at' => time()
         ]);
-        return $this->paymentRequest($request, $request->gateway, $order->id);
+
+        return $this->paymentRequest($request, $request->gateway, $order->id, 'prepay', $request->webinar_id);
     }
 
     public function complete_prepay(Request $request)
     {
+        if ($request->gateway == 'cart') {
+            $gateway = 'payment_channel';
+        } else {
+            $gateway = $request->gateway;
+        }
         $Webinar = Webinar::where('id', $request->webinar_id)->first();
         $order = order::create([
             'user_id' => auth()->user()->id,
             'status' => 'pending',
-            'payment_method' => $request->gateway,
+            'payment_method' =>  $gateway,
             'amount' => $Webinar->price - ($Webinar->price * 0.1),
             'total_amount' => $Webinar->price - ($Webinar->price * 0.1),
             'webinar_id' => $request->webinar_id,
@@ -64,11 +124,16 @@ class PaymentController extends Controller
             'prepay_id' => $request->prepay_id,
             'created_at' => time()
         ]);
-        return $this->paymentRequest($request, $request->gateway, $order->id);
+        return $this->paymentRequest($request, $request->gateway, $order->id, 'complete_prepay', $request->prepay_id);
     }
 
     public function list_pay($id, Request $request)
     {
+        if ($request->gateway == 'cart') {
+            $gateway = 'payment_channel';
+        } else {
+            $gateway = $request->gateway;
+        }
         $sale_link = sale_link::where('id', $id)->first();
         $products = json_decode($sale_link->products);
         $prices = [];
@@ -108,16 +173,16 @@ class PaymentController extends Controller
         $order = order::create([
             'user_id' => $user_id,
             'status' => 'pending',
-            'payment_method' => $request->gateway,
+            'payment_method' => $gateway,
             'amount' => $amount,
             'total_amount' => $amount,
             'created_at' => time(),
             'list_id' => $id
         ]);
-        return $this->paymentRequest($request, $request->gateway, $order->id);
+        return $this->paymentRequest($request, $request->gateway, $order->id, 'list_pay', $id);
     }
 
-    public function paymentRequest(Request $request, ?string $gateway = null, ?int $order_id = null)
+    public function paymentRequest(Request $request, ?string $gateway = null, ?int $order_id = null, $type = 'cart', $type_id = null)
     {
         $this->validate($request, [
             'gateway' => 'required'
@@ -127,6 +192,10 @@ class PaymentController extends Controller
         $gateway = $request->input('gateway') ?? $gateway;
         $orderId = $request->input('order_id') ?? $order_id;
 
+        if ($type_id == null) {
+            $type_id =  $orderId;
+        }
+
         $order = Order::where('id', $orderId)
             ->where('user_id', $user->id)
             ->first();
@@ -135,6 +204,18 @@ class PaymentController extends Controller
             $orderItem = OrderItem::where('order_id', $order->id)->first();
             $reserveMeeting = ReserveMeeting::where('id', $orderItem->reserve_meeting_id)->first();
             $reserveMeeting->update(['locked_at' => time()]);
+        }
+
+        if ($gateway == 'cart') {
+            $this->offline($request, $order->total_amount, $type, $type_id);
+            $toastData = [
+                'title' => 'پرداخت موفق',
+                'msg' => 'پرداخت ثبت شد و به زودی بررسی میشود',
+                'status' => 'success'
+            ];
+            Cart::where('creator_id', auth()->user()->id)->delete();
+            return redirect()->to('/panel/financial/account')->with(['toast' => $toastData])->withCookie(Cookie::forget('carts'));
+            exit;
         }
 
         if ($gateway === 'credit') {

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Web;
 
 use App\Http\Controllers\Controller;
+use App\Models\OfflineBank;
 use App\Models\PaymentChannel;
 use App\Models\sale_link;
 use App\Models\Webinar;
@@ -39,6 +40,7 @@ class PayListController extends Controller
         foreach ($prices as  $price) {
             $amount += $price;
         }
+        $offlineBanks = OfflineBank::get();
         $data = [
             'pageTitle' => 'پیش واریز',
             'userCharge' =>  $charge,
@@ -46,7 +48,8 @@ class PayListController extends Controller
             'action' => 'prepay',
             'price' => $amount,
             'id' => $id,
-            'webinars' => $webinars
+            'webinars' => $webinars,
+            'offlineBanks' => $offlineBanks
         ];
         return view(getTemplate() . '.list_pay.index', $data);
     }

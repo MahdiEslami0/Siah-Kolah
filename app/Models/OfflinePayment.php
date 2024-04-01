@@ -14,6 +14,28 @@ class OfflinePayment extends Model
 
     protected $guarded = ['id'];
 
+
+    public function type()
+    {
+        switch ($this->type) {
+            case 'prepay':
+                return 'پیش واریز';
+                break;
+            case 'complete_prepay':
+                return 'تکمیل وجه پیش خرید';
+                break;
+            case 'cart':
+                return 'پرداخت سبدخرید';
+                break;
+            case 'list_pay':
+                return 'پرداخت سبدخرید';
+                break;
+            default:
+                return 'شارژ حساب';
+                break;
+        }
+    }
+
     public function user()
     {
         return $this->belongsTo('App\User', 'user_id', 'id');

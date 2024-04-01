@@ -9,9 +9,14 @@ use App\Models\Accounting;
 use App\Models\OfflineBank;
 use App\Models\OfflinePayment;
 use App\Models\Order;
+use App\Models\OrderItem;
+use App\Models\prepayment;
 use App\Models\Reward;
 use App\Models\RewardAccounting;
 use App\Models\Role;
+use App\Models\Sale;
+use App\Models\sale_link;
+use App\Models\Webinar;
 use App\User;
 use Illuminate\Http\Request;
 use Maatwebsite\Excel\Facades\Excel;
@@ -142,12 +147,8 @@ class OfflinePaymentController extends Controller
         return back();
     }
 
-    public function approved($id)
+    protected function charge($offlinePayment)
     {
-        $this->authorize('admin_offline_payments_approved');
-
-        $offlinePayment = OfflinePayment::findOrFail($id);
-
         Accounting::create([
             'creator_id' => auth()->user()->id,
             'user_id' => $offlinePayment->user_id,
@@ -158,7 +159,6 @@ class OfflinePaymentController extends Controller
             'created_at' => time(),
         ]);
 
-        $offlinePayment->update(['status' => OfflinePayment::$approved]);
 
         $notifyOptions = [
             '[amount]' => handlePrice($offlinePayment->amount),
@@ -179,6 +179,62 @@ class OfflinePaymentController extends Controller
             $cashbackAccounting = new CashbackAccounting($offlinePayment->user);
             $cashbackAccounting->rechargeWallet($order);
         }
+    }
+
+    public function approved($id)
+    {
+        $this->authorize('admin_offline_payments_approved');
+
+        $offlinePayment = OfflinePayment::findOrFail($id);
+
+        if ($offlinePayment->type == 'prepay') {
+            prepayment::create([
+                'webinar_id' =>  $offlinePayment->type_id,
+                'user_id' => $offlinePayment->user_id,
+                'amount' =>  $offlinePayment->amount,
+                'status' => 'pending',
+            ]);
+        } elseif ($offlinePayment->type == 'complete_prepay') {
+            $prepayment = prepayment::where('id', $offlinePayment->type_id)->first();
+            $prepayment->status = 'done';
+            $prepayment->pay = $offlinePayment->amount;
+            $prepayment->save();
+            Sale::create([
+                'buyer_id' =>  $offlinePayment->user_id,
+                'order_id' => $offlinePayment->id,
+                'webinar_id' => $prepayment->webinar_id,
+                'amount' => $offlinePayment->amount,
+                'created_at' => time()
+            ]);
+        } elseif ($offlinePayment->type == 'cart') {
+            $order = order::where('id', $offlinePayment->type_id)->first();
+            $order_items = OrderItem::where('order_id', $order->id)->get();
+            foreach ($order_items as $item) {
+                Sale::create([
+                    'buyer_id' =>  $offlinePayment->user_id,
+                    'order_id' => $offlinePayment->id,
+                    'webinar_id' => $item->webinar_id,
+                    'amount' => $item->amount,
+                    'created_at' => time()
+                ]);
+            }
+        } elseif ($offlinePayment->type == 'list_pay') {
+            $list = sale_link::where('id', $offlinePayment->type_id)->first();
+            $products =  json_decode($list->products);
+            foreach ($products as $product) {
+                $webianr = Webinar::where('id', $product)->first();
+                Sale::create([
+                    'buyer_id' =>  $offlinePayment->user_id,
+                    'order_id' => $offlinePayment->id,
+                    'webinar_id' => $product,
+                    'amount' =>  $webianr->price,
+                    'created_at' => time()
+                ]);
+            }
+        } else {
+            $this->charge($offlinePayment);
+        }
+        $offlinePayment->update(['status' => OfflinePayment::$approved]);
 
         return back();
     }

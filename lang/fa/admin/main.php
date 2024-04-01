@@ -443,7 +443,7 @@ return [
     'off' => 'OFF',
     'bank' => 'Bank',
     'all_banks' => 'All Banks',
-    'referral_code' => 'Reference Code',
+    'referral_code' => 'کدپیگیری',
     'documents' => 'Documents',
     'new_document' => 'New Document',
     'addiction' => 'Add',

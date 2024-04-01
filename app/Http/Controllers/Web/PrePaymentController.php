@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Web;
 
 use App\Http\Controllers\Controller;
+use App\Models\OfflineBank;
 use App\Models\PaymentChannel;
 use App\Models\prepayment;
 use App\Models\Webinar;
@@ -22,13 +23,15 @@ class PrePaymentController extends Controller
                 $razorpay = true;
             }
         }
+        $offlinebanks =  OfflineBank::get();
         $data = [
             'pageTitle' => 'پیش واریز',
             'webinar' => $webinar,
             'userCharge' => $user->getAccountingCharge(),
             'paymentChannels' =>  $paymentChannels,
             'action' => 'prepay',
-            'price' => $webinar->price * 0.1
+            'price' => $webinar->price * 0.1,
+            'offlineBanks' => $offlinebanks
         ];
         return view(getTemplate() . '.prepay.index', $data);
     }
@@ -44,6 +47,8 @@ class PrePaymentController extends Controller
                 $razorpay = true;
             }
         }
+        $offlinebanks =  OfflineBank::get();
+
         $data = [
             'pageTitle' => 'تکمیل واریز',
             'webinar' => $webinar,
@@ -51,7 +56,9 @@ class PrePaymentController extends Controller
             'paymentChannels' =>  $paymentChannels,
             'action' => 'complete_prepay',
             'prepay_id' => $prepayment->id,
-            'price' => $webinar->price - ($webinar->price * 0.1)
+            'price' => $webinar->price - ($webinar->price * 0.1),
+            'offlineBanks' => $offlinebanks
+
         ];
         return view(getTemplate() . '.prepay.index', $data);
     }

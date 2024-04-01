@@ -69,7 +69,8 @@
                     @foreach ($paymentChannels as $paymentChannel)
                         <div class="col-6 col-lg-4 mb-40 charge-account-radio">
                             <input type="radio" name="gateway" id="{{ $paymentChannel->title }}"
-                                data-class="{{ $paymentChannel->class_name }}" value="{{ $paymentChannel->id }}">
+                                data-class="{{ $paymentChannel->class_name }}" value="{{ $paymentChannel->id }}"
+                                onclick="showHideDiv(this.value)">
                             <label for="{{ $paymentChannel->title }}"
                                 class="rounded-sm p-20 p-lg-45 d-flex flex-column align-items-center justify-content-center"
                                 style="height: 250px;">
@@ -84,17 +85,29 @@
                     @endforeach
                 @endif
 
+                <div class="col-6 col-lg-4 mb-40 charge-account-radio">
+                    <input type="radio" name="gateway" id="cart" value="cart" onclick="showHideDiv(this.value)">
+                    <label for="cart"
+                        class="rounded-sm p-20 p-lg-45 d-flex flex-column align-items-center justify-content-center"
+                        style="height: 250px">
+                        <img src="/assets/default/img/activity/cart.png" width="120" height="120" alt="">
+                        <p class="mt-30 mt-lg-50 font-weight-500 text-dark-blue">
+                            کارت به کارت
+                        </p>
+                    </label>
+                </div>
+
                 @auth
                     <div class="col-6 col-lg-4 mb-40 charge-account-radio">
                         <input type="radio" @if (empty($userCharge) or $price > $userCharge) disabled @endif name="gateway" id="offline"
-                            value="credit">
+                            value="credit" onclick="showHideDiv(this.value)">
                         <label for="offline"
                             class="rounded-sm p-20 p-lg-45 d-flex flex-column align-items-center justify-content-center"
                             style="height: 250px">
                             <img src="/assets/default/img/activity/pay.svg" width="120" height="60" alt="">
 
                             <p class="mt-30 mt-lg-50 font-weight-500 text-dark-blue">
-                                کیف پول (پرداخت آفلاین)
+                                کیف پول
                             </p>
                             <span class="mt-5 font-14">{{ handlePrice($userCharge) }}</span>
 
@@ -137,6 +150,109 @@
             @endif
 
 
+            <div class="row mt-15" id="offlineBanks">
+                <div class="row">
+
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            <label class="input-label">{{ trans('financial.account') }}</label>
+                            <select name="account" class="form-control @error('account') is-invalid @enderror">
+                                <option selected disabled>{{ trans('financial.select_the_account') }}</option>
+
+                                @foreach ($offlineBanks as $offlineBank)
+                                    <option value="{{ $offlineBank->id }}"
+                                        @if (!empty($editOfflinePayment) and $editOfflinePayment->offline_bank_id == $offlineBank->id) selected @endif>{{ $offlineBank->title }}
+                                    </option>
+                                @endforeach
+                            </select>
+
+                            @error('account')
+                                <div class="invalid-feedback"> {{ $message }}</div>
+                            @enderror
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            <label for="referralCode" class="input-label">{{ trans('admin/main.referral_code') }}</label>
+                            <input type="text" name="referral_code" id="referralCode"
+                                value="{{ !empty($editOfflinePayment) ? $editOfflinePayment->reference_number : old('referral_code') }}"
+                                class="form-control @error('referral_code') is-invalid @enderror" />
+                            @error('referral_code')
+                                <div class="invalid-feedback"> {{ $message }}</div>
+                            @enderror
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            <label class="input-label">{{ trans('public.date_time') }}</label>
+                            <div class="input-group">
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text" id="dateRangeLabel">
+                                        <i data-feather="calendar" width="18" height="18" class="text-white"></i>
+                                    </span>
+                                </div>
+                                <input type="text" name="date"
+                                    value="{{ !empty($editOfflinePayment) ? dateTimeFormat($editOfflinePayment->pay_date, 'Y-m-d H:i', false) : old('date') }}"
+                                    class="form-control datetimepicker @error('date') is-invalid @enderror"
+                                    aria-describedby="dateRangeLabel" />
+                                @error('date')
+                                    <div class="invalid-feedback"> {{ $message }}</div>
+                                @enderror
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            <label class="input-label">{{ trans('update.attach_the_payment_photo') }}</label>
+
+                            <label for="attachmentFile" id="attachmentFileLabel" class="custom-upload-input-group">
+                                <div class="custom-upload-input"></div>
+                                <span class="custom-upload-icon text-white">
+                                    <i data-feather="upload" width="18" height="18" class="text-white"></i>
+                                </span>
+                            </label>
+                            <input type="file" name="attachment" id="attachmentFile"
+                                class="form-control h-auto invisible-file-input @error('attachment') is-invalid @enderror"
+                                value="" />
+                            @error('attachment')
+                                <div class="invalid-feedback">
+                                    {{ $message }}
+                                </div>
+                            @enderror
+                        </div>
+                    </div>
+                </div>
+                <div>
+                    @foreach ($offlineBanks as $offlineBank)
+                        <div class="col-12 col-lg-4 mb-30 mb-lg-0">
+                            <div
+                                class="py-25 px-20 rounded-sm panel-shadow d-flex flex-column align-items-center justify-content-center">
+                                <img src="{{ $offlineBank->logo }}" width="120" height="60" alt="">
+
+                                <div class="mt-15 mt-30 w-100">
+
+                                    <div class="d-flex align-items-center justify-content-between">
+                                        <span
+                                            class="font-14 font-weight-500 text-secondary">{{ trans('public.name') }}:</span>
+                                        <span class="font-14 font-weight-500 text-gray">{{ $offlineBank->title }}</span>
+                                    </div>
+
+                                    @foreach ($offlineBank->specifications as $specification)
+                                        <div class="d-flex align-items-center justify-content-between mt-10">
+                                            <span
+                                                class="font-14 font-weight-500 text-secondary">{{ $specification->name }}:</span>
+                                            <span
+                                                class="font-14 font-weight-500 text-gray">{{ $specification->value }}</span>
+                                        </div>
+                                    @endforeach
+                                </div>
+                            </div>
+                        </div>
+                    @endforeach
+                </div>
+            </div>
+
+
             <div class="d-flex align-items-center justify-content-between mt-45">
                 <span class="font-16 font-weight-500 text-gray">{{ trans('financial.total_amount') }}
                     {{ handlePrice($price) }}</span>
@@ -150,5 +266,17 @@
 @endsection
 
 @push('scripts_bottom')
+    <script>
+        offlineBanks.style.display = "none";
+
+        function showHideDiv(gateway) {
+            var offlineBanks = document.getElementById("offlineBanks");
+            if (gateway === "cart") {
+                offlineBanks.style.display = "block";
+            } else {
+                offlineBanks.style.display = "none";
+            }
+        }
+    </script>
     <script src="/assets/default/js/parts/payment.min.js"></script>
 @endpush
