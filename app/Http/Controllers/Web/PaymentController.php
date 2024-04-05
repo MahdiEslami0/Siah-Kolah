@@ -91,18 +91,21 @@ class PaymentController extends Controller
         } else {
             $gateway = $request->gateway;
         }
-        $order = order::create([
-            'user_id' => auth()->user()->id,
-            'status' => 'pending',
-            'payment_method' => $gateway,
-            'amount' => $Webinar->price,
-            'total_amount' => $Webinar->price * 0.1,
-            'webinar_id' => $request->webinar_id,
-            'prepay' => 'pending',
-            'created_at' => time()
-        ]);
-
-        return $this->paymentRequest($request, $request->gateway, $order->id, 'prepay', $request->webinar_id);
+        if ($Webinar->price * 0.1 <= $request->amount) {
+            $order = order::create([
+                'user_id' => auth()->user()->id,
+                'status' => 'pending',
+                'payment_method' => $gateway,
+                'amount' => $Webinar->price,
+                'total_amount' => $request->amount,
+                'webinar_id' => $request->webinar_id,
+                'prepay' => 'pending',
+                'created_at' => time()
+            ]);
+            return $this->paymentRequest($request, $request->gateway, $order->id, 'prepay', $request->webinar_id);
+        } else {
+            return redirect()->back();
+        }
     }
 
     public function complete_prepay(Request $request)
@@ -112,13 +115,14 @@ class PaymentController extends Controller
         } else {
             $gateway = $request->gateway;
         }
+        $prepay = prepayment::where('id', $request->prepay_id)->first();
         $Webinar = Webinar::where('id', $request->webinar_id)->first();
         $order = order::create([
             'user_id' => auth()->user()->id,
             'status' => 'pending',
             'payment_method' =>  $gateway,
-            'amount' => $Webinar->price - ($Webinar->price * 0.1),
-            'total_amount' => $Webinar->price - ($Webinar->price * 0.1),
+            'amount' => $Webinar->price - $prepay->amount,
+            'total_amount' => $Webinar->price -  $prepay->amount,
             'webinar_id' => $request->webinar_id,
             'prepay' => 'complete',
             'prepay_id' => $request->prepay_id,
@@ -150,9 +154,9 @@ class PaymentController extends Controller
         } else {
             $rules = [
                 'full_name' => 'required',
-                'email' => 'required|email|unique:users',
+                'email' => 'required_without:mobile|email|unique:users',
                 'password' => 'required|min:8',
-                'mobile' => 'required|numeric|unique:users|regex:/^[0][9][0-9]{9,9}$/',
+                'mobile' => 'required_without:email|numeric|unique:users|regex:/^[0][9][0-9]{9,9}$/',
             ];
             $Validator =  Validator::make($request->all(), $rules);
             if ($Validator->fails()) {

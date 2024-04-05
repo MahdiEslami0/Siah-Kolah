@@ -38,7 +38,6 @@ class PrePaymentController extends Controller
 
     public function pay(prepayment $prepayment)
     {
-        // dd($prepayment);
         $webinar = Webinar::where('id', $prepayment->webinar_id)->first();
         $user = FacadesAuth::user();
         $paymentChannels = PaymentChannel::where('status', 'active')->get();
@@ -48,7 +47,6 @@ class PrePaymentController extends Controller
             }
         }
         $offlinebanks =  OfflineBank::get();
-
         $data = [
             'pageTitle' => 'تکمیل واریز',
             'webinar' => $webinar,
@@ -56,9 +54,8 @@ class PrePaymentController extends Controller
             'paymentChannels' =>  $paymentChannels,
             'action' => 'complete_prepay',
             'prepay_id' => $prepayment->id,
-            'price' => $webinar->price - ($webinar->price * 0.1),
+            'price' => $webinar->price - $prepayment->amount,
             'offlineBanks' => $offlinebanks
-
         ];
         return view(getTemplate() . '.prepay.index', $data);
     }

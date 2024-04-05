@@ -150,6 +150,10 @@
             @endif
 
 
+            @include('web.default.includes.offline_pay')
+
+
+            {{-- 
             <div class="row mt-15" id="offlineBanks">
                 <div class="row">
 
@@ -250,7 +254,7 @@
                         </div>
                     @endforeach
                 </div>
-            </div>
+            </div> --}}
 
 
             <div class="d-flex align-items-center justify-content-between mt-45">
@@ -266,17 +270,5 @@
 @endsection
 
 @push('scripts_bottom')
-    <script>
-        offlineBanks.style.display = "none";
-
-        function showHideDiv(gateway) {
-            var offlineBanks = document.getElementById("offlineBanks");
-            if (gateway === "cart") {
-                offlineBanks.style.display = "block";
-            } else {
-                offlineBanks.style.display = "none";
-            }
-        }
-    </script>
     <script src="/assets/default/js/parts/payment.min.js"></script>
 @endpush

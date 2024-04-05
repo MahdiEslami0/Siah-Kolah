@@ -42,7 +42,7 @@ class PayListController extends Controller
         }
         $offlineBanks = OfflineBank::get();
         $data = [
-            'pageTitle' => 'پیش واریز',
+            'pageTitle' => 'لیست پرداخت',
             'userCharge' =>  $charge,
             'paymentChannels' =>  $paymentChannels,
             'action' => 'prepay',

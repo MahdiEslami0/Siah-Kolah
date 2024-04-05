@@ -18,6 +18,7 @@ use Illuminate\Auth\Events\Registered;
 use Illuminate\Foundation\Auth\RegistersUsers;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth as FacadesAuth;
 use Illuminate\Support\Facades\Cookie;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
@@ -72,8 +73,8 @@ class RegisterController extends Controller
 
     public function register(Request $request)
     {
-        $key = uuid_create();
-        $code = rand(1000, 9999);
+        // $key = uuid_create();
+        // $code = rand(1000, 9999);
         $rules = [
             'full_name' => 'required',
             'email' => 'required|email|unique:users',
@@ -95,24 +96,31 @@ class RegisterController extends Controller
             'status' => 'active',
             'created_at' => time()
         ]);
-        otp::create([
-            'code' =>  $code,
-            'key' => $key,
-            'user_id' => $user->id,
-            'try' => 0
-        ]);
-        Http::get('http://api.kavenegar.com/v1/2F4E5079575663783031503968356E4E516851634C2F566C6B435A5A7254532B434E3676596443563068733D/verify/lookup.json', [
-            'receptor' => $request->mobile,
-            'token' => $code,
-            'template' => 'verify'
-        ]);
-        Session::put('otp_key', $key);
+        FacadesAuth::login($user);
         $toastData = [
             'title' => "موفق",
-            'msg' => 'کد تایید برای شما پیامک شد',
+            'msg' => 'ثبت نام با موفقیت انجام شد',
             'status' => 'success'
         ];
-        return redirect(url('register/otp'))->with(['toast' => $toastData]);
+        return redirect(url('/'))->with(['toast' => $toastData]);
+        // otp::create([
+        //     'code' =>  $code,
+        //     'key' => $key,
+        //     'user_id' => $user->id,
+        //     'try' => 0
+        // ]);
+        // Http::get('http://api.kavenegar.com/v1/2F4E5079575663783031503968356E4E516851634C2F566C6B435A5A7254532B434E3676596443563068733D/verify/lookup.json', [
+        //     'receptor' => $request->mobile,
+        //     'token' => $code,
+        //     'template' => 'verify'
+        // ]);
+        // Session::put('otp_key', $key);
+        // $toastData = [
+        //     'title' => "موفق",
+        //     'msg' => 'کد تایید برای شما پیامک شد',
+        //     'status' => 'success'
+        // ];
+        // return redirect(url('register/otp'))->with(['toast' => $toastData]);
     }
 
 

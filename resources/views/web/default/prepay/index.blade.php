@@ -19,9 +19,23 @@
                 </ul>
             </div>
         @endif
+
+
         <h2 class="section-title">یک پرتال پرداخت انتخاب کنید</h2>
-        <form action="/payments/{{ $action }}" method="post" class=" mt-25">
+        <form action="/payments/{{ $action }}" method="post" class="mt-25">
             {{ csrf_field() }}
+
+            @if ($action != 'complete_prepay')
+                <div class="row mb-30">
+                    <div class="col-md-4">
+                        <label>مبلغ : <small class="text-danger">(حداقل : {{ handlePrice($price) }}) </small>
+                        </label>
+                        <input type="number" min="{{ $price }}" onkeyup="imposeMinMax(this)"
+                            value="{{ $price }}" class="form-control" name="amount">
+                    </div>
+                </div>
+            @endif
+
             <input type="text" name="webinar_id" value="{{ $webinar->id }}" hidden>
             @isset($prepay_id)
                 <input type="text" name="prepay_id" value="{{ $prepay_id }}" hidden>
@@ -85,113 +99,13 @@
             </div>
 
 
+            @include('web.default.includes.offline_pay')
 
-            <div class="row mt-15" id="offlineBanks">
-                <div class="row">
-
-                    <div class="col-md-4">
-                        <div class="form-group">
-                            <label class="input-label">{{ trans('financial.account') }}</label>
-                            <select name="account" class="form-control @error('account') is-invalid @enderror">
-                                <option selected disabled>{{ trans('financial.select_the_account') }}</option>
-
-                                @foreach ($offlineBanks as $offlineBank)
-                                    <option value="{{ $offlineBank->id }}"
-                                        @if (!empty($editOfflinePayment) and $editOfflinePayment->offline_bank_id == $offlineBank->id) selected @endif>{{ $offlineBank->title }}
-                                    </option>
-                                @endforeach
-                            </select>
-
-                            @error('account')
-                                <div class="invalid-feedback"> {{ $message }}</div>
-                            @enderror
-                        </div>
-                    </div>
-                    <div class="col-md-4">
-                        <div class="form-group">
-                            <label for="referralCode" class="input-label">{{ trans('admin/main.referral_code') }}</label>
-                            <input type="text" name="referral_code" id="referralCode"
-                                value="{{ !empty($editOfflinePayment) ? $editOfflinePayment->reference_number : old('referral_code') }}"
-                                class="form-control @error('referral_code') is-invalid @enderror" />
-                            @error('referral_code')
-                                <div class="invalid-feedback"> {{ $message }}</div>
-                            @enderror
-                        </div>
-                    </div>
-                    <div class="col-md-4">
-                        <div class="form-group">
-                            <label class="input-label">{{ trans('public.date_time') }}</label>
-                            <div class="input-group">
-                                <div class="input-group-prepend">
-                                    <span class="input-group-text" id="dateRangeLabel">
-                                        <i data-feather="calendar" width="18" height="18" class="text-white"></i>
-                                    </span>
-                                </div>
-                                <input type="text" name="date"
-                                    value="{{ !empty($editOfflinePayment) ? dateTimeFormat($editOfflinePayment->pay_date, 'Y-m-d H:i', false) : old('date') }}"
-                                    class="form-control datetimepicker @error('date') is-invalid @enderror"
-                                    aria-describedby="dateRangeLabel" />
-                                @error('date')
-                                    <div class="invalid-feedback"> {{ $message }}</div>
-                                @enderror
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-md-4">
-                        <div class="form-group">
-                            <label class="input-label">{{ trans('update.attach_the_payment_photo') }}</label>
-
-                            <label for="attachmentFile" id="attachmentFileLabel" class="custom-upload-input-group">
-                                <div class="custom-upload-input"></div>
-                                <span class="custom-upload-icon text-white">
-                                    <i data-feather="upload" width="18" height="18" class="text-white"></i>
-                                </span>
-                            </label>
-                            <input type="file" name="attachment" id="attachmentFile"
-                                class="form-control h-auto invisible-file-input @error('attachment') is-invalid @enderror"
-                                value="" />
-                            @error('attachment')
-                                <div class="invalid-feedback">
-                                    {{ $message }}
-                                </div>
-                            @enderror
-                        </div>
-                    </div>
-                </div>
-                <div>
-                    @foreach ($offlineBanks as $offlineBank)
-                        <div class="col-12 col-lg-4 mb-30 mb-lg-0">
-                            <div
-                                class="py-25 px-20 rounded-sm panel-shadow d-flex flex-column align-items-center justify-content-center">
-                                <img src="{{ $offlineBank->logo }}" width="120" height="60" alt="">
-
-                                <div class="mt-15 mt-30 w-100">
-
-                                    <div class="d-flex align-items-center justify-content-between">
-                                        <span
-                                            class="font-14 font-weight-500 text-secondary">{{ trans('public.name') }}:</span>
-                                        <span class="font-14 font-weight-500 text-gray">{{ $offlineBank->title }}</span>
-                                    </div>
-
-                                    @foreach ($offlineBank->specifications as $specification)
-                                        <div class="d-flex align-items-center justify-content-between mt-10">
-                                            <span
-                                                class="font-14 font-weight-500 text-secondary">{{ $specification->name }}:</span>
-                                            <span
-                                                class="font-14 font-weight-500 text-gray">{{ $specification->value }}</span>
-                                        </div>
-                                    @endforeach
-                                </div>
-                            </div>
-                        </div>
-                    @endforeach
-                </div>
-            </div>
 
             <div class="d-flex align-items-center justify-content-between mt-45">
                 <span class="font-16 font-weight-500 text-gray">{{ trans('financial.total_amount') }}
                     {{ handlePrice($price) }}</span>
-                <button type="button" id="paymentSubmit" disabled
+                <button type="submit" id="paymentSubmit"
                     class="btn btn-sm btn-primary">{{ trans('public.start_payment') }}</button>
             </div>
         </form>
@@ -202,14 +116,14 @@
 
 @push('scripts_bottom')
     <script>
-        offlineBanks.style.display = "none";
-
-        function showHideDiv(gateway) {
-            var offlineBanks = document.getElementById("offlineBanks");
-            if (gateway === "cart") {
-                offlineBanks.style.display = "block";
-            } else {
-                offlineBanks.style.display = "none";
+        function imposeMinMax(el) {
+            if (el.value != "") {
+                if (parseInt(el.value) < parseInt(el.min)) {
+                    el.value = el.min;
+                }
+                if (parseInt(el.value) > parseInt(el.max)) {
+                    el.value = el.max;
+                }
             }
         }
     </script>

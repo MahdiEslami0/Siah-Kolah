@@ -125,6 +125,8 @@ class LoginController extends Controller
                     'msg' => 'با موفقیت وارد شدید',
                     'status' => 'success'
                 ];
+                $cartManagerController = new CartManagerController();
+                $cartManagerController->storeCookieCartsToDB();
                 return redirect(url('/'))->with(['toast' => $toastData]);
             }
             return redirect()->back()->withInput($request->only('email'))->withErrors(['email' => 'کاربری با این مشخصات یافت نشد'])->with(['login_method' => 'password']);
@@ -167,6 +169,8 @@ class LoginController extends Controller
                 'status' => 'success'
             ];
             $otp->delete();
+            $cartManagerController = new CartManagerController();
+            $cartManagerController->storeCookieCartsToDB(); 
             return redirect(url('/'))->with(['toast' => $toastData]);
         } else {
             $otp->try =  $otp->try + 1;

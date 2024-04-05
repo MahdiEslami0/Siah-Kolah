@@ -484,7 +484,7 @@
             </div>
         </li>
 
-        {{-- <li
+        <li
             class="sidenav-item {{ (request()->is('panel/support') or request()->is('panel/support/*')) ? 'sidenav-item-active' : '' }}">
             <a class="d-flex align-items-center" data-toggle="collapse" href="#supportCollapse" role="button"
                 aria-expanded="false" aria-controls="supportCollapse">
@@ -508,7 +508,7 @@
                     </li>
                 </ul>
             </div>
-        </li> --}}
+        </li>
 
         @if (
             !$authUser->isUser() or
