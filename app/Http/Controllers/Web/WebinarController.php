@@ -262,7 +262,9 @@ class WebinarController extends Controller
         }
 
 
-        $spotplayers = spotplayer::where('user_id', $user->id)->where('webinar_id', $course->id)->first();
+        if (auth()->user()) {
+            $spotplayers = spotplayer::where('user_id', $user->id)->where('webinar_id', $course->id)->first();
+        }
 
         $data = [
             'pageTitle' => $course->title,
