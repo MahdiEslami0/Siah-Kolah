@@ -262,9 +262,9 @@ class WebinarController extends Controller
         }
 
 
-        if (auth()->user()) {
+        if (isset($user)) {
             $spotplayers = spotplayer::where('user_id', $user->id)->where('webinar_id', $course->id)->first();
-        }else{
+        } else {
             $spotplayers = null;
         }
 
