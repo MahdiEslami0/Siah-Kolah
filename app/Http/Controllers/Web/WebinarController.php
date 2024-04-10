@@ -16,6 +16,7 @@ use App\Models\RewardAccounting;
 use App\Models\Sale;
 use App\Models\TextLesson;
 use App\Models\CourseLearning;
+use App\Models\spotplayer;
 use App\Models\WebinarChapter;
 use App\Models\WebinarReport;
 use App\Models\Webinar;
@@ -260,6 +261,9 @@ class WebinarController extends Controller
             $cashbackRules = $cashbackRulesMixin->getRules('courses', $course->id, $course->type, $course->category_id, $course->teacher_id);
         }
 
+
+        $spotplayers = spotplayer::where('user_id', $user->id)->where('webinar_id', $course->id)->first();
+
         $data = [
             'pageTitle' => $course->title,
             'pageDescription' => $course->seo_description,
@@ -279,6 +283,7 @@ class WebinarController extends Controller
             'quizzes' => $quizzes,
             'installments' => $installments ?? null,
             'cashbackRules' => $cashbackRules ?? null,
+            'spotplayers' => $spotplayers
         ];
 
         // check for certificate

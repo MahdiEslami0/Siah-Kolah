@@ -205,8 +205,62 @@
                                     <button type="button" data-slug="{{ $course->slug }}"
                                         class="btn btn-primary {{ !empty($authUser) ? 'js-join-waitlist-user' : 'js-join-waitlist-guest' }}">{{ trans('update.join_waitlist') }}</button>
                                 @elseif($hasBought or !empty($course->getInstallmentOrder()))
-                                    <a href="{{ $course->getLearningPageUrl() }}"
-                                        class="btn btn-primary">{{ trans('update.go_to_learning_page') }}</a>
+                                    @if ($course->spotplayer == 'active')
+                                        <button class="btn btn-primary mb-15" disabled>شما این در این دوره شرکت کرده ایت
+                                        </button>
+
+                                        <label>
+                                            کدلایسنس :
+                                        </label>
+                                        <input type="text" class="form-control" value="{{ $spotplayers->key }}"
+                                            disabled>
+                                        <div class="row mt-15">
+                                            <div class="col-md-3">
+                                                <a href="https://app.spotplayer.ir/assets/bin/spotplayer/setup.apk"
+                                                    target="_blank" rel="noopener noreferrer">
+                                                    <img src="/spotplayer/android.png" class="shadow-lg"
+                                                        style="width: 100%;border-radius:10px" alt="">
+                                                    <center>
+                                                        <small>اندروید</small>
+                                                    </center>
+                                                </a>
+                                            </div>
+                                            <div class="col-md-3 ">
+                                                <a href="https://app.spotplayer.ir/" target="_blank">
+                                                    <img src="/spotplayer/web.png" class="shadow-lg"
+                                                        style="width: 100%;border-radius:10px">
+                                                    <center>
+                                                        <small>وب</small>
+                                                    </center>
+                                                </a>
+                                            </div>
+                                            <div class="col-md-3">
+                                                <a href="https://app.spotplayer.ir/assets/bin/spotplayer/setup.exe"
+                                                    target="_blank">
+                                                    <img src="/spotplayer/win.png" class="shadow-lg"
+                                                        style="width: 100%;border-radius:10px">
+                                                    <center>
+                                                        <small>ویندوز</small>
+                                                    </center>
+                                                </a>
+                                            </div>
+                                            <div class="col-md-3">
+                                                <a href="https://app.spotplayer.ir/assets/bin/spotplayer/setup.dmg"
+                                                    target="_blank">
+                                                    <img src="/spotplayer/mac.png" class="shadow-lg"
+                                                        style="width: 100%;border-radius:10px">
+                                                    <center>
+                                                        <small>مک</small>
+                                                    </center>
+                                                </a>
+
+                                            </div>
+
+                                        </div>
+                                    @else
+                                        <a href="{{ $course->getLearningPageUrl() }}"
+                                            class="btn btn-primary">{{ trans('update.go_to_learning_page') }}</a>
+                                    @endif
                                 @elseif($course->price > 0)
                                     <button type="button"
                                         class="btn btn-primary {{ $canSale ? 'js-course-add-to-cart-btn' : $course->cantSaleStatus($hasBought) . ' disabled ' }}">

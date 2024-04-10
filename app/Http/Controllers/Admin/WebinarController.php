@@ -378,6 +378,12 @@ class WebinarController extends Controller
         $data['price'] = !empty($data['price']) ? convertPriceToDefaultCurrency($data['price']) : null;
         $data['organization_price'] = !empty($data['organization_price']) ? convertPriceToDefaultCurrency($data['organization_price']) : null;
 
+        if (isset($data['spotplayer_key'])) {
+            $spotplayer = 'active';
+        } else {
+            $spotplayer = 'inactive';
+        }
+
         $webinar = Webinar::create([
             'type' => $data['type'],
             'slug' => $data['slug'],
@@ -406,6 +412,8 @@ class WebinarController extends Controller
             'category_id' => $data['category_id'],
             'message_for_reviewer' => $data['message_for_reviewer'] ?? null,
             'status' => Webinar::$pending,
+            'spotplayer_key' => $data['spotplayer_key'],
+            'spotplayer' => $spotplayer,
             'created_at' => time(),
             'updated_at' => time(),
         ]);
@@ -668,7 +676,8 @@ class WebinarController extends Controller
                 ]);
             }
         }
-        unset($data['_token'],
+        unset(
+            $data['_token'],
             $data['current_step'],
             $data['draft'],
             $data['get_next'],
@@ -691,6 +700,12 @@ class WebinarController extends Controller
 
         $data['price'] = !empty($data['price']) ? convertPriceToDefaultCurrency($data['price']) : null;
         $data['organization_price'] = !empty($data['organization_price']) ? convertPriceToDefaultCurrency($data['organization_price']) : null;
+
+        if (isset($data['spotplayer_key'])) {
+            $spotplayer = "active";
+        } else {
+            $spotplayer = "inactive";
+        }
 
         $webinar->update([
             'slug' => $data['slug'],
@@ -720,6 +735,8 @@ class WebinarController extends Controller
             'points' => $data['points'] ?? null,
             'message_for_reviewer' => $data['message_for_reviewer'] ?? null,
             'status' => $data['status'],
+            'spotplayer_key' => $data['spotplayer_key'],
+            'spotplayer' => $spotplayer,
             'updated_at' => time(),
         ]);
 
@@ -745,7 +762,6 @@ class WebinarController extends Controller
                 $webinar->id,
                 true
             );
-
         } elseif ($reject) {
             sendNotification('course_reject', ['[c.title]' => $webinar->title], $webinar->teacher_id);
         }

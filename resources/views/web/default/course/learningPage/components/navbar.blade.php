@@ -8,7 +8,7 @@
         <div class="learning-page-logo-card d-flex align-items-center justify-content-between justify-content-lg-start">
             <a class="navbar-brand d-flex align-items-center justify-content-center mr-0" href="/">
                 @if(!empty($generalSettings['logo']))
-                    <img src="{{ $generalSettings['logo'] }}" class="img-cover" alt="site logo">
+                    <img src="{{ $generalSettings['logo'] }}" class="img-cover" alt="site logo" style="width: 30px">
                 @endif
             </a>
 

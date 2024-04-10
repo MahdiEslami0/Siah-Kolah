@@ -4,6 +4,7 @@ namespace App\Models;
 
 use App\Mixins\RegistrationBonus\RegistrationBonusAccounting;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Http;
 
 class Sale extends Model
 {
@@ -23,6 +24,39 @@ class Sale extends Model
     public $timestamps = false;
 
     protected $guarded = ['id'];
+
+    protected static function boot()
+    {
+        parent::boot();
+        static::created(function ($sale) {
+            $webinar = Webinar::findOrFail($sale->webinar_id);
+            if ($webinar->spotplayer == 'active') {
+                $jsonData = [
+                    "course" => [$webinar->spotplayer_key],
+                    "name" => auth()->user()->full_name,
+                    "watermark" => [
+                        "texts" => [
+                            ["text" => auth()->user()->full_name]
+                        ]
+                    ]
+                ];
+                $response = Http::withHeaders([
+                    '$API' => env('SPOTPLAYER_KEY'),
+                    '$LEVEL' => "-1"
+                ])->post('https://panel.spotplayer.ir/license/edit/', $jsonData);
+                if ($response->successful()) {
+                    $responseData = $response->json();
+                    spotplayer::create([
+                        'user_id' => auth()->user()->id,
+                        'webinar_id' => $sale->webinar_id,
+                        'key' => $responseData['key'],
+                        'sale_id' => $sale->id
+                    ]);
+                }
+            }
+        });
+    }
+
 
     public function webinar()
     {
