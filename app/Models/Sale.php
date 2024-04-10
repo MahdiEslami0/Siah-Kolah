@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Mixins\RegistrationBonus\RegistrationBonusAccounting;
+use App\User;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Http;
 
@@ -30,13 +31,14 @@ class Sale extends Model
         parent::boot();
         static::created(function ($sale) {
             $webinar = Webinar::findOrFail($sale->webinar_id);
+            $user = User::where('id', $sale->user_id)->first();
             if ($webinar->spotplayer == 'active') {
                 $jsonData = [
                     "course" => [$webinar->spotplayer_key],
-                    "name" => auth()->user()->full_name,
+                    "name" =>  $user->full_name,
                     "watermark" => [
                         "texts" => [
-                            ["text" => auth()->user()->full_name]
+                            ["text" => $user->id]
                         ]
                     ]
                 ];
@@ -47,7 +49,7 @@ class Sale extends Model
                 if ($response->successful()) {
                     $responseData = $response->json();
                     spotplayer::create([
-                        'user_id' => auth()->user()->id,
+                        'user_id' =>  $user->id,
                         'webinar_id' => $sale->webinar_id,
                         'key' => $responseData['key'],
                         'sale_id' => $sale->id
