@@ -206,7 +206,7 @@
                                         class="btn btn-primary {{ !empty($authUser) ? 'js-join-waitlist-user' : 'js-join-waitlist-guest' }}">{{ trans('update.join_waitlist') }}</button>
                                 @elseif($hasBought or !empty($course->getInstallmentOrder()))
                                     @if ($course->spotplayer == 'active')
-                                        <button class="btn btn-primary mb-15" disabled>شما این در این دوره شرکت کرده ایت
+                                        <button class="btn btn-primary mb-15" disabled>شما این در این دوره شرکت کرده اید
                                         </button>
 
                                         <label>
