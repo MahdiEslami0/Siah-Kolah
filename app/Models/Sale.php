@@ -31,14 +31,14 @@ class Sale extends Model
         parent::boot();
         static::created(function ($sale) {
             $webinar = Webinar::findOrFail($sale->webinar_id);
-            $user = User::where('id', $sale->user_id)->first();
+            $user = User::where('id', $sale->buyer_id)->first();
             if ($webinar->spotplayer == 'active') {
                 $jsonData = [
                     "course" => [$webinar->spotplayer_key],
                     "name" =>  $user->full_name,
                     "watermark" => [
                         "texts" => [
-                            ["text" => $user->id]
+                            ["text" => $user->full_name]
                         ]
                     ]
                 ];
