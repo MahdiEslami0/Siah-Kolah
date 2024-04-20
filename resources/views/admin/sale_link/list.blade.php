@@ -21,6 +21,7 @@
                                 <tr>
                                     <th>#</th>
                                     <th>عنوان</th>
+                                    <th>قیمت</th>
                                     <th>وضعیت</th>
                                     <th>دوره ها</th>
                                     <th>عملیات</th>
@@ -39,6 +40,13 @@
                                     <tr>
                                         <td>{{ $item->id }}</td>
                                         <td>{{ $item->name }}</td>
+                                        <td>
+                                            @if (isset($item->price) && $item->price > 0)
+                                                @formatPrice($item->price ?? 0) تومان
+                                            @else
+                                                ثبت نشده
+                                            @endif
+                                        </td>
                                         <td>{{ $item->status }}</td>
                                         <td>
                                             @foreach ($webinars as $webinar)
@@ -52,7 +60,8 @@
                                             <a href="{{ $item->id }}">
                                                 <i class="fas fa-eye text-primary"></i>
                                             </a>
-                                            <a href="/list_pay/{{ $item->id }}" target="_blank">
+                                            <a href="/list_pay/{{ $item->id }}?seller={{ $item->getSeller()->full_name }}"
+                                                target="_blank">
                                                 <i class="fas fa-link text-info"></i>
                                             </a>
                                         </td>

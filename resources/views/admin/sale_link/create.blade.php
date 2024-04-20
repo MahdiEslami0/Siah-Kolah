@@ -90,6 +90,16 @@
                                             </div>
                                         @enderror
                                     </div>
+                                    <div class="col-md-6 mb-3">
+                                        <label for="">قیمت <small>(درصورت نداشتن قیمت خالی بگذارید)</small>
+                                            :</label>
+                                        <input type="number" class="form-control" name="price" value="{{ $sale_link->price ?? '' }}">
+                                        @error('price')
+                                            <div class="invalid-feedback">
+                                                {{ $message }}
+                                            </div>
+                                        @enderror
+                                    </div>
                                     <div class="col-md-12">
                                         <button class="btn btn-primary">ثبت</button>
                                         @if (isset($sale_link))

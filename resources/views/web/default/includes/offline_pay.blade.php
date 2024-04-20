@@ -29,7 +29,10 @@
                 @enderror
             </div>
         </div>
-        <div class="col-md-4">
+        @php
+            $now = time();
+        @endphp
+        <div class="col-md-4" style="display: none">
             <div class="form-group">
                 <label class="input-label">{{ trans('public.date_time') }}</label>
                 <div class="input-group">
@@ -38,8 +41,7 @@
                             <i data-feather="calendar" width="18" height="18" class="text-white"></i>
                         </span>
                     </div>
-                    <input type="text" name="date"
-                        value="{{ !empty($editOfflinePayment) ? dateTimeFormat($editOfflinePayment->pay_date, 'Y-m-d H:i', false) : old('date') }}"
+                    <input type="text" name="date" value="{{ $now }}"
                         class="form-control datetimepicker @error('date') is-invalid @enderror"
                         aria-describedby="dateRangeLabel" />
                     @error('date')

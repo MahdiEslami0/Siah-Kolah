@@ -12,7 +12,8 @@ class SaleLinkController extends Controller
 
     public function index()
     {
-        $sale_link = sale_link::paginate(10);
+        $user_id = auth()->user()->id;
+        $sale_link = sale_link::where('seller_id', $user_id)->paginate(10);
         $data = [
             'pageTitle' => 'لینک فروش',
             'sale_link' => $sale_link
@@ -40,7 +41,8 @@ class SaleLinkController extends Controller
         sale_link::create([
             'name' => $request->name,
             'status' => $request->status,
-            'products' => json_encode($request->products)
+            'products' => json_encode($request->products),
+            'price' => $request->price
         ]);
         return redirect(getAdminPanelUrl() . '/link/list');
     }
@@ -69,7 +71,8 @@ class SaleLinkController extends Controller
         sale_link::where('id', $id)->update([
             'name' => $request->name,
             'status' => $request->status,
-            'products' => json_encode($request->products)
+            'products' => json_encode($request->products),
+            'price' => $request->price
         ]);
         return redirect(getAdminPanelUrl() . '/link/list');
     }

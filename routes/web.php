@@ -223,7 +223,7 @@ Route::group(['namespace' => 'Web', 'middleware' => ['check_mobile_app', 'impers
         Route::post('/payment-request', 'PaymentController@paymentRequest');
         Route::get('/verify/{gateway}', ['as' => 'payment_verify', 'uses' => 'PaymentController@paymentVerify']);
         Route::post('/verify/{gateway}', ['as' => 'payment_verify_post', 'uses' => 'PaymentController@paymentVerify']);
-        Route::get('/status', 'PaymentController@payStatus');
+        Route::get('/status', 'PaymentController@payStatus')->name('payments.status');
         Route::get('/payku/callback/{id}', 'PaymentController@paykuPaymentVerify')->name('payku.result');
     });
 

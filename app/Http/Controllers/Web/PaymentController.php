@@ -57,14 +57,13 @@ class PaymentController extends Controller
             $attachment = $this->handleUploadAttachment($userAuth, $request->file('attachment'));
         }
         $date = $request->date;
-        $date = convertTimeToUTCzone($date, getTimezone());
         OfflinePayment::create([
             'user_id' => $userAuth->id,
             'amount' => $amount,
             'offline_bank_id' => $request->account,
             'reference_number' => $request->referral_code,
             'status' => OfflinePayment::$waiting,
-            'pay_date' => $date->getTimestamp(),
+            'pay_date' => $date,
             'attachment' => $attachment,
             'created_at' => time(),
             'type' => $type,
@@ -145,9 +144,13 @@ class PaymentController extends Controller
             $Webinar = Webinar::where('id', $product)->first();
             $prices[] = $Webinar->price;
         }
-        $amount = 0;
-        foreach ($prices as  $price) {
-            $amount += $price;
+        if (isset($sale_link->price) &&   $sale_link->price > 0) {
+            $amount = $sale_link->price;
+        } else {
+            $amount = 0;
+            foreach ($prices as  $price) {
+                $amount += $price;
+            }
         }
         if (auth()->user()) {
             $user_id = auth()->user()->id;
@@ -349,7 +352,7 @@ class PaymentController extends Controller
                 }
             }
             session()->put($this->order_session_key, $order->id);
-            return redirect('/payments/status');
+            return redirect('/payments/status?order_id=' . $order->id);
         } else {
             $toastData = [
                 'title' => trans('cart.fail_purchase'),
@@ -434,15 +437,15 @@ class PaymentController extends Controller
 
     public function payStatus(Request $request)
     {
-        $orderId = $request->get('order_id', null);
-        if (!empty(session()->get($this->order_session_key, null))) {
-            $orderId = session()->get($this->order_session_key, null);
+        if (!empty(session()->get($this->order_session_key))) {
+            $orderId = session()->get($this->order_session_key);
             session()->forget($this->order_session_key);
+        } else {
+            $orderId = $request->get('order_id', null);
         }
         $order = Order::where('id', $orderId)
-            ->where('user_id', auth()->id())
+            ->where('user_id', auth()->user()->id)
             ->first();
-
         if (!empty($order)) {
             $data = [
                 'pageTitle' => trans('public.cart_page_title'),
@@ -453,15 +456,19 @@ class PaymentController extends Controller
                 $products = json_decode($list_pay->products);
                 foreach ($products as $product) {
                     $Webinar = Webinar::where('id', $product)->first();
-                    Sale::create([
-                        'order_id' => $order->id,
-                        'webinar_id' => $Webinar->id,
-                        'type' => 'webinar',
-                        'amount' =>  $Webinar->price,
-                        'total_amount' => $Webinar->price,
-                        'buyer_id' => auth()->user()->id,
-                        'created_at' => time()
-                    ]);
+                    Sale::updateOrCreate(
+                        [
+                            'webinar_id' => $Webinar->id,
+                            'buyer_id' => auth()->user()->id,
+                        ],
+                        [
+                            'order_id' => $order->id,
+                            'type' => 'webinar',
+                            'amount' => $Webinar->price,
+                            'total_amount' => $Webinar->price,
+                            'created_at' => time(),
+                        ]
+                    );
                 }
             } elseif ($order->prepay == 'pending') {
                 prepayment::create([
@@ -488,15 +495,19 @@ class PaymentController extends Controller
                 $prepayment->pay =  $order->total_amount;
                 $prepayment->save();
                 $total_amount = $prepayment->amount + $order->total_amount;
-                Sale::create([
-                    'order_id' => $order->id,
-                    'webinar_id' => $order->webinar_id,
-                    'type' => 'webinar',
-                    'amount' => $total_amount,
-                    'total_amount' => $total_amount,
-                    'buyer_id' => auth()->user()->id,
-                    'created_at' => time()
-                ]);
+                Sale::updateOrCreate(
+                    [
+                        'webinar_id' => $order->webinar_id,
+                        'buyer_id' => auth()->user()->id,
+                    ],
+                    [
+                        'order_id' => $order->id,
+                        'type' => 'webinar',
+                        'amount' => $total_amount,
+                        'total_amount' => $total_amount,
+                        'created_at' => time(),
+                    ]
+                );
                 if ($order->payment_method == 'credit') {
                     Accounting::create([
                         'user_id' => auth()->user()->id,
@@ -508,21 +519,11 @@ class PaymentController extends Controller
                         'created_at' => time()
                     ]);
                 }
-            } else {
-                Sale::create([
-                    'order_id' => $order->id,
-                    'webinar_id' => $order->webinar_id,
-                    'type' => 'webinar',
-                    'amount' =>  $order->total_amount,
-                    'total_amount' => $order->total_amount,
-                    'buyer_id' => auth()->user()->id,
-                    'created_at' => time()
-                ]);
             }
             return view('web.default.cart.status_pay', $data);
+        } else {
+            return redirect('/panel');
         }
-
-        return redirect('/panel');
     }
 
     private function handleMeetingReserveReward($user)

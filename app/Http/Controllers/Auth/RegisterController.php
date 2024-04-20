@@ -77,10 +77,18 @@ class RegisterController extends Controller
         // $code = rand(1000, 9999);
         $rules = [
             'full_name' => 'required',
-            'email' => 'required|email|unique:users',
             'password' => 'required|min:8',
-            'mobile' => 'required|numeric|unique:users|regex:/^[0][9][0-9]{9,9}$/',
         ];
+        if (request()->has('email')) {
+            $rules['email'] = 'required|email|unique:users';
+        } elseif (request()->has('mobile')) {
+            $rules['mobile'] = [
+                'required',
+                'numeric',
+                'unique:users',
+                'regex:/^[0][9][0-9]{9,9}$/',
+            ];
+        }
         $Validator =  Validator::make($request->all(), $rules);
 
         if ($Validator->fails()) {

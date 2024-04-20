@@ -205,7 +205,7 @@
                                     <button type="button" data-slug="{{ $course->slug }}"
                                         class="btn btn-primary {{ !empty($authUser) ? 'js-join-waitlist-user' : 'js-join-waitlist-guest' }}">{{ trans('update.join_waitlist') }}</button>
                                 @elseif($hasBought or !empty($course->getInstallmentOrder()))
-                                    @if ($course->spotplayer == 'active')
+                                    @if ($course->spotplayer == 'active' && isset($spotplayers))
                                         <button class="btn btn-primary mb-15" disabled>شما این در این دوره شرکت کرده اید
                                         </button>
 

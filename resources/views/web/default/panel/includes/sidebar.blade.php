@@ -64,7 +64,7 @@
     </div>
 
     <ul id="panel-sidebar-scroll"
-        class="sidebar-menu pt-10 @if (!empty($authUser->userGroup)) has-user-group @endif @if (empty($getPanelSidebarSettings) or empty($getPanelSidebarSettings['background'])) without-bottom-image @endif"
+        class="sidebar-menu pt-10 without-bottom-image @if (!empty($authUser->userGroup)) has-user-group @endif @if (empty($getPanelSidebarSettings) or empty($getPanelSidebarSettings['background'])) without-bottom-image @endif"
         @if (!empty($isRtl) and $isRtl) data-simplebar-direction="rtl" @endif>
 
         <li class="sidenav-item {{ request()->is('panel') ? 'sidenav-item-active' : '' }}">

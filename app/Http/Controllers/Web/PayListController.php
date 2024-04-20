@@ -14,7 +14,6 @@ class PayListController extends Controller
 {
     public function index($id)
     {
-        sale_link::where('id', $id)->first();
         $user = Auth::user();
         if ($user) {
             $charge = $user->getAccountingCharge();
@@ -36,10 +35,15 @@ class PayListController extends Controller
             $webinars[] = $webinar;
             $prices[] = $webinar->price;
         }
-        $amount = 0;
-        foreach ($prices as  $price) {
-            $amount += $price;
+        if (isset($sale_link->price) &&   $sale_link->price > 0) {
+            $amount = $sale_link->price;
+        } else {
+            $amount = 0;
+            foreach ($prices as  $price) {
+                $amount += $price;
+            }
         }
+
         $offlineBanks = OfflineBank::get();
         $data = [
             'pageTitle' => 'لیست پرداخت',

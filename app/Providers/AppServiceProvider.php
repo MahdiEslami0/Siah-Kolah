@@ -26,5 +26,8 @@ class AppServiceProvider extends ServiceProvider
     public function boot()
     {
         Paginator::defaultView('pagination::default');
+        \Blade::directive('formatPrice', function ($expression) {
+            return "<?php echo number_format($expression, 0, '.', ','); ?>";
+        });
     }
 }
