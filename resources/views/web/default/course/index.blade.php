@@ -215,7 +215,7 @@
                                         <input type="text" class="form-control" value="{{ $spotplayers->key }}"
                                             disabled>
                                         <div class="row mt-15">
-                                            <div class="col-md-3">
+                                            <div class="col-3">
                                                 <a href="https://app.spotplayer.ir/assets/bin/spotplayer/setup.apk"
                                                     target="_blank" rel="noopener noreferrer">
                                                     <img src="/spotplayer/android.png" class="shadow-lg"
@@ -225,7 +225,7 @@
                                                     </center>
                                                 </a>
                                             </div>
-                                            <div class="col-md-3 ">
+                                            <div class="col-3">
                                                 <a href="https://app.spotplayer.ir/" target="_blank">
                                                     <img src="/spotplayer/web.png" class="shadow-lg"
                                                         style="width: 100%;border-radius:10px">
@@ -234,7 +234,7 @@
                                                     </center>
                                                 </a>
                                             </div>
-                                            <div class="col-md-3">
+                                            <div class="col-3">
                                                 <a href="https://app.spotplayer.ir/assets/bin/spotplayer/setup.exe"
                                                     target="_blank">
                                                     <img src="/spotplayer/win.png" class="shadow-lg"
@@ -244,7 +244,7 @@
                                                     </center>
                                                 </a>
                                             </div>
-                                            <div class="col-md-3">
+                                            <div class="col-3">
                                                 <a href="https://app.spotplayer.ir/assets/bin/spotplayer/setup.dmg"
                                                     target="_blank">
                                                     <img src="/spotplayer/mac.png" class="shadow-lg"

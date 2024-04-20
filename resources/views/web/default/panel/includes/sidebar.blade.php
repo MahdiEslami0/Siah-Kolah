@@ -454,18 +454,20 @@
                     <li class="mt-5 {{ request()->is('panel/financial/summary') ? 'active' : '' }}">
                         <a href="/panel/financial/summary">{{ trans('financial.financial_summary') }}</a>
                     </li>
-
+                    {{-- 
                     <li class="mt-5 {{ request()->is('panel/financial/payout') ? 'active' : '' }}">
                         <a href="/panel/financial/payout">{{ trans('financial.payout') }}</a>
-                    </li>
+                    </li> --}}
 
                     <li class="mt-5 {{ request()->is('panel/financial/account') ? 'active' : '' }}">
-                        <a href="/panel/financial/account">{{ trans('financial.charge_account') }}</a>
+                        <a href="/panel/financial/account">
+                        پرداخت آفلاین 
+                        </a>
                     </li>
 
-                    <li class="mt-5 {{ request()->is('panel/financial/subscribes') ? 'active' : '' }}">
+                    {{-- <li class="mt-5 {{ request()->is('panel/financial/subscribes') ? 'active' : '' }}">
                         <a href="/panel/financial/subscribes">{{ trans('financial.subscribes') }}</a>
-                    </li>
+                    </li> --}}
 
                     @if ($authUser->isOrganization() || $authUser->isTeacher() and getRegistrationPackagesGeneralSettings('status'))
                         <li
@@ -500,9 +502,9 @@
                     <li class="mt-5 {{ request()->is('panel/support/new') ? 'active' : '' }}">
                         <a href="/panel/support/new">{{ trans('public.new') }}</a>
                     </li>
-                    <li class="mt-5 {{ request()->is('panel/support') ? 'active' : '' }}">
+                    {{-- <li class="mt-5 {{ request()->is('panel/support') ? 'active' : '' }}">
                         <a href="/panel/support">{{ trans('panel.classes_support') }}</a>
-                    </li>
+                    </li> --}}
                     <li class="mt-5 {{ request()->is('panel/support/tickets') ? 'active' : '' }}">
                         <a href="/panel/support/tickets">{{ trans('panel.support_tickets') }}</a>
                     </li>

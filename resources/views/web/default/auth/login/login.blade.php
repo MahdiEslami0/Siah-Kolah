@@ -23,16 +23,22 @@
                             <input type="text" name="login_method" id="login_method" hidden>
                             <div class="d-flex mb-30">
                                 <div class="w-100">
-                                    <button class=" btn  w-100" style="border-radius: 0px 10px 10px 0px;" type="button"
-                                        id="by_password">ورود با
-                                        پسورد
+                                    <button class="btn w-100" style="border-radius: 0px 10px 10px 0px;" type="button"
+                                        id="by_password">
+                                        <span style="font-size: 11px">
+                                            ورود با
+                                            پسورد
+                                        </span>
                                     </button>
                                 </div>
                                 <div class="w-100">
                                     <button class=" btn  w-100" style="border-radius: 10px 0px 0px 10px;" type="button"
-                                        id="by_mobile">ورود با
-                                        شماره
-                                        همراه
+                                        id="by_mobile">
+                                        <span style="font-size: 11px">
+                                            ورود با
+                                            شماره
+                                            همراه
+                                        </span>
                                     </button>
                                 </div>
                             </div>

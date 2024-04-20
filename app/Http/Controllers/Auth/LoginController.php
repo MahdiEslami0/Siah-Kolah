@@ -170,7 +170,7 @@ class LoginController extends Controller
             ];
             $otp->delete();
             $cartManagerController = new CartManagerController();
-            $cartManagerController->storeCookieCartsToDB(); 
+            $cartManagerController->storeCookieCartsToDB();
             return redirect(url('/'))->with(['toast' => $toastData]);
         } else {
             $otp->try =  $otp->try + 1;
