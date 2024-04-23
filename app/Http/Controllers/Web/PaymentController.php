@@ -447,10 +447,6 @@ class PaymentController extends Controller
             ->where('user_id', auth()->user()->id)
             ->first();
         if (!empty($order)) {
-            $data = [
-                'pageTitle' => trans('public.cart_page_title'),
-                'order' => $order,
-            ];
             if (isset($order->list_id)) {
                 $list_pay = sale_link::where('id', $order->list_id)->first();
                 $products = json_decode($list_pay->products);
@@ -470,6 +466,8 @@ class PaymentController extends Controller
                         ]
                     );
                 }
+                $button = 'مشاهده دوره ها';
+                $href = "/panel/webinars/purchases";
             } elseif ($order->prepay == 'pending') {
                 prepayment::create([
                     'webinar_id' =>  $order->webinar_id,
@@ -489,6 +487,8 @@ class PaymentController extends Controller
                         'created_at' => time()
                     ]);
                 }
+                $button = "پیش واریز ها";
+                $href = "/panel/webinars/prepay";
             } elseif ($order->prepay == 'complete') {
                 $prepayment = prepayment::where('id', $order->prepay_id)->first();
                 $prepayment->status = 'done';
@@ -519,7 +519,18 @@ class PaymentController extends Controller
                         'created_at' => time()
                     ]);
                 }
+                $button = "مشاهده دوره ها";
+                $href = "/panel/webinars/purchases";
+            } else {
+                $button = 'مشاهده دوره ها';
+                $href = "/panel/webinars/purchases";
             }
+            $data = [
+                'pageTitle' => trans('public.cart_page_title'),
+                'order' => $order,
+                'button' => $button,
+                'href' => $href,
+            ];
             return view('web.default.cart.status_pay', $data);
         } else {
             return redirect('/panel');
