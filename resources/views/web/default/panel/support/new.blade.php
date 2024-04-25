@@ -28,7 +28,7 @@
 
                     <select name="type" id="supportType" class="form-control  @error('type')  is-invalid @enderror" data-allow-clear="false" data-search="false">
                         <option selected disabled></option>
-                        <option value="course_support" @if($errors->has('webinar_id')) selected @endif>{{ trans('panel.course_support') }}</option>
+                        {{-- <option value="course_support" @if($errors->has('webinar_id')) selected @endif>{{ trans('panel.course_support') }}</option> --}}
                         <option value="platform_support" @if($errors->has('department_id')) selected @endif>{{ trans('panel.platform_support') }}</option>
                     </select>
 

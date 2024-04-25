@@ -153,7 +153,7 @@ Route::group(['prefix' => $prefix, 'namespace' => 'Admin', 'middleware' => ['web
             Route::get('/{id}/delete', 'SupportsController@delete');
 
             Route::get('/{id}/close', 'SupportsController@conversationClose');
-            Route::get('/{id}/conversation', 'SupportsController@conversation');
+        Route::get('/{id}/conversation', 'SupportsController@conversation');
             Route::post('/{id}/conversation', 'SupportsController@storeConversation');
 
             Route::group(['prefix' => 'departments'], function () {

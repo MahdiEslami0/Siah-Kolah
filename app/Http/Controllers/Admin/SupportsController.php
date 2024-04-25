@@ -18,13 +18,18 @@ class SupportsController extends Controller
     {
         $this->authorize('admin_supports_list');
 
-        $query = Support::select('*',DB::raw("case
+
+
+        $query = Support::select('*', DB::raw("case
             when status = 'open' then 'a'
             when status = 'replied' then 'a'
             when status = 'supporter_replied' then 'b'
             when status = 'close' then 'c'
             end as status_order
         "));
+
+            $query->where('department_id', auth()->user()->departmen_id);
+            $query->orwhere('support_id', auth()->user()->id);
 
         if (!empty($request->get('type')) and $request->get('type') == 'course_conversations') {
             $query->whereNotNull('webinar_id')
@@ -252,7 +257,7 @@ class SupportsController extends Controller
             'created_at' => time(),
         ]);
 
-        return redirect(getAdminPanelUrl().'/supports/' . $support->id . '/conversation');
+        return redirect(getAdminPanelUrl() . '/supports/' . $support->id . '/conversation');
     }
 
     public function edit($id)
@@ -307,7 +312,7 @@ class SupportsController extends Controller
             'updated_at' => time(),
         ]);
 
-        return redirect(getAdminPanelUrl().'/supports');
+        return redirect(getAdminPanelUrl() . '/supports');
     }
 
     public function delete($id)
@@ -324,7 +329,7 @@ class SupportsController extends Controller
 
         $support->delete();
 
-        return redirect(getAdminPanelUrl().'/supports');
+        return redirect(getAdminPanelUrl() . '/supports');
     }
 
     public function conversationClose($id)
@@ -343,7 +348,7 @@ class SupportsController extends Controller
             'updated_at' => time()
         ]);
 
-        return redirect(getAdminPanelUrl().'/supports/' . $support->id . '/conversation');
+        return redirect(getAdminPanelUrl() . '/supports/' . $support->id . '/conversation');
     }
 
     public function conversation($id)
@@ -374,9 +379,16 @@ class SupportsController extends Controller
             abort(404);
         }
 
+
+        $users = User::where('role_id', '>', '1')->get();
+        $departments = SupportDepartment::get();
+
+
         $data = [
             'pageTitle' => trans('admin/pages/users.support_conversation'),
-            'support' => $support
+            'support' => $support,
+            'users' => $users,
+            'departments' => $departments
         ];
 
         return view('admin.supports.conversation', $data);
@@ -401,6 +413,8 @@ class SupportsController extends Controller
 
         $support->update([
             'status' => 'supporter_replied',
+            'department_id' => $data['department'],
+            'support_id' => $data['support'],
             'updated_at' => time()
         ]);
 
@@ -412,6 +426,6 @@ class SupportsController extends Controller
             'created_at' => time(),
         ]);
 
-        return redirect(getAdminPanelUrl().'/supports/' . $support->id . '/conversation');
+        return redirect(getAdminPanelUrl() . '/supports/' . $support->id . '/conversation');
     }
 }
