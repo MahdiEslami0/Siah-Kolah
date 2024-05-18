@@ -42,8 +42,10 @@ class SaleLinkController extends Controller
             'name' => $request->name,
             'status' => $request->status,
             'products' => json_encode($request->products),
-            'price' => $request->price
+            'price' => $request->price,
+            'seller_id' => auth()->user()->id
         ]);
+
         return redirect(getAdminPanelUrl() . '/link/list');
     }
 

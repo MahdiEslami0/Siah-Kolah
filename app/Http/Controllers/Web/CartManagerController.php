@@ -146,7 +146,6 @@ class CartManagerController extends Controller
                 }
             }
         } catch (\Exception $exception) {
-
         }
     }
 
@@ -335,7 +334,13 @@ class CartManagerController extends Controller
             'msg' => trans('cart.cart_add_success_msg'),
             'status' => 'success'
         ];
-        return back()->with(['toast' => $toastData]);
+        return redirect()->to(url('/cart'))->with(['toast' => $toastData]);
+    }
+
+    public function store_direct()
+    {
+        $user = auth()->user();
+        $this->storeUserWebinarCart($user, $data);
     }
 
     public function destroy($id)

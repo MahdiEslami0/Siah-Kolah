@@ -52,6 +52,8 @@ class RouteServiceProvider extends ServiceProvider
 
         $this->mapPanelRoutes();
 
+        $this->mapLandRoutes();
+
         //
     }
 
@@ -82,7 +84,6 @@ class RouteServiceProvider extends ServiceProvider
             ->middleware('api')
             ->namespace($this->api_namespace)
             ->group(base_path('routes/api.php'));
-
     }
 
     /**
@@ -103,5 +104,12 @@ class RouteServiceProvider extends ServiceProvider
         Route::middleware('web')
             ->namespace($this->namespace)
             ->group(base_path('routes/panel.php'));
+    }
+
+    protected function mapLandRoutes()
+    {
+        Route::middleware('web')
+            ->namespace($this->namespace)
+            ->group(base_path('routes/land.php'));
     }
 }

@@ -18,6 +18,7 @@ use Illuminate\Support\Facades\Auth as FacadesAuth;
 use Illuminate\Validation\ValidationException;
 use Session;
 
+
 class LoginController extends Controller
 {
     /*
@@ -32,6 +33,7 @@ class LoginController extends Controller
     */
 
     use AuthenticatesUsers;
+
 
     /**
      * Where to redirect users after login.
@@ -74,47 +76,62 @@ class LoginController extends Controller
                 'mobile' => ['required', 'numeric', 'regex:/^[0][9][0-9]{9}$/'],
             ]);
             $user =  user::where('mobile', $request->mobile)->first();
-            if (isset($user)) {
-                $otp =  otp::where('user_id',  $user->id)->first();
-                $key = uuid_create();
-                $code = rand(1000, 9999);
-                if ($otp && $otp->created_at->diffInMinutes(now()) < 3) {
-                    $toastData = [
-                        'title' => 'کد قبلا ارسال شده است',
-                        'msg' => ($otp->created_at->diffInMinutes(now()) - 3) * -1 . ' دقیقه دیگر دوباره تلاش کنید ',
-                        'status' => 'error'
-                    ];
-                    return redirect(url('login/otp'))->with(['toast' => $toastData]);
+            $otp =  otp::where('user_id',  $user->id)->first();
+            $key = uuid_create();
+            $code = rand(1000, 9999);
+            if (!isset($user)) {
+                $user = User::create([
+                    'full_name' => 'کاربر' . ' ' . $request->mobile,
+                    'mobile' => $request->mobile,
+                    'role_id' => 1,
+                    'role_name' => 'user',
+                    'status' => 'active',
+                    'created_at' => time()
+                ]);
+            }
+            if ($otp && $otp->created_at->diffInMinutes(now()) < 3) {
+                $toastData = [
+                    'title' => 'کد قبلا ارسال شده است',
+                    'msg' => ($otp->created_at->diffInMinutes(now()) - 3) * -1 . ' دقیقه دیگر دوباره تلاش کنید ',
+                    'status' => 'error'
+                ];
+                if ($request->method == 'ajax') {
+                    return response()->json([
+                        'status' => 'error',
+                        'message' => 'کد قبلا ارسال شده است'
+                    ], 500);
                 } else {
-                    if (isset($otp)) {
-                        $otp->delete();
-                    }
-                    otp::create([
-                        'code' =>  $code,
-                        'key' => $key,
-                        'user_id' => $user->id,
-                        'try' => 0
-                    ]);
-                    Http::get('http://api.kavenegar.com/v1/2F4E5079575663783031503968356E4E516851634C2F566C6B435A5A7254532B434E3676596443563068733D/verify/lookup.json', [
-                        'receptor' => $user->mobile,
-                        'token' => $code,
-                        'template' => 'verify'
-                    ]);
-                    Session::put('otp_key', $key);
-                    $toastData = [
-                        'title' => "موفق",
-                        'msg' => 'کد تایید برای شما پیامک شد',
-                        'status' => 'success'
-                    ];
                     return redirect(url('login/otp'))->with(['toast' => $toastData]);
                 }
             } else {
+                if (isset($otp)) {
+                    $otp->delete();
+                }
+                otp::create([
+                    'code' =>  $code,
+                    'key' => $key,
+                    'user_id' => $user->id,
+                    'try' => 0
+                ]);
+                Http::get('http://api.kavenegar.com/v1/2F4E5079575663783031503968356E4E516851634C2F566C6B435A5A7254532B434E3676596443563068733D/verify/lookup.json', [
+                    'receptor' => $user->mobile,
+                    'token' => $code,
+                    'template' => 'verify'
+                ]);
+                Session::put('otp_key', $key);
                 $toastData = [
-                    'title' => trans('public.request_failed'),
-                    'msg' => 'کاربری یافت نشد',
-                    'status' => 'error'
+                    'title' => "موفق",
+                    'msg' => 'کد تایید برای شما پیامک شد',
+                    'status' => 'success'
                 ];
-                return redirect()->back()->with(['toast' => $toastData]);
+                if ($request->method == 'ajax') {
+                    return response()->json([
+                        'status' => 'code_sent',
+                        'key' => $key
+                    ]);
+                } else {
+                    return redirect(url('login/otp'))->with(['toast' => $toastData]);
+                }
             }
         } elseif ($request->login_method == 'by_password') {
             $credentials = $request->only('email', 'password');
@@ -163,15 +180,31 @@ class LoginController extends Controller
         $user = User::where('id', $otp->user_id)->first();
         if ($request->code == $otp->code) {
             Auth::login($user);
-            $toastData = [
-                'title' => 'موفق',
-                'msg' => 'ورود موفق',
-                'status' => 'success'
-            ];
+
             $otp->delete();
             $cartManagerController = new CartManagerController();
             $cartManagerController->storeCookieCartsToDB();
-            return redirect(url('/'))->with(['toast' => $toastData]);
+            if (!isset($request->buy_type)) {
+                $toastData = [
+                    'title' => 'موفق',
+                    'msg' => 'ورود موفق',
+                    'status' => 'success'
+                ];
+                return redirect(url('/'))->with(['toast' => $toastData]);
+            } elseif ($request->buy_type == 'add_cart') {
+                $toastData = [
+                    'title' => 'موفق',
+                    'msg' => 'محصول به سبدخرید شما اضافه شد',
+                    'status' => 'success'
+                ];
+                $data = ["item_id" => $request->webinar_id];
+                $CartManagerController = new CartManagerController();
+                $CartManagerController->storeUserWebinarCart($user, $data);
+                return redirect(url('/cart'))->with(['toast' => $toastData]);
+            } elseif ($request->buy_type == 'prepay') {
+                $url = '/prepay/' . $request->webinar_id;
+                return redirect($url);
+            }
         } else {
             $otp->try =  $otp->try + 1;
             $otp->save();
