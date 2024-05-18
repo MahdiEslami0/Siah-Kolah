@@ -136,7 +136,6 @@ class LoginController extends Controller
         } elseif ($request->login_method == 'by_password') {
             $credentials = $request->only('email', 'password');
             if (FacadesAuth::attempt($credentials)) {
-                return redirect()->intended('/');
                 $toastData = [
                     'title' => "موفق",
                     'msg' => 'با موفقیت وارد شدید',
