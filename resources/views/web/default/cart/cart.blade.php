@@ -1,4 +1,4 @@
-@extends(getTemplate().'.layouts.app')
+@extends(getTemplate().'.layouts.siahkolah')
 
 
 @section('content')

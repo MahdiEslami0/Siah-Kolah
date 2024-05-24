@@ -23,6 +23,7 @@
             color: #fff
         }
 
+
         .container {
             max-width: 600px;
         }

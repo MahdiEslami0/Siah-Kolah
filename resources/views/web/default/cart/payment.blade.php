@@ -1,4 +1,4 @@
-@extends(getTemplate() . '.layouts.app')
+@extends(getTemplate() . '.layouts.siahkolah')
 
 @push('styles_top')
 @endpush
@@ -39,68 +39,7 @@
             {{ csrf_field() }}
             <input type="hidden" name="order_id" value="{{ $order->id }}">
 
-            <div class="row">
-                @if (!empty($paymentChannels))
-                    @foreach ($paymentChannels as $paymentChannel)
-                        @if (!$isMultiCurrency or !empty($paymentChannel->currencies) and in_array($userCurrency, $paymentChannel->currencies))
-                            <div class="col-6 col-lg-4 mb-40 charge-account-radio">
-                                <input type="radio" name="gateway" id="{{ $paymentChannel->title }}"
-                                    data-class="{{ $paymentChannel->class_name }}" value="{{ $paymentChannel->id }}">
-                                <label for="{{ $paymentChannel->title }}"
-                                    class="rounded-sm p-20 p-lg-45 d-flex flex-column align-items-center justify-content-center"
-                                    style="height: 250px;">
-                                    <img src="{{ $paymentChannel->image }}" width="120" height="60" alt="">
-
-                                    <p class="mt-30 mt-lg-50 font-weight-500 text-dark-blue">
-                                        {{ trans('financial.pay_via') }}
-                                        <span class="font-weight-bold font-14">{{ $paymentChannel->title }}</span>
-                                    </p>
-                                </label>
-                            </div>
-                        @else
-                            @php
-                                $invalidChannels[] = $paymentChannel;
-                            @endphp
-                        @endif
-                    @endforeach
-                @endif
-
-
-                <div class="col-6 col-lg-4 mb-40 charge-account-radio">
-                    <input type="radio" name="gateway" id="cart" value="cart" onclick="showHideDiv(this.value)">
-                    <label for="cart"
-                        class="rounded-sm p-20 p-lg-45 d-flex flex-column align-items-center justify-content-center"
-                        style="height: 250px">
-                        <img src="/assets/default/img/activity/cart.png" width="120" height="120" alt="">
-                        <p class="mt-30 mt-lg-50 font-weight-500 text-dark-blue">
-                            کارت به کارت
-                        </p>
-                    </label>
-                </div>
-
-                <div class="col-6 col-lg-4 mb-40 charge-account-radio">
-                    <input type="radio" @if (empty($userCharge) or $total > $userCharge) disabled @endif name="gateway" id="offline"
-                        value="credit">
-                    <label for="offline"
-                        class="rounded-sm p-20 p-lg-45 d-flex flex-column align-items-center justify-content-center"
-                        style="height: 250px">
-                        <img src="/assets/default/img/activity/pay.svg" width="120" height="60" alt="">
-
-                        <p class="mt-30 mt-lg-50 font-weight-500 text-dark-blue">
-                            کیف پول
-                        </p>
-
-
-
-                        <span class="mt-5 font-14">{{ handlePrice($userCharge) }}</span>
-
-                        <a href="/panel/financial/account">
-                            <button class="btn btn-sm btn-dark mt-2" type="button">افزایش موجودی</button>
-                        </a>
-
-                    </label>
-                </div>
-            </div>
+            @include('web.default.components.pay_cards')
 
             @if (!empty($invalidChannels))
                 <div class="d-flex align-items-center mt-30 rounded-lg border p-15">
@@ -160,6 +99,5 @@
 @endsection
 
 @push('scripts_bottom')
-  
     <script src="/assets/default/js/parts/payment.min.js"></script>
 @endpush
