@@ -86,6 +86,8 @@
 
         </section>
 
+        <img src="{{ url('images/site-sales-banner.jpg') }}" style="width: 100%;border-radius:20px" class="mt-40">
+
         @include('land.components.login')
 
 
