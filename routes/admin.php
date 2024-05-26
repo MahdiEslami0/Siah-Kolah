@@ -153,7 +153,7 @@ Route::group(['prefix' => $prefix, 'namespace' => 'Admin', 'middleware' => ['web
             Route::get('/{id}/delete', 'SupportsController@delete');
 
             Route::get('/{id}/close', 'SupportsController@conversationClose');
-        Route::get('/{id}/conversation', 'SupportsController@conversation');
+            Route::get('/{id}/conversation', 'SupportsController@conversation');
             Route::post('/{id}/conversation', 'SupportsController@storeConversation');
 
             Route::group(['prefix' => 'departments'], function () {
@@ -173,6 +173,15 @@ Route::group(['prefix' => $prefix, 'namespace' => 'Admin', 'middleware' => ['web
             Route::get('{id}/edit', 'NoticeboardController@edit');
             Route::post('{id}/update', 'NoticeboardController@update');
             Route::get('{id}/delete', 'NoticeboardController@delete');
+        });
+
+
+        Route::group(['prefix' => 'page-builder'], function () {
+            Route::get('/list', 'PageBuilderController@list');
+            Route::get('/create', 'PageBuilderController@create');
+            Route::post('/store', 'PageBuilderController@store');
+            Route::get('/edit/{id}', 'PageBuilderController@edit');
+            Route::post('/{id}/update', 'PageBuilderController@update');
         });
 
         Route::group(['prefix' => 'course-noticeboards'], function () {

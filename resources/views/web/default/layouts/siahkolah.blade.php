@@ -1,3 +1,6 @@
+@php
+    $PageBuilder = App\Models\PageBuilder::get();
+@endphp
 <!DOCTYPE html>
 <html lang="{{ app()->getLocale() }}">
 
@@ -43,9 +46,9 @@
             background-color: #ffce02 !important
         }
 
-        .cart-banner{
-            background-color:black;
-            border-radius:20px
+        .cart-banner {
+            background-color: black;
+            border-radius: 20px
         }
 
         .container {
@@ -85,39 +88,28 @@
 
         @include('land.components.login')
 
-        <section class="mt-30">
-            <h2 class="section-title">مشاوره :</h2>
-            <button class="btn btn-warning w-100 mt-3">شک داری ؟ صبحت با کارشناس</button>
-            <button class="btn btn-warning w-100 mt-3">رمز چالش</button>
-        </section>
+
+        <div class="mt-30">
+            @foreach ($PageBuilder as $item)
+                @if ($item->type == 'title')
+                    <h2 class="section-title mb-20">{{ $item->title }}</h2>
+                @endif
+                @if ($item->type == 'button')
+                    <a href="{{ $item->url ?? '#' }}">
+                        <button class="btn {{ $item->class }} w-100 mt-3 mb-20">{{ $item->title }}</button>
+                    </a>
+                @endif
+                @if ($item->type == 'info-box')
+                    <div style="border:solid black;padding:15px;border-radius:10px" class="mb-20">
+                        <h4> {{ $item->title }}</h4>
+                        {!! $item->description !!}
+                    </div>
+                @endif
+            @endforeach
+        </div>
 
 
-        <section class="mt-30">
-            <h2 class="section-title">درباره آکادمی :</h2>
-            <button class="btn btn-dark w-100 mt-3">داستان موفقیت دانشجویان</button>
-        </section>
 
-
-        <section class="mt-30">
-            <h2 class="section-title">پشتیبانی :</h2>
-            <button class="btn btn-green w-100 mt-3">پشتیبانی تلگرام</button>
-            <div style="border:solid black;padding:15px;border-radius:10px" class="mt-10">
-                <h4>اطلاعات تماس :</h4>
-                <div class="d-flex mt-5" style="gap: 10px">
-                    <div>0912000000</div>
-                    <div>-</div>
-                    <div>02144098765</div>
-                    <div>-</div>
-                    <div>02144098765</div>
-                </div>
-            </div>
-        </section>
-
-
-        <section class="mt-30">
-            <h2 class="section-title">هدیه :</h2>
-            <button class="btn btn-danger w-100 mt-3">دوره ویکتوری</button>
-        </section>
 
 
         <footer class="my-30">

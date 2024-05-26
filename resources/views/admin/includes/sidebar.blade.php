@@ -492,7 +492,7 @@
             @endcan() --}}
 
 
-{{-- 
+            {{-- 
             @can('admin_become_instructors_list')
                 <li
                     class="nav-item dropdown {{ request()->is(getAdminPanelUrl('/users/become-instructors*', false)) ? 'active' : '' }}">
@@ -596,7 +596,8 @@
             @endif
 
             @can('admin_supports')
-                <li class="nav-item dropdown {{ (request()->is(getAdminPanelUrl('/supports*', false)) and request()->get('type') != 'course_conversations') ? 'active' : '' }}">
+                <li
+                    class="nav-item dropdown {{ (request()->is(getAdminPanelUrl('/supports*', false)) and request()->get('type') != 'course_conversations') ? 'active' : '' }}">
                     <a href="#" class="nav-link has-dropdown" data-toggle="dropdown">
                         <i class="fas fa-headphones"></i>
                         <span>{{ trans('admin/main.supports') }}</span>
@@ -604,27 +605,31 @@
 
                     <ul class="dropdown-menu">
                         @can('admin_supports_list')
-                            <li class="{{ (request()->is(getAdminPanelUrl('/supports', false))) ? 'active' : '' }}">
-                                <a class="nav-link" href="{{ getAdminPanelUrl() }}/supports">{{ trans('public.tickets') }}</a>
+                            <li class="{{ request()->is(getAdminPanelUrl('/supports', false)) ? 'active' : '' }}">
+                                <a class="nav-link"
+                                    href="{{ getAdminPanelUrl() }}/supports">{{ trans('public.tickets') }}</a>
                             </li>
                         @endcan
 
                         @can('admin_support_send')
-                            <li class="{{ (request()->is(getAdminPanelUrl('/supports/create', false))) ? 'active' : '' }}">
-                                <a class="nav-link" href="{{ getAdminPanelUrl() }}/supports/create">{{ trans('admin/main.new_ticket') }}</a>
+                            <li class="{{ request()->is(getAdminPanelUrl('/supports/create', false)) ? 'active' : '' }}">
+                                <a class="nav-link"
+                                    href="{{ getAdminPanelUrl() }}/supports/create">{{ trans('admin/main.new_ticket') }}</a>
                             </li>
                         @endcan
 
                         @can('admin_support_departments')
-                            <li class="{{ (request()->is(getAdminPanelUrl('/supports/departments', false))) ? 'active' : '' }}">
-                                <a class="nav-link" href="{{ getAdminPanelUrl() }}/supports/departments">{{ trans('admin/main.departments') }}</a>
+                            <li class="{{ request()->is(getAdminPanelUrl('/supports/departments', false)) ? 'active' : '' }}">
+                                <a class="nav-link"
+                                    href="{{ getAdminPanelUrl() }}/supports/departments">{{ trans('admin/main.departments') }}</a>
                             </li>
                         @endcan
                     </ul>
                 </li>
 
                 @can('admin_support_course_conversations')
-                    <li class="{{ (request()->is(getAdminPanelUrl('/supports*', false)) and request()->get('type') == 'course_conversations') ? 'active' : '' }}">
+                    <li
+                        class="{{ (request()->is(getAdminPanelUrl('/supports*', false)) and request()->get('type') == 'course_conversations') ? 'active' : '' }}">
                         <a class="nav-link" href="{{ getAdminPanelUrl() }}/supports?type=course_conversations">
                             <i class="fas fa-envelope-square"></i>
                             <span>{{ trans('admin/main.classes_conversations') }}</span>
@@ -1466,7 +1471,7 @@
                     </ul>
                 </li>
             @endcan
-{{-- 
+            {{-- 
             @can('admin_feature_webinars')
                 <li
                     class="nav-item dropdown {{ request()->is(getAdminPanelUrl('/webinars/features*', false)) ? 'active' : '' }}">
@@ -1597,7 +1602,7 @@
                     </ul>
                 </li>
             @endcan --}}
-{{-- 
+            {{-- 
             @can('admin_newsletters')
                 <li
                     class="nav-item dropdown {{ request()->is(getAdminPanelUrl('/newsletters*', false)) ? 'active' : '' }}">
@@ -1724,6 +1729,22 @@
                 </li>
             @endcan()
 
+
+            <li
+                class="nav-item dropdown {{ request()->is(getAdminPanelUrl('/page-builder*', false)) ? 'active' : '' }}">
+                <a href="#" class="nav-link has-dropdown" data-toggle="dropdown">
+                    <i class="fa fa-cog"></i>
+                    <span>صفحه پیشرفته</span>
+                </a>
+                <ul class="dropdown-menu">
+                    <li class="{{ request()->is(getAdminPanelUrl('/page-builder/list', false)) ? 'active' : '' }}">
+                        <a class="nav-link" href="{{ getAdminPanelUrl() }}/page-builder/list">گزینه ها</a>
+                    </li>
+                    <li class="{{ request()->is(getAdminPanelUrl('/page-builder/create', false)) ? 'active' : '' }}">
+                        <a class="nav-link" href="{{ getAdminPanelUrl() }}/page-builder/create">ایجاد گزینه</a>
+                    </li>
+                </ul>
+            </li>
 
             <li>
                 <a class="nav-link" href="{{ getAdminPanelUrl() }}/logout">
