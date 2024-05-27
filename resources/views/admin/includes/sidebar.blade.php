@@ -658,12 +658,12 @@
                             </li>
                         @endcan
 
-                        @can('admin_blog_comments')
+                        {{-- @can('admin_blog_comments')
                             <li class="{{ request()->is(getAdminPanelUrl('/comments/blog', false)) ? 'active' : '' }}">
                                 <a class="nav-link @if (!empty($sidebarBeeps['blogComments']) and $sidebarBeeps['blogComments']) beep beep-sidebar @endif"
                                     href="{{ getAdminPanelUrl() }}/comments/blog">{{ trans('admin/main.blog_comments') }}</a>
                             </li>
-                        @endcan
+                        @endcan --}}
 
                         @can('admin_product_comments')
                             <li class="{{ request()->is(getAdminPanelUrl('/comments/products', false)) ? 'active' : '' }}">
@@ -697,13 +697,13 @@
                             </li>
                         @endcan
 
-                        @can('admin_blog_comments_reports')
+                        {{-- @can('admin_blog_comments_reports')
                             <li
                                 class="{{ request()->is(getAdminPanelUrl('/comments/blog/reports', false)) ? 'active' : '' }}">
                                 <a class="nav-link"
                                     href="{{ getAdminPanelUrl() }}/comments/blog/reports">{{ trans('admin/main.blog_comments_reports') }}</a>
                             </li>
-                        @endcan
+                        @endcan --}}
 
                         @can('admin_report_reasons')
                             <li class="{{ request()->is(getAdminPanelUrl('/reports/reasons', false)) ? 'active' : '' }}">
@@ -907,7 +907,7 @@
                 </li>
             @endcan --}}
 
-            @can('admin_blog')
+            {{-- @can('admin_blog')
                 <li
                     class="nav-item dropdown {{ (request()->is(getAdminPanelUrl('/blog*', false)) and !request()->is(getAdminPanelUrl('/blog/comments', false))) ? 'active' : '' }}">
                     <a href="#" class="nav-link has-dropdown" data-toggle="dropdown">
@@ -936,7 +936,7 @@
                         @endcan
                     </ul>
                 </li>
-            @endcan()
+            @endcan() --}}
 
             @can('admin_pages')
                 <li class="nav-item dropdown {{ request()->is(getAdminPanelUrl('/pages*', false)) ? 'active' : '' }}">

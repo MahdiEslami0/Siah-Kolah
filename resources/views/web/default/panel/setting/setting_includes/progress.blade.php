@@ -15,20 +15,20 @@
             'icon' => 'about'
         ],
 
-        4 => [
-            'lang' => 'public.educations',
-            'icon' => 'graduate'
-        ],
+        // 4 => [
+        //     'lang' => 'public.educations',
+        //     'icon' => 'graduate'
+        // ],
 
-        5 => [
-            'lang' => 'public.experiences',
-            'icon' => 'experiences'
-        ],
+        // 5 => [
+        //     'lang' => 'public.experiences',
+        //     'icon' => 'experiences'
+        // ],
 
-        6 => [
-            'lang' => 'public.occupations',
-            'icon' => 'skills'
-        ],
+        // 6 => [
+        //     'lang' => 'public.occupations',
+        //     'icon' => 'skills'
+        // ],
 
         7 => [
             'lang' => 'public.identity_and_financial',

@@ -28,8 +28,6 @@ class SupportsController extends Controller
             end as status_order
         "));
 
-            $query->where('department_id', auth()->user()->departmen_id);
-            $query->orwhere('support_id', auth()->user()->id);
 
         if (!empty($request->get('type')) and $request->get('type') == 'course_conversations') {
             $query->whereNotNull('webinar_id')
@@ -46,11 +44,22 @@ class SupportsController extends Controller
             $query->whereNotNull('department_id');
         }
 
-        $totalConversations = deepClone($query)->count();
-        $openConversationsCount = deepClone($query)->where('status', '!=', 'close')->count();
-        $closeConversationsCount = deepClone($query)->where('status', 'close')->count();
-        $classesWithSupport = 0;
-        $pendingReplySupports = 0;
+
+        if (auth()->user()->role_id != 2) {
+            $query->where('department_id', auth()->user()->departmen_id)->orwhere('support_id', auth()->user()->id);
+            $totalConversations = deepClone($query)->where('department_id', auth()->user()->departmen_id)->orwhere('support_id', auth()->user()->id)->count();
+            $openConversationsCount = deepClone($query)->where('department_id', auth()->user()->departmen_id)->orwhere('support_id', auth()->user()->id)->where('status', '!=', 'close')->count();
+            $closeConversationsCount = deepClone($query)->where('department_id', auth()->user()->departmen_id)->orwhere('support_id', auth()->user()->id)->where('status', 'close')->count();
+            $classesWithSupport = 0;
+            $pendingReplySupports = 0;
+        } else {
+            $totalConversations = deepClone($query)->count();
+            $openConversationsCount = deepClone($query)->where('status', '!=', 'close')->count();
+            $closeConversationsCount = deepClone($query)->where('status', 'close')->count();
+            $classesWithSupport = 0;
+            $pendingReplySupports = 0;
+        }
+
 
         if (!empty($request->get('type')) and $request->get('type') == 'course_conversations') {
             $classesWithSupport = Webinar::where('support', true)
@@ -399,7 +408,7 @@ class SupportsController extends Controller
         $this->authorize('admin_supports_reply');
 
         $this->validate($request, [
-            'message' => 'required|string|min:2',
+            // 'message' => 'required|string|min:2',
         ]);
 
         $data = $request->all();
@@ -418,13 +427,16 @@ class SupportsController extends Controller
             'updated_at' => time()
         ]);
 
-        SupportConversation::create([
-            'support_id' => $support->id,
-            'supporter_id' => auth()->id(),
-            'message' => $data['message'],
-            'attach' => $data['attach'],
-            'created_at' => time(),
-        ]);
+        if (isset($request->message) || isset($request->reason)) {
+            SupportConversation::create([
+                'support_id' => $support->id,
+                'supporter_id' => auth()->id(),
+                'message' => $data['message'],
+                'attach' => $data['attach'],
+                'reason' => $data['reason'],
+                'created_at' => time(),
+            ]);
+        }
 
         return redirect(getAdminPanelUrl() . '/supports/' . $support->id . '/conversation');
     }

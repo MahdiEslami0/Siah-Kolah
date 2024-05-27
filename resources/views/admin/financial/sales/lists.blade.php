@@ -246,9 +246,8 @@
                                                 @if ($sale->payment_method == \App\Models\Sale::$subscribe)
                                                     <span class="">{{ trans('admin/main.subscribe') }}</span>
                                                 @else
-                                                    @if (!empty($sale->total_amount))
-                                                        <span
-                                                            class="">{{ handlePrice($sale->total_amount ?? 0) }}</span>
+                                                    @if (!empty($sale->amount))
+                                                        <span class="">{{ handlePrice($sale->amount ?? 0) }}</span>
                                                     @else
                                                         <span class="">{{ trans('public.free') }}</span>
                                                     @endif

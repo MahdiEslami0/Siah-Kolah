@@ -47,29 +47,58 @@
                         <div class="card-body chat-content">
 
                             @foreach ($support->conversations as $conversations)
-                                <div class="chat-item chat-{{ !empty($conversations->sender_id) ? 'right' : 'left' }}">
-                                    <img
-                                        src="{{ !empty($conversations->sender_id) ? $conversations->sender->getAvatar() : $conversations->supporter->getAvatar() }}">
+                                @if (isset($conversations->message))
+                                    <div class="chat-item chat-{{ !empty($conversations->sender_id) ? 'right' : 'left' }}">
+                                        <img
+                                            src="{{ !empty($conversations->sender_id) ? $conversations->sender->getAvatar() : $conversations->supporter->getAvatar() }}">
 
-                                    <div class="chat-details">
+                                        <div class="chat-details">
 
-                                        <div class="chat-time">
-                                            {{ !empty($conversations->sender_id) ? $conversations->sender->full_name : $conversations->supporter->full_name }}
-                                        </div>
+                                            <div class="chat-time">
+                                                {{ !empty($conversations->sender_id) ? $conversations->sender->full_name : $conversations->supporter->full_name }}
+                                            </div>
 
-                                        <div class="chat-text white-space-pre-wrap">{{ $conversations->message }}</div>
-                                        <div class="chat-time">
-                                            <span
-                                                class="mr-2">{{ dateTimeFormat($conversations->created_at, 'Y M j | H:i') }}</span>
+                                            <div class="chat-text white-space-pre-wrap">
+                                                {{ $conversations->message }}
 
-                                            @if (!empty($conversations->attach))
-                                                <a href="{{ url($conversations->attach) }}" target="_blank"
-                                                    class="text-success"><i class="fa fa-paperclip"></i>
-                                                    {{ trans('admin/main.open_attach') }}</a>
-                                            @endif
+                                            </div>
+                                            <div class="chat-time">
+                                                <span
+                                                    class="mr-2">{{ dateTimeFormat($conversations->created_at, 'Y M j | H:i') }}</span>
+
+                                                @if (!empty($conversations->attach))
+                                                    <a href="{{ url($conversations->attach) }}" target="_blank"
+                                                        class="text-success"><i class="fa fa-paperclip"></i>
+                                                        {{ trans('admin/main.open_attach') }}</a>
+                                                @endif
+                                            </div>
                                         </div>
                                     </div>
-                                </div>
+                                @endif
+                                @if (isset($conversations->reason))
+                                    <div class="chat-item chat-{{ !empty($conversations->sender_id) ? 'right' : 'left' }}">
+                                        <img
+                                            src="{{ !empty($conversations->sender_id) ? $conversations->sender->getAvatar() : $conversations->supporter->getAvatar() }}">
+                                        <div class="chat-details">
+                                            <div class="chat-time">
+                                                {{ !empty($conversations->sender_id) ? $conversations->sender->full_name : $conversations->supporter->full_name }}
+                                                (علت ضمیمه شده)
+                                            </div>
+                                            <div>
+                                                <span class="text-danger">{{ $conversations->reason }}</span>
+                                            </div>
+                                            <div class="chat-time">
+                                                <span
+                                                    class="mr-2">{{ dateTimeFormat($conversations->created_at, 'Y M j | H:i') }}</span>
+                                                @if (!empty($conversations->attach))
+                                                    <a href="{{ url($conversations->attach) }}" target="_blank"
+                                                        class="text-success"><i class="fa fa-paperclip"></i>
+                                                        {{ trans('admin/main.open_attach') }}</a>
+                                                @endif
+                                            </div>
+                                        </div>
+                                    </div>
+                                @endif
                             @endforeach
                         </div>
                     </div>
@@ -85,17 +114,37 @@
                                 method="post">
                                 {{ csrf_field() }}
 
-                                <div class="form-group mt-15">
-                                    <label class="input-label">{{ trans('site.message') }}</label>
-                                    <textarea name="message" rows="6" class=" form-control @error('message')  is-invalid @enderror">{!! old('message') !!}</textarea>
-                                    @error('message')
-                                        <div class="invalid-feedback">
-                                            {{ $message }}
-                                        </div>
-                                    @enderror
-                                </div>
+
 
                                 <div class="row">
+
+                                    <div class="col-md-6">
+
+                                        <div class="form-group mt-15">
+                                            <label class="input-label">{{ trans('site.message') }}</label>
+                                            <textarea name="message" rows="6" class=" form-control @error('message')  is-invalid @enderror">{!! old('message') !!}</textarea>
+                                            @error('message')
+                                                <div class="invalid-feedback">
+                                                    {{ $message }}
+                                                </div>
+                                            @enderror
+                                        </div>
+                                    </div>
+
+                                    <div class="col-md-6">
+
+                                        <div class="form-group mt-15">
+                                            <label class="input-label">علت (عدم نمایش به دانشجو)</label>
+                                            <textarea name="reason" rows="6" class=" form-control @error('message')  is-invalid @enderror">{!! old('message') !!}</textarea>
+                                            @error('reason')
+                                                <div class="invalid-feedback">
+                                                    {{ $message }}
+                                                </div>
+                                            @enderror
+                                        </div>
+                                    </div>
+
+
                                     <div class="col-4">
                                         <div class="form-group">
                                             <label class="input-label">اوپراتور</label>

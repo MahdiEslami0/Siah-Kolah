@@ -76,9 +76,7 @@ class LoginController extends Controller
                 'mobile' => ['required', 'numeric', 'regex:/^[0][9][0-9]{9}$/'],
             ]);
             $user =  user::where('mobile', $request->mobile)->first();
-            $otp =  otp::where('user_id',  $user->id)->first();
-            $key = uuid_create();
-            $code = rand(1000, 9999);
+
             if (!isset($user)) {
                 $user = User::create([
                     'full_name' => 'کاربر' . ' ' . $request->mobile,
@@ -89,6 +87,9 @@ class LoginController extends Controller
                     'created_at' => time()
                 ]);
             }
+            $otp =  otp::where('user_id',  $user->id)->first();
+            $key = uuid_create();
+            $code = rand(1000, 9999);
             if ($otp && $otp->created_at->diffInMinutes(now()) < 3) {
                 $toastData = [
                     'title' => 'کد قبلا ارسال شده است',
