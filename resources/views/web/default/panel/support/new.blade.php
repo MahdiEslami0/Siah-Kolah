@@ -45,7 +45,7 @@
                             {{ $faq->title }}
                         </div>
                         <div class="accordion-content">
-                            {{ $faq->descriptiona }}
+                            {{ $faq->description }}
                         </div>
                     </div>
                 @endforeach
