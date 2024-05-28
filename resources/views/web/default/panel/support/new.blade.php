@@ -31,7 +31,7 @@
 @endpush
 
 @php
-    $faqs = App\Models\SupportFaq::get();
+    $faqs = App\Models\SupportFaq::orderBy('order')->get();
 @endphp
 
 @section('content')
