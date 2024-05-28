@@ -164,6 +164,15 @@ Route::group(['prefix' => $prefix, 'namespace' => 'Admin', 'middleware' => ['web
                 Route::post('/{id}/update', 'SupportDepartmentsController@update');
                 Route::get('/{id}/delete', 'SupportDepartmentsController@delete');
             });
+
+
+            Route::group(['prefix' => 'faq'], function () {
+                Route::get('/', 'SupportFaqController@index');
+                Route::get('/create', 'SupportFaqController@create');
+                Route::post('/store', 'SupportFaqController@store');
+                Route::get('/edit/{id}', 'SupportFaqController@edit');
+                Route::post('/{id}/update', 'SupportFaqController@update');
+            });
         });
 
         Route::group(['prefix' => 'noticeboards'], function () {

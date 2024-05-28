@@ -623,7 +623,18 @@
                                 <a class="nav-link"
                                     href="{{ getAdminPanelUrl() }}/supports/departments">{{ trans('admin/main.departments') }}</a>
                             </li>
+
+
+                            <li class="{{ request()->is(getAdminPanelUrl('/supports/faq', false)) ? 'active' : '' }}">
+                                <a class="nav-link" href="{{ getAdminPanelUrl() }}/supports/faq">سوالات متداول</a>
+                            </li>
+
+                            <li class="{{ request()->is(getAdminPanelUrl('/supports/faq/create', false)) ? 'active' : '' }}">
+                                <a class="nav-link" href="{{ getAdminPanelUrl() }}/supports/faq/create">ایجاد سوال</a>
+                            </li>
                         @endcan
+
+
                     </ul>
                 </li>
 
