@@ -27,7 +27,7 @@
                             </p>
                         </label>
                     </div>
-                @else
+                @elseif(!isset($selected_gates))
                     <div class="col-6  mb-40 charge-account-radio">
                         <input type="radio" name="gateway" id="{{ $paymentChannel->title }}"
                             data-class="{{ $paymentChannel->class_name }}" value="{{ $paymentChannel->id }}"
@@ -59,7 +59,7 @@
                     </p>
                 </label>
             </div>
-        @else
+        @elseif(!isset($selected_gates))
             <div class="col-6  mb-40 charge-account-radio">
                 <input type="radio" name="gateway" id="cart" value="cart" onclick="showHideDiv(this.value)">
                 <label for="cart"
