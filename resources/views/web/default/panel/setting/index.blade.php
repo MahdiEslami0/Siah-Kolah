@@ -25,29 +25,29 @@
 
         @if(empty($new_user) and !empty($currentStep))
             @switch($currentStep)
-                @case(2)
+                {{-- @case(2)
                 @include('web.default.panel.setting.setting_includes.image')
-                @break
+                @break --}}
 
                 @case(3)
                 @include('web.default.panel.setting.setting_includes.about')
                 @break
 
-                @case(4)
+                {{-- @case(4)
                 @include('web.default.panel.setting.setting_includes.education')
-                @break
-
+                @break --}}
+{{-- 
                 @case(5)
                 @include('web.default.panel.setting.setting_includes.experiences')
-                @break
+                @break --}}
 
                 @case(6)
                 @include('web.default.panel.setting.setting_includes.occupations')
                 @break
 
-                @case(7)
+                {{-- @case(7)
                 @include('web.default.panel.setting.setting_includes.identity_and_financial')
-                @break
+                @break --}}
 
                 @case(8)
                 @if(!$user->isUser())

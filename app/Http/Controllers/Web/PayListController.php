@@ -26,7 +26,11 @@ class PayListController extends Controller
                 $razorpay = true;
             }
         }
-        $sale_link = sale_link::where('id', $id)->first();
+        if (is_numeric($id)) {
+            $sale_link = sale_link::where('id', $id)->first();
+        } else {
+            $sale_link = sale_link::where('slug', $id)->first();
+        }
         $products = json_decode($sale_link->products);
         $prices = [];
         $webinars = [];
@@ -53,7 +57,8 @@ class PayListController extends Controller
             'price' => $amount,
             'id' => $id,
             'webinars' => $webinars,
-            'offlineBanks' => $offlineBanks
+            'offlineBanks' => $offlineBanks,
+            'sale_link' => $sale_link
         ];
         return view(getTemplate() . '.list_pay.index', $data);
     }

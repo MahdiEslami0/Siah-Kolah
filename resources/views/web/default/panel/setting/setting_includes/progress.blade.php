@@ -5,10 +5,10 @@
             'icon' => 'basic-info'
         ],
 
-        2 => [
-            'lang' => 'public.images',
-            'icon' => 'images'
-        ],
+        // 2 => [
+        //     'lang' => 'public.images',
+        //     'icon' => 'images'
+        // ],
 
         3 => [
             'lang' => 'public.about',
@@ -30,10 +30,10 @@
         //     'icon' => 'skills'
         // ],
 
-        7 => [
-            'lang' => 'public.identity_and_financial',
-            'icon' => 'financial'
-        ]
+        // 7 => [
+        //     'lang' => 'public.identity_and_financial',
+        //     'icon' => 'financial'
+        // ]
     ];
 
     if(!$user->isUser()) {
@@ -47,10 +47,10 @@
             'icon' => 'extra_info'
         ];
     } else {
-        $progressSteps[8] =[
-            'lang' => 'public.extra_information',
-            'icon' => 'extra_info'
-        ];
+        // $progressSteps[8] =[
+        //     'lang' => 'public.extra_information',
+        //     'icon' => 'extra_info'
+        // ];
     }
 
     $currentStep = empty($currentStep) ? 1 : $currentStep;

@@ -60,7 +60,7 @@
                                             <a href="{{ $item->id }}">
                                                 <i class="fas fa-eye text-primary"></i>
                                             </a>
-                                            <a href="/list_pay/{{ $item->id }}?seller={{ $item->getSeller()->full_name }}"
+                                            <a href="/list_pay/{{ $item->slug ?? $item->id }}?seller={{ $item->getSeller()->full_name }}"
                                                 target="_blank">
                                                 <i class="fas fa-link text-info"></i>
                                             </a>

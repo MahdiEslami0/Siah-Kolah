@@ -74,7 +74,7 @@
                                                 <input type="hidden" name="locale" value="{{ getDefaultLocale() }}">
                                             @endif
 
-                                            <div class="form-group mt-15 ">
+                                            <div class="form-group mt-15 " style="display: none">
                                                 <label class="input-label d-block">{{ trans('panel.course_type') }}</label>
 
                                                 <select name="type"
@@ -108,7 +108,7 @@
                                                 @enderror
                                             </div>
 
-                                            <div class="form-group mt-15">
+                                            <div class="form-group mt-15" style="display:none">
                                                 <label class="input-label">{{ trans('update.points') }}</label>
                                                 <input type="number" name="points"
                                                     value="{{ !empty($webinar) ? $webinar->points : old('points') }}"
@@ -261,7 +261,7 @@
                                                 </div>
                                             </div>
 
-                                            <div class="form-group mt-0">
+                                            <div class="form-group mt-0" style="display: none">
                                                 <label class="input-label font-12">{{ trans('update.path') }}</label>
                                                 <div class="input-group js-video-demo-path-input">
                                                     <div class="input-group-prepend">
@@ -286,6 +286,7 @@
                                                     @enderror
                                                 </div>
                                             </div>
+
                                         </div>
                                     </div>
 
@@ -417,106 +418,110 @@
                                                 </div>
                                             @endif
 
-                                            <div
-                                                class="form-group mt-30 d-flex align-items-center justify-content-between">
-                                                <label class=""
-                                                    for="supportSwitch">{{ trans('panel.support') }}</label>
-                                                <div class="custom-control custom-switch">
-                                                    <input type="checkbox" name="support" class="custom-control-input"
-                                                        id="supportSwitch"
-                                                        {{ !empty($webinar) && $webinar->support ? 'checked' : '' }}>
-                                                    <label class="custom-control-label" for="supportSwitch"></label>
+                                            <div style="display: none">
+                                                <div
+                                                    class="form-group mt-30 d-flex align-items-center justify-content-between">
+                                                    <label class=""
+                                                        for="supportSwitch">{{ trans('panel.support') }}</label>
+                                                    <div class="custom-control custom-switch">
+                                                        <input type="checkbox" name="support"
+                                                            class="custom-control-input" id="supportSwitch"
+                                                            {{ !empty($webinar) && $webinar->support ? 'checked' : '' }}>
+                                                        <label class="custom-control-label" for="supportSwitch"></label>
+                                                    </div>
+                                                </div>
+
+                                                <div
+                                                    class="form-group mt-30 d-flex align-items-center justify-content-between">
+                                                    <label class=""
+                                                        for="includeCertificateSwitch">{{ trans('update.include_certificate') }}</label>
+                                                    <div class="custom-control custom-switch">
+                                                        <input type="checkbox" name="certificate"
+                                                            class="custom-control-input" id="includeCertificateSwitch"
+                                                            {{ !empty($webinar) && $webinar->certificate ? 'checked' : '' }}>
+                                                        <label class="custom-control-label"
+                                                            for="includeCertificateSwitch"></label>
+                                                    </div>
+                                                </div>
+
+                                                <div
+                                                    class="form-group mt-30 d-flex align-items-center justify-content-between">
+                                                    <label class="cursor-pointer"
+                                                        for="downloadableSwitch">{{ trans('home.downloadable') }}</label>
+                                                    <div class="custom-control custom-switch">
+                                                        <input type="checkbox" name="downloadable"
+                                                            class="custom-control-input" id="downloadableSwitch"
+                                                            {{ !empty($webinar) && $webinar->downloadable ? 'checked' : '' }}>
+                                                        <label class="custom-control-label"
+                                                            for="downloadableSwitch"></label>
+                                                    </div>
+                                                </div>
+
+                                                <div
+                                                    class="form-group mt-30 d-flex align-items-center justify-content-between">
+                                                    <label class=""
+                                                        for="partnerInstructorSwitch">{{ trans('public.partner_instructor') }}</label>
+                                                    <div class="custom-control custom-switch">
+                                                        <input type="checkbox" name="partner_instructor"
+                                                            class="custom-control-input" id="partnerInstructorSwitch"
+                                                            {{ !empty($webinar) && $webinar->partner_instructor ? 'checked' : '' }}>
+                                                        <label class="custom-control-label"
+                                                            for="partnerInstructorSwitch"></label>
+                                                    </div>
+                                                </div>
+
+                                                <div
+                                                    class="form-group mt-30 d-flex align-items-center justify-content-between">
+                                                    <label class=""
+                                                        for="forumSwitch">{{ trans('update.course_forum') }}</label>
+                                                    <div class="custom-control custom-switch">
+                                                        <input type="checkbox" name="forum"
+                                                            class="custom-control-input" id="forumSwitch"
+                                                            {{ !empty($webinar) && $webinar->forum ? 'checked' : '' }}>
+                                                        <label class="custom-control-label" for="forumSwitch"></label>
+                                                    </div>
+                                                </div>
+
+                                                <div
+                                                    class="form-group mt-30 d-flex align-items-center justify-content-between">
+                                                    <label class=""
+                                                        for="subscribeSwitch">{{ trans('public.subscribe') }}</label>
+                                                    <div class="custom-control custom-switch">
+                                                        <input type="checkbox" name="subscribe"
+                                                            class="custom-control-input" id="subscribeSwitch"
+                                                            {{ !empty($webinar) && $webinar->subscribe ? 'checked' : '' }}>
+                                                        <label class="custom-control-label" for="subscribeSwitch"></label>
+                                                    </div>
+                                                </div>
+
+                                                <div
+                                                    class="form-group mt-30 d-flex align-items-center justify-content-between">
+                                                    <label class=""
+                                                        for="privateSwitch">{{ trans('webinars.private') }}</label>
+                                                    <div class="custom-control custom-switch">
+                                                        <input type="checkbox" name="private"
+                                                            class="custom-control-input" id="privateSwitch"
+                                                            {{ (!empty($webinar) and $webinar->private) ? 'checked' : '' }}>
+                                                        <label class="custom-control-label" for="privateSwitch"></label>
+                                                    </div>
+                                                </div>
+                                                <div
+                                                    class="form-group mt-30 d-flex align-items-center justify-content-between">
+                                                    <label class=""
+                                                        for="privateSwitch">{{ trans('update.enable_waitlist') }}</label>
+                                                    <div class="custom-control custom-switch">
+                                                        <input type="checkbox" name="enable_waitlist"
+                                                            class="custom-control-input" id="enable_waitlistSwitch"
+                                                            {{ (!empty($webinar) and $webinar->enable_waitlist) ? 'checked' : '' }}>
+                                                        <label class="custom-control-label"
+                                                            for="enable_waitlistSwitch"></label>
+                                                    </div>
                                                 </div>
                                             </div>
 
-                                            <div
-                                                class="form-group mt-30 d-flex align-items-center justify-content-between">
-                                                <label class=""
-                                                    for="includeCertificateSwitch">{{ trans('update.include_certificate') }}</label>
-                                                <div class="custom-control custom-switch">
-                                                    <input type="checkbox" name="certificate"
-                                                        class="custom-control-input" id="includeCertificateSwitch"
-                                                        {{ !empty($webinar) && $webinar->certificate ? 'checked' : '' }}>
-                                                    <label class="custom-control-label"
-                                                        for="includeCertificateSwitch"></label>
-                                                </div>
-                                            </div>
 
-                                            <div
-                                                class="form-group mt-30 d-flex align-items-center justify-content-between">
-                                                <label class="cursor-pointer"
-                                                    for="downloadableSwitch">{{ trans('home.downloadable') }}</label>
-                                                <div class="custom-control custom-switch">
-                                                    <input type="checkbox" name="downloadable"
-                                                        class="custom-control-input" id="downloadableSwitch"
-                                                        {{ !empty($webinar) && $webinar->downloadable ? 'checked' : '' }}>
-                                                    <label class="custom-control-label" for="downloadableSwitch"></label>
-                                                </div>
-                                            </div>
 
-                                            <div
-                                                class="form-group mt-30 d-flex align-items-center justify-content-between">
-                                                <label class=""
-                                                    for="partnerInstructorSwitch">{{ trans('public.partner_instructor') }}</label>
-                                                <div class="custom-control custom-switch">
-                                                    <input type="checkbox" name="partner_instructor"
-                                                        class="custom-control-input" id="partnerInstructorSwitch"
-                                                        {{ !empty($webinar) && $webinar->partner_instructor ? 'checked' : '' }}>
-                                                    <label class="custom-control-label"
-                                                        for="partnerInstructorSwitch"></label>
-                                                </div>
-                                            </div>
-
-                                            <div
-                                                class="form-group mt-30 d-flex align-items-center justify-content-between">
-                                                <label class=""
-                                                    for="forumSwitch">{{ trans('update.course_forum') }}</label>
-                                                <div class="custom-control custom-switch">
-                                                    <input type="checkbox" name="forum" class="custom-control-input"
-                                                        id="forumSwitch"
-                                                        {{ !empty($webinar) && $webinar->forum ? 'checked' : '' }}>
-                                                    <label class="custom-control-label" for="forumSwitch"></label>
-                                                </div>
-                                            </div>
-
-                                            <div
-                                                class="form-group mt-30 d-flex align-items-center justify-content-between">
-                                                <label class=""
-                                                    for="subscribeSwitch">{{ trans('public.subscribe') }}</label>
-                                                <div class="custom-control custom-switch">
-                                                    <input type="checkbox" name="subscribe" class="custom-control-input"
-                                                        id="subscribeSwitch"
-                                                        {{ !empty($webinar) && $webinar->subscribe ? 'checked' : '' }}>
-                                                    <label class="custom-control-label" for="subscribeSwitch"></label>
-                                                </div>
-                                            </div>
-
-                                            <div
-                                                class="form-group mt-30 d-flex align-items-center justify-content-between">
-                                                <label class=""
-                                                    for="privateSwitch">{{ trans('webinars.private') }}</label>
-                                                <div class="custom-control custom-switch">
-                                                    <input type="checkbox" name="private" class="custom-control-input"
-                                                        id="privateSwitch"
-                                                        {{ (!empty($webinar) and $webinar->private) ? 'checked' : '' }}>
-                                                    <label class="custom-control-label" for="privateSwitch"></label>
-                                                </div>
-                                            </div>
-
-                                            <div
-                                                class="form-group mt-30 d-flex align-items-center justify-content-between">
-                                                <label class=""
-                                                    for="privateSwitch">{{ trans('update.enable_waitlist') }}</label>
-                                                <div class="custom-control custom-switch">
-                                                    <input type="checkbox" name="enable_waitlist"
-                                                        class="custom-control-input" id="enable_waitlistSwitch"
-                                                        {{ (!empty($webinar) and $webinar->enable_waitlist) ? 'checked' : '' }}>
-                                                    <label class="custom-control-label"
-                                                        for="enable_waitlistSwitch"></label>
-                                                </div>
-                                            </div>
-
-                                            <div class="form-group mt-15">
+                                            <div class="form-group mt-15" style="display: none">
                                                 <label class="input-label">{{ trans('update.access_days') }}</label>
                                                 <input type="text" name="access_days"
                                                     value="{{ !empty($webinar) ? $webinar->access_days : old('access_days') }}"
@@ -546,7 +551,7 @@
                                             <div class="form-group mt-15">
                                                 <label class="input-label">شناسه اسپات پلیر</label>
                                                 <input type="text" name="spotplayer_key"
-                                                    value="{{  !empty($webinar) ? $webinar->spotplayer_key : old('spotplayer_key') }}"
+                                                    value="{{ !empty($webinar) ? $webinar->spotplayer_key : old('spotplayer_key') }}"
                                                     class="form-control @error('spotplayer_key')  is-invalid @enderror"
                                                     placeholder="key" />
                                                 @error('spotplayer_key')

@@ -53,7 +53,7 @@ Route::get('/emergencyDatabaseUpdate', function () {
 });
 
 Route::group(['namespace' => 'Auth', 'middleware' => ['check_mobile_app', 'share', 'check_maintenance']], function () {
-    Route::get('/login', 'LoginController@showLoginForm');
+    Route::get('/login', 'LoginController@showLoginForm')->middleware(['store.last.url']);
     Route::post('/login', 'LoginController@login');
     Route::get('/login/otp', 'LoginController@showOtpForm');
     Route::post('/login/otp', 'LoginController@otp');

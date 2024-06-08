@@ -39,17 +39,30 @@
         <h2 class="section-title">سوالات متداول</h2>
         <div class="mt-25 rounded-sm shadow py-20 px-10 px-lg-25 bg-white">
             <div class="accordion">
-                @foreach ($faqs as $faq)
+                @foreach ($faqs->whereNull('parent_id') as $faq)
                     <div class="accordion-item mb-10">
                         <div class="accordion-header shadow-lg">
                             {{ $faq->title }}
                         </div>
                         <div class="accordion-content">
                             {{ $faq->description }}
+                            @if ($faqs->where('parent_id', $faq->id)->isNotEmpty())
+                                <div class="accordion mt-35">
+                                    @foreach ($faqs->where('parent_id', $faq->id) as $subFaq)
+                                        <div class="accordion-item mb-10">
+                                            <div class="accordion-header shadow-lg">
+                                                {{ $subFaq->title }}
+                                            </div>
+                                            <div class="accordion-content">
+                                                {{ $subFaq->description }}
+                                            </div>
+                                        </div>
+                                    @endforeach
+                                </div>
+                            @endif
                         </div>
                     </div>
                 @endforeach
-
             </div>
         </div>
     </section>
@@ -151,15 +164,6 @@
                 if (content.classList.contains("active")) {
                     content.classList.remove("active");
                 } else {
-                    // Close all other accordion items
-                    accordionItems.forEach(function(otherItem) {
-                        const otherContent = otherItem.querySelector(
-                            ".accordion-content");
-                        if (otherContent !== content && otherContent.classList.contains(
-                                "active")) {
-                            otherContent.classList.remove("active");
-                        }
-                    });
                     content.classList.add("active");
                 }
             });

@@ -22,8 +22,10 @@ class SupportFaqController extends Controller
 
     public function create()
     {
+        $faqs = SupportFaq::orderBy('order')->get();
         $data = [
             'pageTitle' => 'ایجاد سوال',
+            'faqs' => $faqs
         ];
         return view('admin.supports.faq.create', $data);
     }
@@ -37,7 +39,8 @@ class SupportFaqController extends Controller
         SupportFaq::create([
             'title' => $request->title,
             'order' => $request->order,
-            'description' => $request->description
+            'description' => $request->description,
+            'parent_id' => $request->parent
         ]);
         return redirect()->to(url('admin/supports/faq'));
     }
@@ -45,9 +48,11 @@ class SupportFaqController extends Controller
     public function edit($id)
     {
         $faq = SupportFaq::where('id', $id)->first();
+        $faqs = SupportFaq::orderBy('order')->get();
         $data = [
             'pageTitle' => 'ایجاد سوال',
-            'faq' => $faq
+            'faq' => $faq,
+            'faqs' => $faqs
         ];
         return view('admin.supports.faq.create', $data);
     }
@@ -62,6 +67,7 @@ class SupportFaqController extends Controller
         SupportFaq::where('id', $id)->update([
             'title' => $request->title,
             'order' => $request->order,
+            'parent_id' => $request->parent,
             'description' => $request->description
         ]);
         return redirect()->to(url('admin/supports/faq'));

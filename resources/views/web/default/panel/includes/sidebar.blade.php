@@ -451,9 +451,9 @@
                         </li>
                     @endif
 
-                    <li class="mt-5 {{ request()->is('panel/financial/summary') ? 'active' : '' }}">
+                    {{-- <li class="mt-5 {{ request()->is('panel/financial/summary') ? 'active' : '' }}">
                         <a href="/panel/financial/summary">{{ trans('financial.financial_summary') }}</a>
-                    </li>
+                    </li> --}}
                     {{-- 
                     <li class="mt-5 {{ request()->is('panel/financial/payout') ? 'active' : '' }}">
                         <a href="/panel/financial/payout">{{ trans('financial.payout') }}</a>
@@ -461,7 +461,7 @@
 
                     <li class="mt-5 {{ request()->is('panel/financial/account') ? 'active' : '' }}">
                         <a href="/panel/financial/account">
-                        پرداخت آفلاین 
+                            کارت به کارت
                         </a>
                     </li>
 
@@ -470,18 +470,17 @@
                     </li> --}}
 
                     @if ($authUser->isOrganization() || $authUser->isTeacher() and getRegistrationPackagesGeneralSettings('status'))
-                        <li
-                            class="mt-5 {{ request()->is('panel/financial/registration-packages') ? 'active' : '' }}">
+                        <li class="mt-5 {{ request()->is('panel/financial/registration-packages') ? 'active' : '' }}">
                             <a
                                 href="{{ route('panelRegistrationPackagesLists') }}">{{ trans('update.registration_packages') }}</a>
                         </li>
                     @endif
 
-                    @if (getInstallmentsSettings('status'))
+                    {{-- @if (getInstallmentsSettings('status'))
                         <li class="mt-5 {{ request()->is('panel/financial/installments*') ? 'active' : '' }}">
                             <a href="/panel/financial/installments">{{ trans('update.installments') }}</a>
                         </li>
-                    @endif
+                    @endif --}}
                 </ul>
             </div>
         </li>

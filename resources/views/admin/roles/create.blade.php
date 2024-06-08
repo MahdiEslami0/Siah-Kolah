@@ -77,7 +77,7 @@
                                     </div>
                                 </div>
 
-                                <div class="form-group {{ (!empty($role) && $role->is_admin) ? '' :'d-none'}}" id="sections">
+                                <div class="form-group {{ (!empty($role) && $role->is_admin) ? '' :'d-none'}}" id="sections" style="direction: ltr">
 
                                     <h2 class="section-title">{{ trans('admin/main.permission') }}</h2>
                                     <p class="section-lead">

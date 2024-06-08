@@ -22,11 +22,11 @@
             </a>
 
 
-            @if($webinar->checkShowProgress())
+            {{-- @if($webinar->checkShowProgress())
                 <div class="progress">
                     <span class="progress-bar" style="width: {{ $webinar->getProgress() }}%"></span>
                 </div>
-            @endif
+            @endif --}}
 
             @if($webinar->type == 'webinar')
                 <a href="{{ $webinar->addToCalendarLink() }}" target="_blank" class="webinar-notify d-flex align-items-center justify-content-center">

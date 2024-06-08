@@ -20,7 +20,7 @@
     </section>
 
     <section
-        class="container course-content-section {{ $course->type }} {{ ($hasBought or $course->isWebinar()) ? 'has-progress-bar' : '' }}">
+        class="container course-content-section {{ $course->type }}">
         <div class="row">
             <div class="col-12 col-lg-8">
                 <div class="course-content-body user-select-none">
@@ -47,10 +47,10 @@
                                 class="text-decoration-underline text-white font-14 font-weight-500">{{ $course->teacher->full_name }}</a>
                         </div>
 
-                        @php
+                        {{-- @php
                             $percent = $course->getProgress();
-                        @endphp
-
+                        @endphp --}}
+{{-- 
                         @if ($hasBought or $percent)
                             <div class="mt-30 d-flex align-items-center">
                                 <div class="progress course-progress flex-grow-1 shadow-xs rounded-sm">
@@ -68,7 +68,7 @@
                                     @endif
                                 </span>
                             </div>
-                        @endif
+                        @endif --}}
                     </div>
 
                     <div class="mt-35">
@@ -85,12 +85,12 @@
                                     aria-controls="content" aria-selected="false">{{ trans('product.content') }}
                                     ({{ $webinarContentCount }})</a>
                             </li>
-                            <li class="nav-item">
+                            {{-- <li class="nav-item">
                                 <a class="position-relative font-14 text-white {{ request()->get('tab', '') == 'reviews' ? 'active' : '' }}"
                                     id="reviews-tab" data-toggle="tab" href="#reviews" role="tab"
                                     aria-controls="reviews" aria-selected="false">{{ trans('product.reviews') }}
                                     ({{ $course->reviews->count() > 0 ? $course->reviews->pluck('creator_id')->count() : 0 }})</a>
-                            </li>
+                            </li> --}}
                         </ul>
 
                         <div class="tab-content" id="nav-tabContent">

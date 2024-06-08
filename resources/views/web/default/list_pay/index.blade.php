@@ -33,7 +33,7 @@
             </div>
         @endif
 
-        <form action="/list_pay/pay/{{ $id }}" method="post" class=" mt-25">
+        <form action="/list_pay/pay/{{ $sale_link->id }}" method="post" class=" mt-25">
             {{ csrf_field() }}
 
             @if (!auth()->user())
@@ -64,7 +64,10 @@
                 <input type="text" name="prepay_id" value="{{ $prepay_id }}" hidden>
             @endisset
             <h2 class="section-title">یک پرتال پرداخت انتخاب کنید</h2>
-            @include('web.default.components.pay_cards')
+
+      
+
+                @include('web.default.components.pay_cards')
 
 
             @if (!empty($invalidChannels))

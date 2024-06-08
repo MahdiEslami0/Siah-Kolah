@@ -41,6 +41,28 @@
                                         </div>
 
                                         <div class="form-group">
+                                            <label>والد</label>
+                                            <select name="parent" class="form-control" id="">
+                                                <option value="">انتخاب کنید</option>
+                                                @foreach ($faqs as $item)
+                                                    @if (isset($faq))
+                                                        <option value="{{ $item->id }}"
+                                                            @if ($item->id == $faq->parent_id) selected @endif>
+                                                            {{ $item->title }}
+                                                        </option>
+                                                    @else
+                                                        <option value="{{ $item->id }}">{{ $item->title }}</option>
+                                                    @endif
+                                                @endforeach
+                                            </select>
+                                            @error('order')
+                                                <div class="invalid-feedback">
+                                                    {{ $message }}
+                                                </div>
+                                            @enderror
+                                        </div>
+
+                                        <div class="form-group">
                                             <label>ترتیب</label>
                                             <input type="text" name="order"
                                                 class="form-control  @error('order') is-invalid @enderror"
@@ -54,8 +76,11 @@
 
                                         <div class="form-group">
                                             <label>توضیحات</label>
-                                            <textarea id="" cols="30" rows="10" name="description" class="form-control">
-                                                {{ $faq->description ?? '' }}
+
+                                            <textarea name="description" class="form-control" cols="30" rows="10">
+                                                @isset($faq)
+{{ $faq->description }}
+@endisset
                                             </textarea>
                                             @error('description')
                                                 <div class="invalid-feedback">
@@ -63,8 +88,6 @@
                                                 </div>
                                             @enderror
                                         </div>
-
-
                                         <div class="col-12 col-md-4 mt-2 mt-md-0">
                                             <button class="btn btn-primary w-100">{{ trans('admin/main.submit') }}</button>
                                         </div>

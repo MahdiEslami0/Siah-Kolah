@@ -273,9 +273,9 @@ class SupportsController extends Controller
 
         $this->validate($request, [
             'title' => 'required|min:2',
-            'type' => 'required',
+            // 'type' => 'required',
             'department_id' => 'required_if:type,platform_support|exists:support_departments,id',
-            'webinar_id' => 'required_if:type,course_support|exists:webinars,id',
+            // 'webinar_id' => 'required_if:type,course_support|exists:webinars,id',
             'message' => 'required|min:2',
             'attach' => 'nullable|string',
         ]);

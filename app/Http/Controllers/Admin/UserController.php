@@ -446,10 +446,14 @@ class UserController extends Controller
         $roles = Role::orderBy('created_at', 'desc')->get();
         $userGroups = Group::orderBy('created_at', 'desc')->where('status', 'active')->get();
 
+        $departments = SupportDepartment::get();
+
+
         $data = [
             'pageTitle' => trans('admin/main.user_new_page_title'),
             'roles' => $roles,
             'userGroups' => $userGroups,
+            'departments' => $departments
         ];
 
 

@@ -103,11 +103,11 @@
                                         @break
                                 @endswitch
 
-                                @if($webinar->isWebinar())
+                                {{-- @if($webinar->isWebinar())
                                     <div class="progress">
                                         <span class="progress-bar" style="width: {{ $webinar->getProgress() }}%"></span>
                                     </div>
-                                @endif
+                                @endif --}}
                             </div>
 
                             <div class="webinar-card-body w-100 d-flex flex-column">

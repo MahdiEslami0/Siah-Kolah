@@ -43,6 +43,17 @@
                                         @enderror
                                     </div>
                                     <div class="col-md-6 mb-3">
+                                        <label for="">لینک <small></small>
+                                            :</label>
+                                        <input type="text" class="form-control" name="slug"
+                                            value="{{ $sale_link->slug ?? '' }}">
+                                        @error('price')
+                                            <div class="invalid-feedback">
+                                                {{ $message }}
+                                            </div>
+                                        @enderror
+                                    </div>
+                                    <div class="col-md-6 mb-3">
                                         <label for="">وضعیت :</label>
                                         <select name="status" class="form-control">
                                             <option value="active" @if (isset($sale_link->status) && $sale_link->status == 'active') selected @endif>فعال
@@ -93,13 +104,55 @@
                                     <div class="col-md-6 mb-3">
                                         <label for="">قیمت <small>(درصورت نداشتن قیمت خالی بگذارید)</small>
                                             :</label>
-                                        <input type="number" class="form-control" name="price" value="{{ $sale_link->price ?? '' }}">
+                                        <input type="number" class="form-control" name="price"
+                                            value="{{ $sale_link->price ?? '' }}">
                                         @error('price')
                                             <div class="invalid-feedback">
                                                 {{ $message }}
                                             </div>
                                         @enderror
                                     </div>
+
+                                    <div class="col-md-6 mb-3">
+                                        <label for="">درگاه ها :</label>
+                                        @if (isset($sale_link))
+                                            <select name="gates[]" class="form-control js-example-basic-single" multiple>
+                                                @php
+                                                    $selected_gates = json_decode($sale_link->gates);
+                                                @endphp
+                                                <option value="offline" @if (isset($selected_gates) && in_array('offline', $selected_gates)) selected @endif>
+                                                    کارت به کارت</option>
+                                                @foreach ($gates as $gate)
+                                                    @if ($sale_link != null)
+                                                        <option value="{{ $gate->id }}"
+                                                            @if (isset($selected_gates) && in_array($gate->id, $selected_gates)) selected @endif>
+                                                            {{ $gate->title }}</option>
+                                                    @else
+                                                        <option value="{{ $gate->id }}">
+                                                            {{ $gate->title }}</option>
+                                                    @endif
+                                                @endforeach
+                                            </select>
+                                        @else
+                                            <select name="gates[]" class="form-control js-example-basic-single" multiple>
+                                                <option value="offline">
+                                                    کارت به کارت</option>
+                                                @foreach ($gates as $gate)
+                                                    <option value="{{ $gate->id }}">
+                                                        {{ $gate->title }}</option>
+                                                @endforeach
+                                            </select>
+                                        @endif
+
+                                        @error('products')
+                                            <div class="invalid-feedback">
+                                                {{ $message }}
+                                            </div>
+                                        @enderror
+                                    </div>
+
+
+
                                     <div class="col-md-12">
                                         <button class="btn btn-primary">ثبت</button>
                                         @if (isset($sale_link))

@@ -1269,8 +1269,8 @@ li {
 }
 
 .table-responsive-2 .dropdown.show > .dropdown-menu {
-    right: 0 !important;
-    left: auto !important;
+    right: auto !important;
+    left: 0 !important;
 }
 
 .custom-inv-fck {

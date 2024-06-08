@@ -92,14 +92,14 @@
                                                    $progressTitle = trans('public.course_learning_passed',['percent' => $percent]);
                                             }
                                         @endphp
-
+{{-- 
                                         @if(!empty($sale->gift_id) and $sale->buyer_id == $authUser->id)
-                                            {{--  --}}
+                                        
                                         @else
                                             <div class="progress cursor-pointer" data-toggle="tooltip" data-placement="top" title="{{ $progressTitle }}">
                                                 <span class="progress-bar" style="width: {{ $percent }}%"></span>
                                             </div>
-                                        @endif
+                                        @endif --}}
                                     @else
                                         <span class="badge badge-secondary">{{ trans('update.bundle') }}</span>
                                     @endif

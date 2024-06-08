@@ -144,7 +144,7 @@ class LoginController extends Controller
                 ];
                 $cartManagerController = new CartManagerController();
                 $cartManagerController->storeCookieCartsToDB();
-                return redirect(url('/'))->with(['toast' => $toastData]);
+                return redirect()->to(session()->get('previous_url'))->with(['toast' => $toastData]);
             }
             return redirect()->back()->withInput($request->only('email'))->withErrors(['email' => 'کاربری با این مشخصات یافت نشد'])->with(['login_method' => 'password']);
         }
@@ -190,7 +190,7 @@ class LoginController extends Controller
                     'msg' => 'ورود موفق',
                     'status' => 'success'
                 ];
-                return redirect(url('/'))->with(['toast' => $toastData]);
+                return redirect()->to(session()->get('previous_url'))->with(['toast' => $toastData]);
             } elseif ($request->buy_type == 'add_cart') {
                 $toastData = [
                     'title' => 'موفق',

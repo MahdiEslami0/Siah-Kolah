@@ -91,6 +91,6 @@ class Kernel extends HttpKernel
         'api.request.type' => \App\Http\Middleware\Api\RequestType::class,
         'api.identify' => \App\Http\Middleware\Api\CheckApiKey::class,
         'api.level-access' => \App\Http\Middleware\Api\LevelAccess::class,
-
+        'store.last.url' => \App\Http\Middleware\StoreLastUrl::class,
     ];
 }
