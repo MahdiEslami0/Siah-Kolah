@@ -25,7 +25,7 @@
         <div class="d-flex align-items-center justify-content-between w-100">
 
             <a class="navbar-brand navbar-order d-flex align-items-center justify-content-center mr-0"
-                href="/" >
+                href="/" style="margin-right: 15px !important;">
                 @if (!empty($generalSettings['logo']))
                     <img src="{{ $generalSettings['logo'] }}" alt="site logo" style="width: 35px">
                 @endif
