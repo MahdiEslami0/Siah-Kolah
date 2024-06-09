@@ -19,7 +19,6 @@
                     <div class="subscribe-input bg-white p-10 flex-grow-1 mt-30 mt-md-0">
                         <form action="/newsletters" method="post">
                             {{ csrf_field() }}
-
                             <div class="form-group d-flex align-items-center m-0">
                                 <div class="w-100">
                                     <input type="text" name="newsletter_email"

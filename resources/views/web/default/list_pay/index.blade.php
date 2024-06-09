@@ -65,9 +65,12 @@
             @endisset
             <h2 class="section-title">یک پرتال پرداخت انتخاب کنید</h2>
 
-      
 
-                @include('web.default.components.pay_cards')
+
+            @include('web.default.components.pay_cards')
+
+
+
 
 
             @if (!empty($invalidChannels))
@@ -209,8 +212,19 @@
             <div class="d-flex align-items-center justify-content-between mt-45">
                 <span class="font-16 font-weight-500 text-gray">{{ trans('financial.total_amount') }}
                     {{ handlePrice($price) }}</span>
-                <button type="button" id="paymentSubmit" disabled
-                    class="btn btn-sm btn-primary">{{ trans('public.start_payment') }}</button>
+                <div>
+                    @if (isset($sale_link))
+                        @php
+                            $products = json_decode($sale_link->products);
+                        @endphp
+                        @if (count($products) == 1)
+                            <a href="/prepay/{{ $products[0] }}" type="button"
+                                class="btn btn-outline-danger btn-sm  btn-d">
+                                پیش پرداخت</a>
+                        @endif
+                    @endif
+                    <button type="button" id="paymentSubmit" disabled class="btn btn-sm btn-primary">پرداخت نقدی</button>
+                </div>
             </div>
         </form>
 

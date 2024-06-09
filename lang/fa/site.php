@@ -100,7 +100,7 @@ return [
     'certificate_is_valid' => 'گواهی نامه معتبر است',
     'certificate_is_valid_hint' => 'این گواهی نامه با اطلاعات زیر معتبر است',
 
-    'create_newsletter_success' => 'عضویت در ایمیل خبرنامه با موفقیت تایید شد',
+    'create_newsletter_success' => 'عضویت در خبرنامه با موفقیت تایید شد',
 
     'user_disabled_public_message' => 'پیام های عمومی کاربرغیرفعال است!',
     'you_have_message_from' => 'یک پیام دارید، از طرف: ایمیل',

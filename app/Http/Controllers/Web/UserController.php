@@ -495,7 +495,7 @@ class UserController extends Controller
     public function makeNewsletter(Request $request)
     {
         $this->validate($request, [
-            'newsletter_email' => 'required|email|max:255|unique:newsletters,email'
+            'newsletter_email' => 'required|max:255'
         ]);
 
         $data = $request->all();
@@ -525,7 +525,7 @@ class UserController extends Controller
             if (!empty($check->user_id) and !empty($user_id) and $check->user_id != $user_id) {
                 $toastData = [
                     'title' => trans('public.request_failed'),
-                    'msg' => trans('update.this_email_used_by_another_user'),
+                    'msg' => trans('update.this_mobile_used_by_another_user'),
                     'status' => 'error'
                 ];
                 return back()->with(['toast' => $toastData]);

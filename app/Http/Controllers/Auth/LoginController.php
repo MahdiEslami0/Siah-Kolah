@@ -136,7 +136,16 @@ class LoginController extends Controller
             }
         } elseif ($request->login_method == 'by_password') {
             $credentials = $request->only('email', 'password');
-            if (FacadesAuth::attempt($credentials)) {
+            $emailOrPhone = $credentials['email'];
+            $password = $credentials['password'];
+            if (filter_var($emailOrPhone, FILTER_VALIDATE_EMAIL)) {
+                $field = 'email';
+            } elseif (preg_match('/^(\+98|0)?9\d{9}$/', $emailOrPhone)) {
+                $field = 'mobile';
+            } else {
+                return redirect()->back()->withInput($request->only('email'))->withErrors(['email' => 'ایمیل یا شماره تلفن نامعتبر است'])->with(['login_method' => 'password']);
+            }
+            if (FacadesAuth::attempt([$field => $emailOrPhone, 'password' => $password])) {
                 $toastData = [
                     'title' => "موفق",
                     'msg' => 'با موفقیت وارد شدید',

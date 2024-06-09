@@ -260,6 +260,7 @@ return [
     'buy' => 'خرید کردن',
     'my_points' => 'امتیازات من',
     'this_email_used_by_another_user' => 'این ایمیل توسط کاربری دیگر استفاده شده است',
+    'this_mobile_used_by_another_user' => 'این شماره همراه توسط کاربری دیگر استفاده شده است',
     'buy_with_n_points' => 'خرید با :points امتیاز',
     'buy_with_points' => 'خرید با امتیاز',
     'this_course_requires_n_points' => 'None',

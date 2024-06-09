@@ -54,8 +54,8 @@
                                     @enderror
                                 </div>
                                 <div class="form-group" id="emailInput">
-                                    <label class="input-label" for="email">ایمیل :</label>
-                                    <input type="email" placeholder="ایمیل"
+                                    <label class="input-label" for="email">ایمیل | شماره همراه :</label>
+                                    <input type="text" placeholder="ایمیل | شماره همراه"
                                         class="form-control @error('email') is-invalid @enderror" name="email">
                                     @error('email')
                                         <div class="invalid-feedback">

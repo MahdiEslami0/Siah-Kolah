@@ -6,7 +6,7 @@
     $navBtnUrl = null;
     $navBtnText = null;
 
-    if(request()->is('forums*')) {
+    if (request()->is('forums*')) {
         $navBtnUrl = '/forums/create-topic';
         $navBtnText = trans('update.create_new_topic');
     } else {
@@ -21,11 +21,12 @@
 
 <div id="navbarVacuum"></div>
 <nav id="navbar" class="navbar navbar-expand-lg navbar-light">
-    <div class="{{ (!empty($isPanel) and $isPanel) ? 'container-fluid' : 'container'}}">
+    <div class="{{ (!empty($isPanel) and $isPanel) ? 'container-fluid' : 'container' }}">
         <div class="d-flex align-items-center justify-content-between w-100">
 
-            <a class="navbar-brand navbar-order d-flex align-items-center justify-content-center mr-0 {{ (empty($navBtnUrl) and empty($navBtnText)) ? 'ml-auto' : '' }}" href="/">
-                @if(!empty($generalSettings['logo']))
+            <a class="navbar-brand navbar-order d-flex align-items-center justify-content-center mr-0"
+                href="/" >
+                @if (!empty($generalSettings['logo']))
                     <img src="{{ $generalSettings['logo'] }}" alt="site logo" style="width: 35px">
                 @endif
             </a>
@@ -42,36 +43,46 @@
                 </div>
 
                 <ul class="navbar-nav mr-auto d-flex align-items-center">
-                    @if(!empty($categories) and count($categories))
+                    @if (!empty($categories) and count($categories))
                         <li class="mr-lg-25">
                             <div class="menu-category">
                                 <ul>
                                     <li class="cursor-pointer user-select-none d-flex xs-categories-toggle">
-                                        <i data-feather="grid" width="20" height="20" class="mr-10 d-none d-lg-block"></i>
+                                        <i data-feather="grid" width="20" height="20"
+                                            class="mr-10 d-none d-lg-block"></i>
                                         {{ trans('categories.categories') }}
 
                                         <ul class="cat-dropdown-menu">
-                                            @foreach($categories as $category)
+                                            @foreach ($categories as $category)
                                                 <li>
-                                                    <a href="{{ $category->getUrl() }}" class="{{ (!empty($category->subCategories) and count($category->subCategories)) ? 'js-has-subcategory' : '' }}">
+                                                    <a href="{{ $category->getUrl() }}"
+                                                        class="{{ (!empty($category->subCategories) and count($category->subCategories)) ? 'js-has-subcategory' : '' }}">
                                                         <div class="d-flex align-items-center">
-                                                            <img src="{{ $category->icon }}" class="cat-dropdown-menu-icon mr-10" alt="{{ $category->title }} icon">
+                                                            <img src="{{ $category->icon }}"
+                                                                class="cat-dropdown-menu-icon mr-10"
+                                                                alt="{{ $category->title }} icon">
                                                             {{ $category->title }}
                                                         </div>
 
-                                                        @if(!empty($category->subCategories) and count($category->subCategories))
-                                                            <i data-feather="chevron-right" width="20" height="20" class="d-none d-lg-inline-block ml-10"></i>
-                                                            <i data-feather="chevron-down" width="20" height="20" class="d-inline-block d-lg-none"></i>
+                                                        @if (!empty($category->subCategories) and count($category->subCategories))
+                                                            <i data-feather="chevron-right" width="20"
+                                                                height="20"
+                                                                class="d-none d-lg-inline-block ml-10"></i>
+                                                            <i data-feather="chevron-down" width="20" height="20"
+                                                                class="d-inline-block d-lg-none"></i>
                                                         @endif
                                                     </a>
 
-                                                    @if(!empty($category->subCategories) and count($category->subCategories))
-                                                        <ul class="sub-menu" data-simplebar @if((!empty($isRtl) and $isRtl)) data-simplebar-direction="rtl" @endif>
-                                                            @foreach($category->subCategories as $subCategory)
+                                                    @if (!empty($category->subCategories) and count($category->subCategories))
+                                                        <ul class="sub-menu" data-simplebar
+                                                            @if (!empty($isRtl) and $isRtl) data-simplebar-direction="rtl" @endif>
+                                                            @foreach ($category->subCategories as $subCategory)
                                                                 <li>
                                                                     <a href="{{ $subCategory->getUrl() }}">
-                                                                        @if(!empty($subCategory->icon))
-                                                                            <img src="{{ $subCategory->icon }}" class="cat-dropdown-menu-icon mr-10" alt="{{ $subCategory->title }} icon">
+                                                                        @if (!empty($subCategory->icon))
+                                                                            <img src="{{ $subCategory->icon }}"
+                                                                                class="cat-dropdown-menu-icon mr-10"
+                                                                                alt="{{ $subCategory->title }} icon">
                                                                         @endif
 
                                                                         {{ $subCategory->title }}
@@ -89,8 +100,8 @@
                         </li>
                     @endif
 
-                    @if(!empty($navbarPages) and count($navbarPages))
-                        @foreach($navbarPages as $navbarPage)
+                    @if (!empty($navbarPages) and count($navbarPages))
+                        @foreach ($navbarPages as $navbarPage)
                             <li class="nav-item">
                                 <a class="nav-link" href="{{ $navbarPage['link'] }}">{{ $navbarPage['title'] }}</a>
                             </li>
@@ -99,9 +110,8 @@
                 </ul>
             </div>
 
-            <div class="nav-icons-or-start-live navbar-order d-flex align-items-center justify-content-end">
-
-                @if(!empty($navBtnUrl))
+            <div class="nav-icons-or-start-live navbar-order">
+                @if (!empty($navBtnUrl))
                     <a href="{{ $navBtnUrl }}" class="d-none d-lg-flex btn btn-sm btn-primary nav-start-a-live-btn">
                         {{ $navBtnText }}
                     </a>
@@ -111,13 +121,15 @@
                     </a>
                 @endif
 
-                @if(!empty($isPanel))
-                    @if($authUser->checkAccessToAIContentFeature())
+                @if (!empty($isPanel))
+                    @if ($authUser->checkAccessToAIContentFeature())
                         <div class="js-show-ai-content-drawer show-ai-content-drawer-btn d-flex-center mr-40">
                             <div class="d-flex-center size-32 rounded-circle bg-white">
-                                <img src="/assets/default/img/ai/ai-chip.svg" alt="ai" class="" width="16px" height="16px">
+                                <img src="/assets/default/img/ai/ai-chip.svg" alt="ai" class=""
+                                    width="16px" height="16px">
                             </div>
-                            <span class="ml-5 font-weight-500 text-secondary font-14 d-none d-lg-block">{{ trans('update.ai_content') }}</span>
+                            <span
+                                class="ml-5 font-weight-500 text-secondary font-14 d-none d-lg-block">{{ trans('update.ai_content') }}</span>
                         </div>
                     @endif
                 @endif
