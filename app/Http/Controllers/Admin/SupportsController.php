@@ -434,6 +434,7 @@ class SupportsController extends Controller
                 'message' => $data['message'],
                 'attach' => $data['attach'],
                 'reason' => $data['reason'],
+                'admin_reason' => $data['admin_reason'],
                 'created_at' => time(),
             ]);
         }

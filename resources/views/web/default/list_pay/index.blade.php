@@ -63,43 +63,107 @@
             @isset($prepay_id)
                 <input type="text" name="prepay_id" value="{{ $prepay_id }}" hidden>
             @endisset
-            <h2 class="section-title">یک پرتال پرداخت انتخاب کنید</h2>
 
 
+            @if (isset($sale_link))
+                @php
+                    $products = json_decode($sale_link->products);
+                @endphp
+                @if (count($products) == 1)
+                    <div id="select_pay">
+                        <h2 class="section-title">نوع پرداخت را انتخاب کنید</h2>
+                        <div class="row mt-45">
+                            <div class="col-6">
+                                <a href="/prepay/{{ $products[0] }}">
+                                    <div class="rounded-sm p-20 p-lg-45 d-flex flex-column align-items-center justify-content-center"
+                                        style="border: 3px solid var(--primary);
+                                        transition: all 0.3s ease;
+                                        box-shadow: 0 10px 30px 0 rgba(119, 122, 120, 0.3);
+                                    }">
+                                        <img src="/assets/default/img/no-results/financial.png" width="90"
+                                            height="90">
 
-            @include('web.default.components.pay_cards')
-
-
-
-
-
-            @if (!empty($invalidChannels))
-                <div class="d-flex align-items-center mt-30 rounded-lg border p-15">
-                    <div class="size-40 d-flex-center rounded-circle bg-gray200">
-                        <i data-feather="info" class="text-gray" width="20" height="20"></i>
-                    </div>
-                    <div class="ml-5">
-                        <h4 class="font-14 font-weight-bold text-gray">{{ trans('update.disabled_payment_gateways') }}</h4>
-                        <p class="font-12 text-gray">{{ trans('update.disabled_payment_gateways_hint') }}</p>
-                    </div>
-                </div>
-
-                <div class="row mt-20">
-                    @foreach ($invalidChannels as $invalidChannel)
-                        <div class="col-6 col-lg-4 mb-40 charge-account-radio">
-                            <div
-                                class="disabled-payment-channel bg-white border rounded-sm p-20 p-lg-45 d-flex flex-column align-items-center justify-content-center">
-                                <img src="{{ $invalidChannel->image }}" width="120" height="60" alt="">
-
-                                <p class="mt-30 mt-lg-50 font-weight-500 text-dark-blue">
-                                    {{ trans('financial.pay_via') }}
-                                    <span class="font-weight-bold font-14">{{ $invalidChannel->title }}</span>
-                                </p>
+                                        <p class="mt-30 mt-lg-50 font-weight-500 text-dark-blue">
+                                            پیش واریز
+                                        </p>
+                                    </div>
+                                </a>
                             </div>
+
+                            <div class="col-6">
+                                <a onclick="show_pay_online()">
+                                    <div class="rounded-sm p-20 p-lg-45 d-flex flex-column align-items-center justify-content-center"
+                                        style="border: 3px solid var(--primary);
+                                        transition: all 0.3s ease;
+                                        box-shadow: 0 10px 30px 0 rgba(119, 122, 120, 0.3);
+                                    }">
+                                        <img src="/assets/default/img/no-results/offer.png" width="90" height="90"
+                                            alt="">
+                                        <p class="mt-30 mt-lg-50 font-weight-500 text-dark-blue">
+                                            پرداخت نقدی
+                                        </p>
+                                    </div>
+                                </a>
+                            </div>
+
                         </div>
-                    @endforeach
-                </div>
+                    </div>
+                @endif
             @endif
+
+
+            <div id="pay_online">
+                <div class="row justify-content-between">
+                    <div>
+                        <h2 class="section-title">یک پرتال پرداخت انتخاب کنید</h2>
+                    </div>
+                    <div class="d-flex align-items-center" style="gap: 5px" onclick="show_select_pay()">
+                        <div>
+                            <a>
+                                پیش وارزی
+                            </a>
+                        </div>
+                        <div>
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+                                class="bi bi-arrow-left" viewBox="0 0 16 16">
+                                <path fill-rule="evenodd"
+                                    d="M15 8a.5.5 0 0 0-.5-.5H2.707l3.147-3.146a.5.5 0 1 0-.708-.708l-4 4a.5.5 0 0 0 0 .708l4 4a.5.5 0 0 0 .708-.708L2.707 8.5H14.5A.5.5 0 0 0 15 8" />
+                            </svg>
+                        </div>
+                    </div>
+                </div>
+                @include('web.default.components.pay_cards')
+                <div class="d-flex align-items-center justify-content-between mt-45">
+                    <span class="font-16 font-weight-500 text-gray">{{ trans('financial.total_amount') }}
+                        {{ handlePrice($price) }}</span>
+                    <div>
+                        <button type="button" id="paymentSubmit" disabled class="btn btn-sm btn-primary">پرداخت
+                            نقدی</button>
+                    </div>
+                </div>
+            </div>
+
+
+
+            @if (isset($sale_link))
+                @if (count($products) == 1)
+                    <script>
+                        document.getElementById('pay_online').style.display = 'none';
+
+                        function show_pay_online() {
+                            document.getElementById('pay_online').style.display = 'block';
+                            document.getElementById('select_pay').style.display = 'none';
+                        }
+
+                        function show_select_pay() {
+                            document.getElementById('pay_online').style.display = 'none';
+                            document.getElementById('select_pay').style.display = 'block';
+                        }
+                    </script>
+                @endif
+            @endif
+
+
 
 
             @include('web.default.includes.offline_pay')
@@ -209,23 +273,6 @@
             </div> --}}
 
 
-            <div class="d-flex align-items-center justify-content-between mt-45">
-                <span class="font-16 font-weight-500 text-gray">{{ trans('financial.total_amount') }}
-                    {{ handlePrice($price) }}</span>
-                <div>
-                    @if (isset($sale_link))
-                        @php
-                            $products = json_decode($sale_link->products);
-                        @endphp
-                        @if (count($products) == 1)
-                            <a href="/prepay/{{ $products[0] }}" type="button"
-                                class="btn btn-outline-danger btn-sm  btn-d">
-                                پیش پرداخت</a>
-                        @endif
-                    @endif
-                    <button type="button" id="paymentSubmit" disabled class="btn btn-sm btn-primary">پرداخت نقدی</button>
-                </div>
-            </div>
         </form>
 
 

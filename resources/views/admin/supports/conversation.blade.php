@@ -62,6 +62,8 @@
                                                 {{ $conversations->message }}
 
                                             </div>
+
+
                                             <div class="chat-time">
                                                 <span
                                                     class="mr-2">{{ dateTimeFormat($conversations->created_at, 'Y M j | H:i') }}</span>
@@ -72,6 +74,11 @@
                                                         {{ trans('admin/main.open_attach') }}</a>
                                                 @endif
                                             </div>
+                                            @if (isset($conversations->admin_reason))
+                                                <span
+                                                    class="badge badge-{{ !empty($conversations->sender_id) ? 'light' : 'primary' }}">{{ $conversations->admin_reason }}</span>
+                                            @endif
+
                                         </div>
                                     </div>
                                 @endif
@@ -87,6 +94,11 @@
                                             <div>
                                                 <span class="text-danger">{{ $conversations->reason }}</span>
                                             </div>
+                                            @if (isset($conversations->admin_reason))
+                                                <hr>
+                                                <span
+                                                    class="text-{{ !empty($conversations->sender_id) ? 'light' : 'primary' }}">{{ $conversations->admin_reason }}</span>
+                                            @endif
                                             <div class="chat-time">
                                                 <span
                                                     class="mr-2">{{ dateTimeFormat($conversations->created_at, 'Y M j | H:i') }}</span>
@@ -131,6 +143,7 @@
                                         </div>
                                     </div>
 
+
                                     <div class="col-md-6">
 
                                         <div class="form-group mt-15">
@@ -145,7 +158,19 @@
                                     </div>
 
 
-                                    <div class="col-4">
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <label class="input-label d-block">علت</label>
+                                            <select name="admin_reason" class="form-control">
+                                                <option value="">انتخاب کنید</option>
+                                                <option value="تست 1">تست 1</option>
+                                                <option value="تست 2">تست 2</option>
+                                                <option value="تست 3">تست 3</option>
+                                            </select>
+                                        </div>
+                                    </div>
+
+                                    <div class="col-6">
                                         <div class="form-group">
                                             <label class="input-label">اوپراتور</label>
                                             <select name="support" class="form-control">
@@ -158,7 +183,7 @@
                                             </select>
                                         </div>
                                     </div>
-                                    <div class="col-4">
+                                    <div class="col-6">
                                         <div class="form-group">
                                             <label class="input-label">دپارتمان</label>
                                             <select name="department" class="form-control">
@@ -170,7 +195,7 @@
                                             </select>
                                         </div>
                                     </div>
-                                    <div class="col-4">
+                                    <div class="col-6">
                                         <div class="form-group">
                                             <label class="input-label">{{ trans('admin/main.attach') }}</label>
                                             <div class="input-group">

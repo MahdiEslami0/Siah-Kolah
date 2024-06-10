@@ -108,6 +108,7 @@
                                         <div class="form-group">
                                             <label class="input-label">دپارتمان پشتیبانی</label>
                                             <select name="departmen_id" class="form-control">
+                                                <option value="">انتخاب کنید</option>
                                                 @foreach ($departments as $department)
                                                     <option value="{{ $department->id }}"
                                                         @if (!empty($user) and $user->departmen_id == $department->id) selected @endif>

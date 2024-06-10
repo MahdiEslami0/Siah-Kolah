@@ -666,12 +666,12 @@
                             </li>
                         @endcan
 
-                        @can('admin_bundle_comments')
+                        {{-- @can('admin_bundle_comments')
                             <li class="{{ request()->is(getAdminPanelUrl('/comments/bundles', false)) ? 'active' : '' }}">
                                 <a class="nav-link @if (!empty($sidebarBeeps['bundleComments']) and $sidebarBeeps['bundleComments']) beep beep-sidebar @endif"
                                     href="{{ getAdminPanelUrl() }}/comments/bundles">{{ trans('update.bundle_comments') }}</a>
                             </li>
-                        @endcan
+                        @endcan --}}
 
                         {{-- @can('admin_blog_comments')
                             <li class="{{ request()->is(getAdminPanelUrl('/comments/blog', false)) ? 'active' : '' }}">
@@ -680,12 +680,12 @@
                             </li>
                         @endcan --}}
 
-                        @can('admin_product_comments')
+                        {{-- @can('admin_product_comments')
                             <li class="{{ request()->is(getAdminPanelUrl('/comments/products', false)) ? 'active' : '' }}">
                                 <a class="nav-link @if (!empty($sidebarBeeps['productComments']) and $sidebarBeeps['productComments']) beep beep-sidebar @endif"
                                     href="{{ getAdminPanelUrl() }}/comments/products">{{ trans('update.product_comments') }}</a>
                             </li>
-                        @endcan
+                        @endcan --}}
                     </ul>
                 </li>
             @endcan
