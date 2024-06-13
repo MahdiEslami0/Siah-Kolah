@@ -2,6 +2,8 @@
 
 use App\Mixins\Financial\MultiCurrency;
 use Illuminate\Support\Facades\Cookie;
+use Morilog\Jalali\Jalalian;
+
 
 function getTemplate()
 {
@@ -40,7 +42,7 @@ function formatSizeUnits($bytes)
  * */
 function dateTimeFormat($timestamp, $format = 'H:i', $useAdminSetting = true, $applyTimezone = true, $timezone = null)
 {
-    if ($applyTimezone and empty($timezone)) {
+    if ($applyTimezone && empty($timezone)) {
         $timezone = getTimezone();
     }
 
@@ -52,11 +54,16 @@ function dateTimeFormat($timestamp, $format = 'H:i', $useAdminSetting = true, $a
         $timezone = "UTC";
     }
 
+    // Create a Carbon instance and set the timestamp and timezone
     $carbon = (new Carbon\Carbon())
         ->setTimezone($timezone)
         ->setTimestamp($timestamp);
 
-    return $useAdminSetting ? $carbon->translatedFormat($format) : $carbon->format($format);
+    // Convert the Carbon instance to Jalalian
+    $jalalian = Jalalian::fromCarbon($carbon);
+
+    // Format the Jalalian date
+    return $jalalian->format($format);
 }
 
 function dateTimeFormatForHumans($timestamp, $applyTimezone = true, $timezone = "UTC", $parts = 3)
