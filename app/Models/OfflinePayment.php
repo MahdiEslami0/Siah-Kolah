@@ -39,20 +39,25 @@ class OfflinePayment extends Model
 
     public function products()
     {
+        $data = null;
         if ($this->type == 'list_pay') {
             $sale_link = sale_link::where('id', $this->type_id)->first();
-            $products =  json_decode($sale_link->products);
-            $data = [];
-            foreach ($products as  $product) {
-                $Webinar = Webinar::where('id', $product)->first();
-                $data[] = $Webinar->title;
+            if (isset($sale_link)) {
+                $products =  json_decode($sale_link->products);
+                $data = [];
+                foreach ($products as  $product) {
+                    $Webinar = Webinar::where('id', $product)->first();
+                    $data[] = $Webinar->title;
+                }
+                return $data;
             }
-            return $data;
         } elseif ($this->type == 'prepay') {
             $prapay = prepayment::where('id', $this->type_id)->first();
-            $Webinar = Webinar::where('id', $prapay->webinar_id)->first();
-            $data[] = $Webinar->title;
-            return $data;
+            if (isset($prapay)) {
+                $Webinar = Webinar::where('id', $prapay->webinar_id)->first();
+                $data[] = $Webinar->title;
+                return $data;
+            }
         }
     }
 
