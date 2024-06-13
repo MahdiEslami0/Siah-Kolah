@@ -161,6 +161,7 @@
                                         <th>{{ trans('admin/main.bank') }}</th>
                                         <th>{{ trans('admin/main.referral_code') }}</th>
                                         <th>{{ trans('admin/main.phone') }}</th>
+                                        <th>دوره</th>
                                         <th>{{ trans('update.attachment') }}</th>
                                         <th width=180px>{{ trans('admin/main.transaction_time') }}</th>
 
@@ -182,6 +183,8 @@
 
                                             <td>{{ $offlinePayment->user->role->caption }}</td>
 
+                                         
+
                                             <td>{{ handlePrice($offlinePayment->amount) }}</td>
 
                                             @if (!empty($offlinePayment->offlineBank->title))
@@ -195,6 +198,17 @@
                                             </td>
 
                                             <td>{{ $offlinePayment->user->mobile }}</td>
+
+                                            <td>
+                                                @if ($offlinePayment->products() != null)
+                                                    @foreach ($offlinePayment->products() as $item)
+                                                        {{ $item }}
+                                                    @endforeach
+                                                @else
+                                                    نامشخص
+                                                @endif
+                                            </td>
+
 
                                             <td class="text-center align-middle">
                                                 @if (!empty($offlinePayment->attachment))
