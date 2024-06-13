@@ -162,6 +162,7 @@
                                         <th>{{ trans('admin/main.referral_code') }}</th>
                                         <th>{{ trans('admin/main.phone') }}</th>
                                         <th>دوره</th>
+                                        <th>نوع</th>
                                         <th>{{ trans('update.attachment') }}</th>
                                         <th width=180px>{{ trans('admin/main.transaction_time') }}</th>
 
@@ -183,7 +184,7 @@
 
                                             <td>{{ $offlinePayment->user->role->caption }}</td>
 
-                                         
+
 
                                             <td>{{ handlePrice($offlinePayment->amount) }}</td>
 
@@ -207,6 +208,11 @@
                                                 @else
                                                     نامشخص
                                                 @endif
+                                            </td>
+
+
+                                            <td>
+                                                {{ $offlinePayment->type }}
                                             </td>
 
 
