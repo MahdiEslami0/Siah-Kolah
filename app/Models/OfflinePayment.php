@@ -47,7 +47,7 @@ class OfflinePayment extends Model
                 $data = [];
                 foreach ($products as  $product) {
                     $Webinar = Webinar::where('id', $product)->first();
-                    $data[] = $Webinar->title;
+                    $data[] = $Webinar->title ?? null;
                 }
                 return $data;
             }
@@ -55,7 +55,7 @@ class OfflinePayment extends Model
             $prapay = prepayment::where('id', $this->type_id)->first();
             if (isset($prapay)) {
                 $Webinar = Webinar::where('id', $prapay->webinar_id)->first();
-                $data[] = $Webinar->title;
+                $data[] = $Webinar->title ?? null;
                 return $data;
             }
         }
