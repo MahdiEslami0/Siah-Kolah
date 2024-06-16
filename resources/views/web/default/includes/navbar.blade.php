@@ -24,8 +24,8 @@
     <div class="{{ (!empty($isPanel) and $isPanel) ? 'container-fluid' : 'container' }}">
         <div class="d-flex align-items-center justify-content-between w-100">
 
-            <a class="navbar-brand navbar-order d-flex align-items-center justify-content-center mr-0"
-                href="/" style="margin-right: 15px !important;">
+            <a class="navbar-brand navbar-order d-flex align-items-center justify-content-center mr-0" href="/"
+                style="margin-right: 15px !important;">
                 @if (!empty($generalSettings['logo']))
                     <img src="{{ $generalSettings['logo'] }}" alt="site logo" style="width: 35px">
                 @endif
@@ -100,13 +100,9 @@
                         </li>
                     @endif
 
-                    @if (!empty($navbarPages) and count($navbarPages))
-                        @foreach ($navbarPages as $navbarPage)
-                            <li class="nav-item">
-                                <a class="nav-link" href="{{ $navbarPage['link'] }}">{{ $navbarPage['title'] }}</a>
-                            </li>
-                        @endforeach
-                    @endif
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ url('/') }}">خانه</a>
+                    </li>
                 </ul>
             </div>
 
