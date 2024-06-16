@@ -388,13 +388,12 @@
                                                 @endswitch
                                             </td>
                                             <td width="200" class="">
-                                                <div class="btn-group dropdown table-actions">
+                                                <div class="btn-group dropdown table-actions" style="direction: ltr;">
                                                     <button type="button" class="btn-transparent dropdown-toggle"
                                                         data-toggle="dropdown" data-toggle="dropdown">
                                                         <i class="fa fa-ellipsis-v"></i>
                                                     </button>
                                                     <div class="dropdown-menu text-left webinars-lists-dropdown">
-
                                                         @can('admin_webinars_edit')
                                                             @if ($webinar->status == \App\Models\Webinar::$pending)
                                                                 @include('admin.includes.delete_button', [

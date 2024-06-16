@@ -33,6 +33,9 @@
     @stack('styles_top')
     @stack('scripts_top')
 
+    <link rel="stylesheet" href="/persianDatepicker-default.css">
+
+
     <style>
         {!! !empty(getCustomCssAndJs('css')) ? getCustomCssAndJs('css') : '' !!} {!! getThemeColorsSettings(true) !!}
     </style>
@@ -128,6 +131,14 @@
 
     @stack('styles_bottom')
     @stack('scripts_bottom')
+
+    <script src="/persianDatepicker.min.js"></script>
+
+    <script type="text/javascript">
+        $(function() {
+            $("#input1").persianDatepicker();
+        });
+    </script>
 
     <script>
         var deleteAlertTitle = '{{ trans('public.are_you_sure') }}';
