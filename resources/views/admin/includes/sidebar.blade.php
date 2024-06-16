@@ -62,7 +62,7 @@
                             <li
                                 class="{{ (request()->is(getAdminPanelUrl('/webinars', false)) and request()->get('type') == 'course') ? 'active' : '' }}">
                                 <a class="nav-link @if (!empty($sidebarBeeps['courses']) and $sidebarBeeps['courses']) beep beep-sidebar @endif"
-                                    href="{{ getAdminPanelUrl() }}/webinars?type=course">{{ trans('admin/main.courses') }}</a>
+                                    href="{{ getAdminPanelUrl() }}/webinars?type=webinar">{{ trans('admin/main.courses') }}</a>
                             </li>
 
                             {{-- <li
