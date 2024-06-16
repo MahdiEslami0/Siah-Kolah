@@ -62,7 +62,7 @@
                             <li
                                 class="{{ (request()->is(getAdminPanelUrl('/webinars', false)) and request()->get('type') == 'course') ? 'active' : '' }}">
                                 <a class="nav-link @if (!empty($sidebarBeeps['courses']) and $sidebarBeeps['courses']) beep beep-sidebar @endif"
-                                    href="{{ getAdminPanelUrl() }}/webinars?type=webinar">{{ trans('admin/main.courses') }}</a>
+                                    href="{{ getAdminPanelUrl() }}/webinars?type=course">{{ trans('admin/main.courses') }}</a>
                             </li>
 
                             {{-- <li
@@ -610,8 +610,7 @@
                     <ul class="dropdown-menu">
                         @can('admin_supports_list')
                             <li class="{{ request()->is(getAdminPanelUrl('/supports', false)) ? 'active' : '' }}">
-                                <a class="nav-link"
-                                    href="{{ getAdminPanelUrl() }}/supports">{{ trans('public.tickets') }}</a>
+                                <a class="nav-link" href="{{ getAdminPanelUrl() }}/supports">{{ trans('public.tickets') }}</a>
                             </li>
                         @endcan
 
@@ -719,7 +718,7 @@
                                     href="{{ getAdminPanelUrl() }}/comments/blog/reports">{{ trans('admin/main.blog_comments_reports') }}</a>
                             </li>
                         @endcan --}}
-{{-- 
+            {{-- 
                         @can('admin_report_reasons')
                             <li class="{{ request()->is(getAdminPanelUrl('/reports/reasons', false)) ? 'active' : '' }}">
                                 <a class="nav-link"
@@ -727,12 +726,12 @@
                             </li>
                         @endcan() --}}
 
-                        {{-- @can('admin_forum_topic_post_reports')
+            {{-- @can('admin_forum_topic_post_reports')
                             <li class="{{ (request()->is(getAdminPanelUrl('/reports/forum-topics', false))) ? 'active' : '' }}">
                                 <a class="nav-link" href="{{ getAdminPanelUrl() }}/reports/forum-topics">{{ trans('update.forum_topics') }}</a>
                             </li>
                         @endcan() --}}
-                    {{-- </ul>
+            {{-- </ul>
                 </li> --}}
             {{-- @endcan --}}
 
@@ -781,8 +780,7 @@
                         @endcan
 
                         @can('admin_notifications_posted_list')
-                            <li
-                                class="{{ request()->is(getAdminPanelUrl('/notifications/posted', false)) ? 'active' : '' }}">
+                            <li class="{{ request()->is(getAdminPanelUrl('/notifications/posted', false)) ? 'active' : '' }}">
                                 <a class="nav-link"
                                     href="{{ getAdminPanelUrl() }}/notifications/posted">{{ trans('admin/main.posted') }}</a>
                             </li>
