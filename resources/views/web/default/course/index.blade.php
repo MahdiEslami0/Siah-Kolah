@@ -19,8 +19,7 @@
         </div>
     </section>
 
-    <section
-        class="container course-content-section {{ $course->type }}">
+    <section class="container course-content-section {{ $course->type }}">
         <div class="row">
             <div class="col-12 col-lg-8">
                 <div class="course-content-body user-select-none">
@@ -50,7 +49,7 @@
                         {{-- @php
                             $percent = $course->getProgress();
                         @endphp --}}
-{{-- 
+                        {{-- 
                         @if ($hasBought or $percent)
                             <div class="mt-30 d-flex align-items-center">
                                 <div class="progress course-progress flex-grow-1 shadow-xs rounded-sm">
@@ -312,41 +311,49 @@
                             </div>
                         @endif --}}
 
-                        <div class="mt-35">
-                            <strong
-                                class="d-block text-secondary font-weight-bold">{{ trans('webinars.this_webinar_includes', ['classes' => trans('webinars.' . $course->type)]) }}</strong>
-                            @if ($course->isDownloadable())
-                                <div class="mt-20 d-flex align-items-center text-gray">
-                                    <i data-feather="download-cloud" width="20" height="20"></i>
-                                    <span
-                                        class="ml-5 font-14 font-weight-500">{{ trans('webinars.downloadable_content') }}</span>
-                                </div>
-                            @endif
 
-                            @if ($course->certificate or $course->quizzes->where('certificate', 1)->count() > 0)
-                                <div class="mt-20 d-flex align-items-center text-gray">
-                                    <i data-feather="award" width="20" height="20"></i>
-                                    <span
-                                        class="ml-5 font-14 font-weight-500">{{ trans('webinars.official_certificate') }}</span>
-                                </div>
-                            @endif
+                        @if (
+                            $course->isDownloadable() or
+                                $course->certificate or
+                                $course->quizzes->where('certificate', 1)->count() > 0 or
+                                $course->quizzes->where('status', \App\models\Quiz::ACTIVE)->count() > 0 or
+                                $course->support)
+                            <div class="mt-35">
+                                <strong
+                                    class="d-block text-secondary font-weight-bold">{{ trans('webinars.this_webinar_includes', ['classes' => trans('webinars.' . $course->type)]) }}</strong>
+                                @if ($course->isDownloadable())
+                                    <div class="mt-20 d-flex align-items-center text-gray">
+                                        <i data-feather="download-cloud" width="20" height="20"></i>
+                                        <span
+                                            class="ml-5 font-14 font-weight-500">{{ trans('webinars.downloadable_content') }}</span>
+                                    </div>
+                                @endif
 
-                            @if ($course->quizzes->where('status', \App\models\Quiz::ACTIVE)->count() > 0)
-                                <div class="mt-20 d-flex align-items-center text-gray">
-                                    <i data-feather="file-text" width="20" height="20"></i>
-                                    <span
-                                        class="ml-5 font-14 font-weight-500">{{ trans('webinars.online_quizzes_count', ['quiz_count' => $course->quizzes->where('status', \App\models\Quiz::ACTIVE)->count()]) }}</span>
-                                </div>
-                            @endif
+                                @if ($course->certificate or $course->quizzes->where('certificate', 1)->count() > 0)
+                                    <div class="mt-20 d-flex align-items-center text-gray">
+                                        <i data-feather="award" width="20" height="20"></i>
+                                        <span
+                                            class="ml-5 font-14 font-weight-500">{{ trans('webinars.official_certificate') }}</span>
+                                    </div>
+                                @endif
 
-                            @if ($course->support)
-                                <div class="mt-20 d-flex align-items-center text-gray">
-                                    <i data-feather="headphones" width="20" height="20"></i>
-                                    <span
-                                        class="ml-5 font-14 font-weight-500">{{ trans('webinars.instructor_support') }}</span>
-                                </div>
-                            @endif
-                        </div>
+                                @if ($course->quizzes->where('status', \App\models\Quiz::ACTIVE)->count() > 0)
+                                    <div class="mt-20 d-flex align-items-center text-gray">
+                                        <i data-feather="file-text" width="20" height="20"></i>
+                                        <span
+                                            class="ml-5 font-14 font-weight-500">{{ trans('webinars.online_quizzes_count', ['quiz_count' => $course->quizzes->where('status', \App\models\Quiz::ACTIVE)->count()]) }}</span>
+                                    </div>
+                                @endif
+
+                                @if ($course->support)
+                                    <div class="mt-20 d-flex align-items-center text-gray">
+                                        <i data-feather="headphones" width="20" height="20"></i>
+                                        <span
+                                            class="ml-5 font-14 font-weight-500">{{ trans('webinars.instructor_support') }}</span>
+                                    </div>
+                                @endif
+                            </div>
+                        @endif
 
                         <div class="mt-40 p-10 rounded-sm border row align-items-center favorites-share-box">
                             @if ($course->isWebinar())
