@@ -163,9 +163,14 @@
                                             <label class="input-label d-block">علت</label>
                                             <select name="admin_reason" class="form-control">
                                                 <option value="">انتخاب کنید</option>
-                                                <option value="تست 1">تست 1</option>
-                                                <option value="تست 2">تست 2</option>
-                                                <option value="تست 3">تست 3</option>
+                                                <option value="مشكل محصول">مشكل محصول</option>
+                                                <option value="مشكل اسپات پلير">مشكل اسپات پلير</option>
+                                                <option value="مشكل از سمت مشترى">مشكل از سمت مشترى</option>
+                                                <option value="مشكل از كارشناس فروش">مشكل از كارشناس فروش</option>
+                                                <option value="مشكل از پرزنت محصول در كمپين">مشكل از پرزنت محصول در كمپين
+                                                </option>
+                                                <option value="مشكل از كوچ">مشكل از كوچ</option>
+                                                <option value="مشكل پشتيبانى">مشكل پشتيبانى</option>
                                             </select>
                                         </div>
                                     </div>
