@@ -45,7 +45,8 @@ class SupportsController extends Controller
         }
 
 
-        if (auth()->user()->department_id != '0') {
+        dd(auth()->user()->department_id != 0, auth()->user()->department_id);
+        if (auth()->user()->department_id != 0) {
             $query->where('department_id', auth()->user()->departmen_id)->orwhere('support_id', auth()->user()->id);
             $totalConversations = deepClone($query)->where('department_id', auth()->user()->departmen_id)->orwhere('support_id', auth()->user()->id)->count();
             $openConversationsCount = deepClone($query)->where('department_id', auth()->user()->departmen_id)->orwhere('support_id', auth()->user()->id)->where('status', '!=', 'close')->count();
