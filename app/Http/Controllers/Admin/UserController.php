@@ -908,7 +908,7 @@ class UserController extends Controller
             }
         }
 
-        // dd($data['departmen_id']);
+        dd($data['departmen_id']);
 
         $user->full_name = !empty($data['full_name']) ? $data['full_name'] : null;
         $user->role_name = $role->name;
