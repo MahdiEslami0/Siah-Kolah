@@ -143,6 +143,7 @@ class EnrollmentController extends Controller
 
     public function store(Request $request)
     {
+
         $this->authorize('admin_enrollment_add_student_to_items');
 
         $data = $request->all();
