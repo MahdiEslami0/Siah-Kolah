@@ -44,11 +44,13 @@ class ImportSpotPlayer extends Command
                 if (!$webinar) {
                     continue;
                 }
-
-                $Sale = Sale::where('buyer_id', $user->id)->where('webinar_id', $webinar->id)->first();
-                if (!$Sale) {
-                    continue;
-                }
+                $Sale =  Sale::create([
+                    'buyer_id' => $user->id,
+                    'type' => 'webinar',
+                    'webinar_id' => $webinar->id,
+                    'amount' => $webinar->price,
+                    'created_at' => time(),
+                ]);
                 spotplayer::create([
                     'user_id' => $user->id,
                     'sale_id' =>  $Sale->id,

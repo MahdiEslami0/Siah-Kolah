@@ -82,21 +82,21 @@ class ImportUsersFromJson extends Command
                         $createdUser = User::create($dataToInsert);
                         $userId = $createdUser->id;
                     }
-                    if (isset($slug)) {
-                        $webinar = Webinar::where('slug', $slug)->first();
-                        if (isset($webinar)) {
-                            Sale::create([
-                                'buyer_id' => $userId,
-                                'type' => 'webinar',
-                                'webinar_id' => $webinar->id,
-                                'amount' => $webinar->price,
-                                'created_at' => time(),
-                            ]);
-                        } else {
-                            error_log('Webinar not found - Slug: ' . $slug);
-                            continue;
-                        }
-                    }
+                    // if (isset($slug)) {
+                    //     $webinar = Webinar::where('slug', $slug)->first();
+                    //     if (isset($webinar)) {
+                    //         Sale::create([
+                    //             'buyer_id' => $userId,
+                    //             'type' => 'webinar',
+                    //             'webinar_id' => $webinar->id,
+                    //             'amount' => $webinar->price,
+                    //             'created_at' => time(),
+                    //         ]);
+                    //     } else {
+                    //         error_log('Webinar not found - Slug: ' . $slug);
+                    //         continue;
+                    //     }
+                    // }
                 } catch (\Exception $e) {
                     error_log('Error updating/inserting user or creating sale: ' . $e->getMessage());
                 }
