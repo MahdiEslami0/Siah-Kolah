@@ -45,17 +45,17 @@ class SupportsController extends Controller
         }
 
 
-        if (auth()->user()->department_id == 0) {
-            $totalConversations = deepClone($query)->count();
-            $openConversationsCount = deepClone($query)->where('status', '!=', 'close')->count();
-            $closeConversationsCount = deepClone($query)->where('status', 'close')->count();
-            $classesWithSupport = 0;
-            $pendingReplySupports = 0;
-        } else {
+        if (auth()->user()->department_id != 0) {
             $query->where('department_id', auth()->user()->departmen_id)->orwhere('support_id', auth()->user()->id);
             $totalConversations = deepClone($query)->where('department_id', auth()->user()->departmen_id)->orwhere('support_id', auth()->user()->id)->count();
             $openConversationsCount = deepClone($query)->where('department_id', auth()->user()->departmen_id)->orwhere('support_id', auth()->user()->id)->where('status', '!=', 'close')->count();
             $closeConversationsCount = deepClone($query)->where('department_id', auth()->user()->departmen_id)->orwhere('support_id', auth()->user()->id)->where('status', 'close')->count();
+            $classesWithSupport = 0;
+            $pendingReplySupports = 0;
+        } else {
+            $totalConversations = deepClone($query)->count();
+            $openConversationsCount = deepClone($query)->where('status', '!=', 'close')->count();
+            $closeConversationsCount = deepClone($query)->where('status', 'close')->count();
             $classesWithSupport = 0;
             $pendingReplySupports = 0;
         }
