@@ -176,6 +176,7 @@ class EnrollmentController extends Controller
             'webinar_id' => $course->id,
             'amount' => $course->price,
             'created_at' => time(),
+            'notgen' => 1
         ]);
 
         if ($request->spotplayer) {
