@@ -44,6 +44,7 @@ class SupportsController extends Controller
             $query->whereNotNull('department_id');
         }
 
+        dd(auth()->user()->department_id, auth()->user()->department_id != 0);
 
         if (auth()->user()->department_id != 0) {
             $query->where('department_id', auth()->user()->departmen_id)->orwhere('support_id', auth()->user()->id);
