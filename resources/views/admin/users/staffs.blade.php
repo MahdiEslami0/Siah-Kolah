@@ -102,7 +102,7 @@
                                             </td>
 
                                             <td class="text-center">{{ $user->role->caption }}</td>
-                                            <td class="text-center">{{ $user->SupportDepartment->getTitleAttribute() }}
+                                            <td class="text-center">{{ $user->SupportDepartment->title }}
                                             </td>
 
 
