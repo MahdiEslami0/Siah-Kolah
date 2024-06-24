@@ -10,16 +10,22 @@
                     <input type="hidden" name="user_id" value="{{ $user->id }}">
 
                     <div class="form-group">
-                        <label class="input-label">{{trans('admin/main.class')}}</label>
+                        <label class="input-label">{{ trans('admin/main.class') }}</label>
                         <select name="webinar_id" class="form-control search-webinar-select2"
-                                data-placeholder="{{trans('panel.choose_webinar')}}">
-
+                            data-placeholder="{{ trans('panel.choose_webinar') }}">
                         </select>
                         <div class="invalid-feedback"></div>
                     </div>
 
+                    <div class="form-group">
+                        <label class="input-label">لایسنس اسپات پلیر :</label>
+                        <input type="text" class="form-control" value="spotplayer">
+                        <div class="invalid-feedback"></div>
+                    </div>
+
                     <div class=" mt-4">
-                        <button type="button" class="js-save-manual-add btn btn-primary">{{ trans('admin/main.submit') }}</button>
+                        <button type="button"
+                            class="js-save-manual-add btn btn-primary">{{ trans('admin/main.submit') }}</button>
                     </div>
                 </form>
             </div>
@@ -40,22 +46,23 @@
                             <th class="text-right">{{ trans('admin/main.actions') }}</th>
                         </tr>
 
-                        @if(!empty($manualAddedClasses))
-                            @foreach($manualAddedClasses as $manualAddedClass)
-
+                        @if (!empty($manualAddedClasses))
+                            @foreach ($manualAddedClasses as $manualAddedClass)
                                 <tr>
                                     <td width="25%">
-                                        <a href="{{ !empty($manualAddedClass->webinar) ? $manualAddedClass->webinar->getUrl() : '#1' }}" target="_blank" class="">{{ !empty($manualAddedClass->webinar) ? $manualAddedClass->webinar->title : trans('update.deleted_item') }}</a>
+                                        <a href="{{ !empty($manualAddedClass->webinar) ? $manualAddedClass->webinar->getUrl() : '#1' }}"
+                                            target="_blank"
+                                            class="">{{ !empty($manualAddedClass->webinar) ? $manualAddedClass->webinar->title : trans('update.deleted_item') }}</a>
                                     </td>
 
                                     <td>
-                                        @if(!empty($manualAddedClass->webinar))
-                                            {{ trans('admin/main.'.$manualAddedClass->webinar->type) }}
+                                        @if (!empty($manualAddedClass->webinar))
+                                            {{ trans('admin/main.' . $manualAddedClass->webinar->type) }}
                                         @endif
                                     </td>
 
                                     <td>
-                                        @if(!empty($manualAddedClass->webinar))
+                                        @if (!empty($manualAddedClass->webinar))
                                             {{ !empty($manualAddedClass->webinar->price) ? handlePrice($manualAddedClass->webinar->price) : '-' }}
                                         @else
                                             {{ !empty($manualAddedClass->amount) ? handlePrice($manualAddedClass->amount) : '-' }}
@@ -63,21 +70,26 @@
                                     </td>
 
                                     <td width="25%">
-                                        @if(!empty($manualAddedClass->webinar))
-                                            <p>{{ $manualAddedClass->webinar->creator->full_name  }}</p>
+                                        @if (!empty($manualAddedClass->webinar))
+                                            <p>{{ $manualAddedClass->webinar->creator->full_name }}</p>
                                         @else
-                                            <p>{{ $manualAddedClass->seller->full_name  }}</p>
+                                            <p>{{ $manualAddedClass->seller->full_name }}</p>
                                         @endif
                                     </td>
 
-                                    <td class="text-center">{{ dateTimeFormat($manualAddedClass->created_at,'j M Y | H:i') }}</td>
+                                    <td class="text-center">
+                                        {{ dateTimeFormat($manualAddedClass->created_at, 'j M Y | H:i') }}</td>
                                     <td class="text-right">
                                         @can('admin_enrollment_block_access')
-                                            @include('admin.includes.delete_button',[
-                                                    'url' => getAdminPanelUrl().'/enrollments/'. $manualAddedClass->id .'/block-access',
-                                                    'tooltip' => trans('update.block_access'),
-                                                    'btnIcon' => 'fa-times-circle'
-                                                ])
+                                            @include('admin.includes.delete_button', [
+                                                'url' =>
+                                                    getAdminPanelUrl() .
+                                                    '/enrollments/' .
+                                                    $manualAddedClass->id .
+                                                    '/block-access',
+                                                'tooltip' => trans('update.block_access'),
+                                                'btnIcon' => 'fa-times-circle',
+                                            ])
                                         @endcan
                                     </td>
                                 </tr>
@@ -104,22 +116,23 @@
                             <th class="text-right">{{ trans('admin/main.actions') }}</th>
                         </tr>
 
-                        @if(!empty($manualDisabledClasses))
-                            @foreach($manualDisabledClasses as $manualDisabledClass)
-
+                        @if (!empty($manualDisabledClasses))
+                            @foreach ($manualDisabledClasses as $manualDisabledClass)
                                 <tr>
                                     <td width="25%">
-                                        <a href="{{ !empty($manualDisabledClass->webinar) ? $manualDisabledClass->webinar->getUrl() : '#1' }}" target="_blank" class="">{{ !empty($manualDisabledClass->webinar) ? $manualDisabledClass->webinar->title : trans('update.deleted_item') }}</a>
+                                        <a href="{{ !empty($manualDisabledClass->webinar) ? $manualDisabledClass->webinar->getUrl() : '#1' }}"
+                                            target="_blank"
+                                            class="">{{ !empty($manualDisabledClass->webinar) ? $manualDisabledClass->webinar->title : trans('update.deleted_item') }}</a>
                                     </td>
 
                                     <td>
-                                        @if(!empty($manualDisabledClass->webinar))
-                                            {{ trans('admin/main.'.$manualDisabledClass->webinar->type) }}
+                                        @if (!empty($manualDisabledClass->webinar))
+                                            {{ trans('admin/main.' . $manualDisabledClass->webinar->type) }}
                                         @endif
                                     </td>
 
                                     <td>
-                                        @if(!empty($manualDisabledClass->webinar))
+                                        @if (!empty($manualDisabledClass->webinar))
                                             {{ !empty($manualDisabledClass->webinar->price) ? handlePrice($manualDisabledClass->webinar->price) : '-' }}
                                         @else
                                             {{ !empty($manualDisabledClass->amount) ? handlePrice($manualDisabledClass->amount) : '-' }}
@@ -127,19 +140,23 @@
                                     </td>
 
                                     <td width="25%">
-                                        @if(!empty($manualDisabledClass->webinar))
-                                            <p>{{ $manualDisabledClass->webinar->creator->full_name  }}</p>
+                                        @if (!empty($manualDisabledClass->webinar))
+                                            <p>{{ $manualDisabledClass->webinar->creator->full_name }}</p>
                                         @else
-                                            <p>{{ $manualDisabledClass->seller->full_name  }}</p>
+                                            <p>{{ $manualDisabledClass->seller->full_name }}</p>
                                         @endif
                                     </td>
 
                                     <td class="text-right">
                                         @can('admin_enrollment_block_access')
-                                            @include('admin.includes.delete_button',[
-                                                    'url' => getAdminPanelUrl().'/enrollments/'. $manualDisabledClass->id .'/enable-access',
-                                                    'tooltip' => trans('update.enable-student-access'),
-                                                ])
+                                            @include('admin.includes.delete_button', [
+                                                'url' =>
+                                                    getAdminPanelUrl() .
+                                                    '/enrollments/' .
+                                                    $manualDisabledClass->id .
+                                                    '/enable-access',
+                                                'tooltip' => trans('update.enable-student-access'),
+                                            ])
                                         @endcan
                                     </td>
                                 </tr>
@@ -167,22 +184,23 @@
                             <th>{{ trans('admin/main.actions') }}</th>
                         </tr>
 
-                        @if(!empty($purchasedClasses))
-                            @foreach($purchasedClasses as $purchasedClass)
-
+                        @if (!empty($purchasedClasses))
+                            @foreach ($purchasedClasses as $purchasedClass)
                                 <tr>
                                     <td width="25%">
-                                        <a href="{{ !empty($purchasedClass->webinar) ? $purchasedClass->webinar->getUrl() : '#1' }}" target="_blank" class="">{{ !empty($purchasedClass->webinar) ? $purchasedClass->webinar->title : trans('update.deleted_item') }}</a>
+                                        <a href="{{ !empty($purchasedClass->webinar) ? $purchasedClass->webinar->getUrl() : '#1' }}"
+                                            target="_blank"
+                                            class="">{{ !empty($purchasedClass->webinar) ? $purchasedClass->webinar->title : trans('update.deleted_item') }}</a>
                                     </td>
 
                                     <td>
-                                        @if(!empty($purchasedClass->webinar))
-                                            {{ trans('admin/main.'.$purchasedClass->webinar->type) }}
+                                        @if (!empty($purchasedClass->webinar))
+                                            {{ trans('admin/main.' . $purchasedClass->webinar->type) }}
                                         @endif
                                     </td>
 
                                     <td>
-                                        @if(!empty($purchasedClass->webinar))
+                                        @if (!empty($purchasedClass->webinar))
                                             {{ !empty($purchasedClass->webinar->price) ? handlePrice($purchasedClass->webinar->price) : '-' }}
                                         @else
                                             {{ !empty($purchasedClass->amount) ? handlePrice($purchasedClass->amount) : '-' }}
@@ -190,22 +208,27 @@
                                     </td>
 
                                     <td width="25%">
-                                        @if(!empty($purchasedClass->webinar))
-                                            <p>{{ $purchasedClass->webinar->creator->full_name  }}</p>
+                                        @if (!empty($purchasedClass->webinar))
+                                            <p>{{ $purchasedClass->webinar->creator->full_name }}</p>
                                         @else
-                                            <p>{{ $purchasedClass->seller->full_name  }}</p>
+                                            <p>{{ $purchasedClass->seller->full_name }}</p>
                                         @endif
                                     </td>
 
-                                    <td class="text-center">{{ dateTimeFormat($purchasedClass->created_at,'j M Y | H:i') }}</td>
+                                    <td class="text-center">
+                                        {{ dateTimeFormat($purchasedClass->created_at, 'j M Y | H:i') }}</td>
 
                                     <td class="text-right">
                                         @can('admin_enrollment_block_access')
-                                            @include('admin.includes.delete_button',[
-                                                    'url' => getAdminPanelUrl().'/enrollments/'. $purchasedClass->id .'/block-access',
-                                                    'tooltip' => trans('update.block_access'),
-                                                    'btnIcon' => 'fa-times-circle'
-                                                ])
+                                            @include('admin.includes.delete_button', [
+                                                'url' =>
+                                                    getAdminPanelUrl() .
+                                                    '/enrollments/' .
+                                                    $purchasedClass->id .
+                                                    '/block-access',
+                                                'tooltip' => trans('update.block_access'),
+                                                'btnIcon' => 'fa-times-circle',
+                                            ])
                                         @endcan
                                     </td>
                                 </tr>

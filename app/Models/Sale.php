@@ -29,34 +29,37 @@ class Sale extends Model
     protected static function boot()
     {
         parent::boot();
-        // static::created(function ($sale) {
-        //     $webinar = Webinar::findOrFail($sale->webinar_id);
-        //     $user = User::where('id', $sale->buyer_id)->first();
-        //     if ($webinar->spotplayer == 'active') {
-        //         $jsonData = [
-        //             "course" => [$webinar->spotplayer_key],
-        //             "name" =>  $user->full_name,
-        //             "watermark" => [
-        //                 "texts" => [
-        //                     ["text" => $user->full_name]
-        //                 ]
-        //             ]
-        //         ];
-        //         $response = Http::withHeaders([
-        //             '$API' => env('SPOTPLAYER_KEY'),
-        //             '$LEVEL' => "-1"
-        //         ])->post('https://panel.spotplayer.ir/license/edit/', $jsonData);
-        //         if ($response->successful()) {
-        //             $responseData = $response->json();
-        //             spotplayer::create([
-        //                 'user_id' =>  $user->id,
-        //                 'webinar_id' => $sale->webinar_id,
-        //                 'key' => $responseData['key'],
-        //                 'sale_id' => $sale->id
-        //             ]);
-        //         }
-        //     }
-        // });
+        static::created(function ($sale) {
+            if ($sale->notgen()) {
+                return;
+            }
+            $webinar = Webinar::findOrFail($sale->webinar_id);
+            $user = User::where('id', $sale->buyer_id)->first();
+            if ($webinar->spotplayer == 'active') {
+                $jsonData = [
+                    "course" => [$webinar->spotplayer_key],
+                    "name" =>  $user->full_name,
+                    "watermark" => [
+                        "texts" => [
+                            ["text" => $user->full_name]
+                        ]
+                    ]
+                ];
+                $response = Http::withHeaders([
+                    '$API' => env('SPOTPLAYER_KEY'),
+                    '$LEVEL' => "-1"
+                ])->post('https://panel.spotplayer.ir/license/edit/', $jsonData);
+                if ($response->successful()) {
+                    $responseData = $response->json();
+                    spotplayer::create([
+                        'user_id' =>  $user->id,
+                        'webinar_id' => $sale->webinar_id,
+                        'key' => $responseData['key'],
+                        'sale_id' => $sale->id
+                    ]);
+                }
+            }
+        });
     }
 
 

@@ -994,7 +994,7 @@ Route::group(['prefix' => $prefix, 'namespace' => 'Admin', 'middleware' => ['web
         Route::group(['prefix' => 'enrollments'], function () {
             Route::get('/history', 'EnrollmentController@history');
             Route::get('/add-student-to-class', 'EnrollmentController@addStudentToClass');
-            Route::post('/store', 'EnrollmentController@store');
+        Route::post('/store', 'EnrollmentController@store');
             Route::get('/{sale_id}/block-access', 'EnrollmentController@blockAccess');
             Route::get('/{sale_id}/enable-access', 'EnrollmentController@enableAccess');
             Route::get('/export', 'EnrollmentController@exportExcel');

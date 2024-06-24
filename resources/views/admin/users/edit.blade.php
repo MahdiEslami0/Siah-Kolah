@@ -114,7 +114,7 @@
 
                                 @include('admin.users.editTabs.badges')
 
-                                @if(!empty($user) and ($user->isOrganization() or $user->isTeacher()))
+                                {{-- @if(!empty($user) and ($user->isOrganization() or $user->isTeacher()))
                                     @can('admin_update_user_registration_package')
                                         @include('admin.users.editTabs.registration_package')
                                     @endcan
@@ -124,19 +124,19 @@
                                     @can('admin_update_user_meeting_settings')
                                         @include('admin.users.editTabs.meeting_settings')
                                     @endcan
-                                @endif
+                                @endif --}}
 
                                 @if(!empty($becomeInstructor))
                                     @include('admin.users.editTabs.become_instructor')
                                 @endif
 
                                 @include('admin.users.editTabs.purchased_courses')
-
+{{-- 
                                 @include('admin.users.editTabs.purchased_bundles')
 
-                                @include('admin.users.editTabs.purchased_products')
+                                @include('admin.users.editTabs.purchased_products') --}}
 
-                                @include('admin.users.editTabs.topics')
+                                {{-- @include('admin.users.editTabs.topics') --}}
 
                             </div>
                         </div>

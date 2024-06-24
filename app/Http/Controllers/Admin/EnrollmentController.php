@@ -17,6 +17,8 @@ use App\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use Maatwebsite\Excel\Facades\Excel;
+use App\Models\spotplayer;
+
 
 class EnrollmentController extends Controller
 {
@@ -190,7 +192,6 @@ class EnrollmentController extends Controller
                     $itemType = Sale::$webinar;
                     $itemColumnName = 'webinar_id';
                     $isOwner = $course->isOwner($user->id);
-
                     $checkUserHasBought = $course->checkUserHasBought($user);
                 }
             } elseif (!empty($data['bundle_id'])) {
@@ -282,7 +283,16 @@ class EnrollmentController extends Controller
                     'amount' => 0,
                     'total_amount' => 0,
                     'created_at' => time(),
-                ]);
+                ])->notgen();
+
+                if ($request->spotplayer) {
+                    spotplayer::create([
+                        'user_id' => $user->id,
+                        'sale_id' =>  $sale->id,
+                        'webinar_id' => $data['webinar_id'],
+                        'key' => $request->spotplayer
+                    ]);
+                }
 
                 if (!empty($product) and !empty($productOrder)) {
                     $productOrder->update([
@@ -301,7 +311,7 @@ class EnrollmentController extends Controller
                         'msg' => trans('webinars.success_store'),
                         'status' => 'success'
                     ];
-                    return redirect(getAdminPanelUrl().'/enrollments/history')->with(['toast' => $toastData]);
+                    return redirect(getAdminPanelUrl() . '/enrollments/history')->with(['toast' => $toastData]);
                 }
             }
         }
