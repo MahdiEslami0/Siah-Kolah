@@ -908,7 +908,6 @@ class UserController extends Controller
             }
         }
 
-        dd($data['departmen_id']);
 
         $user->full_name = !empty($data['full_name']) ? $data['full_name'] : null;
         $user->role_name = $role->name;
@@ -922,7 +921,7 @@ class UserController extends Controller
         $user->about = !empty($data['about']) ? $data['about'] : null;
         $user->status = !empty($data['status']) ? $data['status'] : null;
         $user->language = !empty($data['language']) ? $data['language'] : null;
-        $user->departmen_id = !empty($data['departmen_id']) ? $data['departmen_id'] : null;
+        $user->departmen_id = $data['departmen_id'];
 
 
         if (!empty($data['password'])) {
