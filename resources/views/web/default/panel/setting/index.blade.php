@@ -80,9 +80,9 @@
         </div>
 
         <div class="d-flex align-items-center">
-            @if(empty($new_user) and empty($edit_new_user))
+            {{-- @if(empty($new_user) and empty($edit_new_user))
                 <a href="/panel/setting/deleteAccount" class="delete-action btn btn-sm btn-danger" data-confirm="{{ trans('update.delete_account_modal_confirm_btn_text') }}" data-title="{{ trans('update.delete_account_modal_hint') }}">{{ trans('update.delete_account') }}</a>
-            @endif
+            @endif --}}
 
             <button type="button" id="saveData" class="btn btn-sm btn-primary ml-15">{{ trans('public.save') }}</button>
         </div>

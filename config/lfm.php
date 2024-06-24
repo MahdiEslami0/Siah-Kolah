@@ -80,6 +80,7 @@ return [
                 '.eot',
                 '.svg',
                 '.json',
+                '.webp'
             ],
         ],
         'image' => [
@@ -107,6 +108,7 @@ return [
                 '.eot',
                 '.svg',
                 '.json',
+                '.webp'
             ],
         ],
     ],

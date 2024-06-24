@@ -61,7 +61,7 @@
 
     <section class="dashboard">
         <div class="row">
-            <div class="col-12 col-lg-3 mt-35">
+            {{-- <div class="col-12 col-lg-3 mt-35">
                 <div class="bg-white account-balance rounded-sm panel-shadow py-15 py-md-30 px-10 px-md-20">
                     <div class="text-center">
                         <img src="/assets/default/img/activity/36.svg" class="account-balance-icon" alt="">
@@ -92,7 +92,7 @@
                         @endif
                     </div>
                 </div>
-            </div>
+            </div> --}}
 
             <div class="col-12 col-lg-3 mt-35">
                 <a href="@if ($authUser->isUser()) /panel/webinars/purchases @else /panel/meetings/requests @endif"

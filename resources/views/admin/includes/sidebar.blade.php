@@ -1249,7 +1249,7 @@
                             class="{{ (request()->is(getAdminPanelUrl('/financial/offline_payments', false)) and request()->get('page_type') == 'history') ? 'active' : '' }}">
                             <a href="{{ getAdminPanelUrl() }}/financial/offline_payments?page_type=history"
                                 class="nav-link">
-                                <span>تایین وضعیت شده</span>
+                                <span>تعیین وضعیت شده</span>
                             </a>
                         </li>
                     </ul>

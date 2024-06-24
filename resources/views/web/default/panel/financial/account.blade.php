@@ -207,8 +207,8 @@
     @else
         @include(getTemplate() . '.includes.no-result', [
             'file_name' => 'offline.png',
-            'title' => trans('financial.offline_no_result'),
-            'hint' => nl2br(trans('financial.offline_no_result_hint')),
+            'title' => 'کارت به کارت یافت نشد',
+            'hint' => 'سابقه کارت به کارتی برای شما ثبت نشده است',
         ])
     @endif
 @endsection
