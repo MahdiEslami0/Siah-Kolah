@@ -70,6 +70,7 @@
                                         <th>{{ trans('admin/main.id') }}</th>
                                         <th class="text-left">{{ trans('admin/main.name') }}</th>
                                         <th>{{ trans('admin/main.role_name') }}</th>
+                                        <th>دپارتمان</th>
                                         <th>{{ trans('admin/main.register_date') }}</th>
                                         <th>{{ trans('admin/main.status') }}</th>
                                         <th width="120">{{ trans('admin/main.actions') }}</th>
@@ -101,6 +102,10 @@
                                             </td>
 
                                             <td class="text-center">{{ $user->role->caption }}</td>
+                                            <td class="text-center">{{ $user->SupportDepartment->getTitleAttribute() }}
+                                            </td>
+
+
                                             <td>{{ dateTimeFormat($user->created_at, 'j M Y | H:i') }}</td>
 
                                             <td>

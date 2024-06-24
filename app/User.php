@@ -76,7 +76,7 @@ class User extends Authenticatable
         return $admin;
     }
 
-    
+
 
     public function isAdmin()
     {
@@ -113,6 +113,11 @@ class User extends Authenticatable
     public function role()
     {
         return $this->belongsTo('App\Models\Role', 'role_id', 'id');
+    }
+
+    public function SupportDepartment()
+    {
+        return $this->belongsTo('App\Models\SupportDepartment', 'department_id', 'id');
     }
 
     public function getAvatar($size = 40)
@@ -167,7 +172,6 @@ class User extends Authenticatable
                     $bit = $tmp;
                 }
             } catch (\Exception $exception) {
-
             }
         }
 
