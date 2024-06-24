@@ -191,9 +191,10 @@
                 </div>
 
                 <div class="form-group">
-                    <label class="input-label">دپارتمان پشتیبانی</label>
+                    <label class="input-label">دپارتمان پشتیبانی {{ $user->departmen_id }}</label>
                     <select name="departmen_id" class="form-control">
-                        <option value=""></option>
+                        <option value="">انتخاب کنید</option>
+                        <option value="0" @if (!empty($user) and $user->departmen_id == 0) selected @endif>همه</option>
                         @foreach ($departments as $department)
                             <option value="{{ $department->id }}" @if (!empty($user) and $user->departmen_id == $department->id) selected @endif>
                                 {{ $department->getTitleAttribute() }}</option>
