@@ -19,7 +19,7 @@
 
                     <div class="form-group">
                         <label class="input-label">لایسنس اسپات پلیر :</label>
-                        <input type="text" class="form-control" value="spotplayer">
+                        <input type="text" class="form-control" value="">
                         <div class="invalid-feedback"></div>
                     </div>
 
