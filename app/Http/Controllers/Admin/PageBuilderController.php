@@ -71,4 +71,10 @@ class PageBuilderController extends Controller
         ]);
         return redirect()->to(url('/admin/page-builder/list'));
     }
+
+    public function delete($id)
+    {
+        PageBuilder::where('id', $id)->delete();
+        return redirect()->to(url('/admin/page-builder/list'));
+    }
 }

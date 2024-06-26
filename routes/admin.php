@@ -192,6 +192,7 @@ Route::group(['prefix' => $prefix, 'namespace' => 'Admin', 'middleware' => ['web
             Route::post('/store', 'PageBuilderController@store');
             Route::get('/edit/{id}', 'PageBuilderController@edit');
             Route::post('/{id}/update', 'PageBuilderController@update');
+            Route::get('/delete/{id}', 'PageBuilderController@delete');
         });
 
         Route::group(['prefix' => 'course-noticeboards'], function () {

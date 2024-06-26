@@ -118,7 +118,9 @@
                                     <div class="col-md-12">
                                         <button class="btn btn-primary">ثبت</button>
                                         @if (isset($page))
-                                            <button class="btn btn-danger" type="button" id="deleteButton">حذف</button>
+                                            <a href="/admin/page-builder/delete/1">
+                                                <button class="btn btn-danger" type="button" id="deleteButton">حذف</button>
+                                            </a>
                                         @endif
                                     </div>
                                 </div>
