@@ -10,6 +10,7 @@ use App\Models\Cart;
 use App\Models\OfflinePayment;
 use App\Models\Order;
 use App\Models\OrderItem;
+use App\Models\otp;
 use App\Models\PaymentChannel;
 use App\Models\prepayment;
 use App\Models\Product;
@@ -30,6 +31,8 @@ use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\ValidationException;
 use Illuminate\Support\Facades\Cookie;
+use Http;
+use Illuminate\Support\Facades\Http as FacadesHttp;
 
 class PaymentController extends Controller
 {
@@ -155,27 +158,93 @@ class PaymentController extends Controller
         if (auth()->user()) {
             $user_id = auth()->user()->id;
         } else {
-            $rules = [
-                'full_name' => 'required',
-                // 'email' => 'required_without:mobile|email|unique:users',
-                // 'password' => 'required|min:8',
-                'mobile' => 'required|numeric|unique:users|regex:/^[0][9][0-9]{9,9}$/',
-            ];
-            $Validator =  Validator::make($request->all(), $rules);
-            if ($Validator->fails()) {
-                throw new ValidationException($Validator);
+            if (isset($request->uuid)) {
+                $otp =  otp::where('key', $request->uuid)->first();
+                if ($request->action == 'login') {
+                    $user = User::where('id', $otp->user_id)->first();
+                    if ($request->code == $otp->code) {
+                        Auth::login($user);
+                        $otp->delete();
+                        $user_id = $user->id;
+                    } else {
+                        $otp->try =  $otp->try + 1;
+                        $otp->save();
+                        $toastData = [
+                            'title' => trans('public.request_failed'),
+                            'msg' => 'کد تایید اشتباه است',
+                            'status' => 'danger'
+                        ];
+                        return redirect()->back()->with(['toast' => $toastData]);
+                    }
+                } else {
+                    if ($otp->try >= 3) {
+                        $otp->delete();
+                        $toastData = [
+                            'title' => 'خطا',
+                            'msg' => 'تلاش بیش ازحد مجاز',
+                            'status' => 'danger'
+                        ];
+                        return redirect(url('/list_pay/' . $id))->with(['toast' => $toastData]);
+                    }
+                }
+            } else {
+                $check_user = User::where('mobile', $request->mobile)->first();
+                if (isset($check_user)) {
+                    $otp =  otp::where('user_id',  $check_user->id)->first();
+                    $key = uuid_create();
+                    $code = rand(1000, 9999);
+                    if ($otp && $otp->created_at->diffInMinutes(now()) < 3) {
+                        $toastData = [
+                            'title' => 'کد قبلا ارسال شده است',
+                            'msg' => ($otp->created_at->diffInMinutes(now()) - 3) * -1 . ' دقیقه دیگر دوباره تلاش کنید ',
+                            'status' => 'error'
+                        ];
+                    } else {
+                        if (isset($otp)) {
+                            $otp->delete();
+                        }
+                        otp::create([
+                            'code' =>  $code,
+                            'key' => $key,
+                            'user_id' => $check_user->id,
+                            'try' => 0
+                        ]);
+                        $toastData = [
+                            'title' => "موفق",
+                            'msg' => 'کد تایید برای شما پیامک شد',
+                            'status' => 'success'
+                        ];
+                        FacadesHttp::get('http://api.kavenegar.com/v1/2F4E5079575663783031503968356E4E516851634C2F566C6B435A5A7254532B434E3676596443563068733D/verify/lookup.json', [
+                            'receptor' =>  $request->mobile,
+                            'token' => $code,
+                            'template' => 'verify'
+                        ]);
+                    }
+                    return redirect()->to(url('/list_pay/' . $id . '?uuid=' . $key))->with(['toast' => $toastData]);;
+                } else {
+                    $rules = [
+                        'full_name' => 'required',
+                        // 'email' => 'required_without:mobile|email|unique:users',
+                        // 'password' => 'required|min:8',
+                        'mobile' => 'required|numeric|regex:/^[0][9][0-9]{9,9}$/',
+                    ];
+                    $Validator =  Validator::make($request->all(), $rules);
+                    if ($Validator->fails()) {
+                        throw new ValidationException($Validator);
+                    }
+                    $user =  User::create([
+                        'full_name' => $request->full_name,
+                        // 'email' => $request->email,
+                        'mobile' => $request->mobile,
+                        'role_id' => 1,
+                        'role_name' => 'user',
+                        // 'password' => Hash::make($request->password) ?? null,
+                        'created_at' => time()
+                    ]);
+                    Auth::login($user);
+                    $user_id = $user->id;
+                }
             }
-            $user =  User::create([
-                'full_name' => $request->full_name,
-                // 'email' => $request->email,
-                'mobile' => $request->mobile,
-                'role_id' => 1,
-                'role_name' => 'user',
-                // 'password' => Hash::make($request->password) ?? null,
-                'created_at' => time()
-            ]);
-            Auth::login($user);
-            $user_id = $user->id;
         }
         $order = order::create([
             'user_id' => $user_id,

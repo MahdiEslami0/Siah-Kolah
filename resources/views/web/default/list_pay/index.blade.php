@@ -37,24 +37,35 @@
             {{ csrf_field() }}
 
             @if (!auth()->user())
-                <div class="row mb-30">
-                    <div class="col-md-6 mb-3">
-                        <label>نام و نام خانوادگی :</label>
-                        <input type="text" name="full_name" value="{{ old('full_name') }}" class="form-control">
+                @if (request()->has('uuid'))
+                    <input type="text" name="uuid" class="form-control" value="{{ request('uuid') }}" hidden>
+                    <input type="text" name="action" class="form-control" value="login" hidden>
+                    <div class="row mb-30 mt-10">
+                        <div class="col-md-6 mb-3">
+                            <label>کد تایید :</label>
+                            <input type="number" name="code" class="form-control" value="{{ old('code') }}">
+                        </div>
                     </div>
-                    {{-- <div class="col-md-6 mb-3">
+                @else
+                    <div class="row mb-30">
+                        <div class="col-md-6 mb-3">
+                            <label>نام و نام خانوادگی :</label>
+                            <input type="text" name="full_name" value="{{ old('full_name') }}" class="form-control">
+                        </div>
+                        {{-- <div class="col-md-6 mb-3">
                         <label>ایمیل :</label>
                         <input type="email" name="email" class="form-control" value="{{ old('email') }}">
                     </div> --}}
-                    <div class="col-md-6 mb-3">
-                        <label>شماره همراه :</label>
-                        <input type="number" name="mobile" class="form-control" value="{{ old('mobile') }}">
-                    </div>
-                    {{-- <div class="col-md-6 mb-3">
+                        <div class="col-md-6 mb-3">
+                            <label>شماره همراه :</label>
+                            <input type="number" name="mobile" class="form-control" value="{{ old('mobile') }}">
+                        </div>
+                        {{-- <div class="col-md-6 mb-3">
                         <label>رمزعبور :</label>
                         <input type="password" name="password" class="form-control">
                     </div> --}}
-                </div>
+                    </div>
+                @endif
             @endif
 
 
