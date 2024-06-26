@@ -157,9 +157,9 @@ class PaymentController extends Controller
         } else {
             $rules = [
                 'full_name' => 'required',
-                'email' => 'required_without:mobile|email|unique:users',
-                'password' => 'required|min:8',
-                'mobile' => 'nullable|required_without:email|numbric|unique:users|regex:/^[0][9][0-9]{9,9}$/',
+                // 'email' => 'required_without:mobile|email|unique:users',
+                // 'password' => 'required|min:8',
+                'mobile' => 'nullable|required:email|numbric|unique:users|regex:/^[0][9][0-9]{9,9}$/',
             ];
             $Validator =  Validator::make($request->all(), $rules);
             if ($Validator->fails()) {
@@ -167,11 +167,11 @@ class PaymentController extends Controller
             }
             $user =  User::create([
                 'full_name' => $request->full_name,
-                'email' => $request->email,
+                // 'email' => $request->email,
                 'mobile' => $request->mobile,
                 'role_id' => 1,
                 'role_name' => 'user',
-                'password' => Hash::make($request->passwork),
+                // 'password' => Hash::make($request->password) ?? null,
                 'created_at' => time()
             ]);
             Auth::login($user);

@@ -42,18 +42,18 @@
                         <label>نام و نام خانوادگی :</label>
                         <input type="text" name="full_name" value="{{ old('full_name') }}" class="form-control">
                     </div>
-                    <div class="col-md-6 mb-3">
+                    {{-- <div class="col-md-6 mb-3">
                         <label>ایمیل :</label>
                         <input type="email" name="email" class="form-control" value="{{ old('email') }}">
-                    </div>
+                    </div> --}}
                     <div class="col-md-6 mb-3">
                         <label>شماره همراه :</label>
                         <input type="number" name="mobile" class="form-control" value="{{ old('mobile') }}">
                     </div>
-                    <div class="col-md-6 mb-3">
+                    {{-- <div class="col-md-6 mb-3">
                         <label>رمزعبور :</label>
                         <input type="password" name="password" class="form-control">
-                    </div>
+                    </div> --}}
                 </div>
             @endif
 
