@@ -159,7 +159,7 @@ class PaymentController extends Controller
                 'full_name' => 'required',
                 // 'email' => 'required_without:mobile|email|unique:users',
                 // 'password' => 'required|min:8',
-                'mobile' => 'nullable|required|numbric|unique:users|regex:/^[0][9][0-9]{9,9}$/',
+                'mobile' => 'required|numbric|unique:users|regex:/^[0][9][0-9]{9,9}$/',
             ];
             $Validator =  Validator::make($request->all(), $rules);
             if ($Validator->fails()) {
