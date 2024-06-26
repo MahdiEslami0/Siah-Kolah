@@ -76,7 +76,7 @@
             <div class="col-12 col-lg-4 mb-30 mb-lg-0">
                 <div
                     class="py-25 px-20 rounded-sm panel-shadow d-flex flex-column align-items-center justify-content-center">
-                    <img src="{{ $offlineBank->logo }}" width="120" height="60" alt="">
+                    <img src="{{ $offlineBank->logo }}" width="60" height="60" alt="">
 
                     <div class="mt-15 mt-30 w-100">
 
