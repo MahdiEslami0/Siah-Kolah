@@ -118,7 +118,7 @@
                                     <div class="col-md-12">
                                         <button class="btn btn-primary">ثبت</button>
                                         @if (isset($page))
-                                            <a href="/admin/page-builder/delete/1">
+                                            <a href="/admin/page-builder/delete/{{ $page->id }}">
                                                 <button class="btn btn-danger" type="button" id="deleteButton">حذف</button>
                                             </a>
                                         @endif
