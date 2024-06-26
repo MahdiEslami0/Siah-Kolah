@@ -211,8 +211,26 @@
                                         <label>
                                             کدلایسنس :
                                         </label>
-                                        <input type="text" class="form-control" value="{{ $spotplayers->key }}"
-                                            disabled>
+                                        <div class="d-flex">
+                                            <div style="width: 100%;">
+                                                <input type="text" class="form-control" id="spotPlayerKey"
+                                                    value="{{ $spotplayers->key }}"
+                                                    style="
+                                                    border-radius: 0px 10px 10px 0px;
+                                                "
+                                                    disabled>
+                                            </div>
+                                            <div style="width: 20%;">
+                                                <button class="btn btn-sm btn-primary"
+                                                    style="
+                                                border-radius: 10px 0px 0px 10px;
+                                                padding: 19px;
+                                                height:10px
+                                            "
+                                                    onclick="copyToClipboard()" type="button">کپی</button>
+                                            </div>
+                                        </div>
+
                                         <div class="row mt-15">
                                             <div class="col-3">
                                                 <a href="https://app.spotplayer.ir/assets/bin/spotplayer/setup.apk"
@@ -671,6 +689,24 @@
         var emailLang = '{{ trans('auth.email') }}';
         var phoneLang = '{{ trans('public.phone') }}';
         var captchaLang = '{{ trans('site.captcha') }}';
+    </script>
+
+
+    <script>
+        function copyToClipboard() {
+            var copyText = document.getElementById("spotPlayerKey");
+            copyText.disabled = false; // Enable the input to select its content
+            copyText.select();
+            copyText.setSelectionRange(0, 99999); // For mobile devices
+            document.execCommand("copy");
+            copyText.disabled = true; // Disable the input again
+            $.toast({
+                heading: 'لایسنس با موفقیت کپی شد',
+                icon: 'info',
+                loader: true,
+                position: 'bottom-right',
+            })
+        }
     </script>
 
     <script src="/assets/default/js/parts/comment.min.js"></script>
