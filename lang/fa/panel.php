@@ -161,7 +161,7 @@ return [
     'support_summary' => 'خلاصۀ پشتیبانی',
     'classes_support' => 'پشتیبانی دوره‌ها',
     'support_tickets' => 'تیکت‌ها',
-    'staff' => 'کارکنان',
+    'staff' => 'پشتیبانی',
     'teacher' => 'مدرس ',
     'open' => 'باز کن',
     'closed' => 'بسته',
