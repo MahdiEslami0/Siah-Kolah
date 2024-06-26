@@ -89,6 +89,11 @@
                                             @enderror
                                         </div>
                                         <div class="col-12 col-md-4 mt-2 mt-md-0">
+                                            @isset($faq)
+                                                <a href="/admin/supports/faq/{{ $faq->id }}/delete">
+                                                    <button class="btn btn-danger w-100" type="button">حذف</button>
+                                                </a>
+                                            @endisset
                                             <button class="btn btn-primary w-100">{{ trans('admin/main.submit') }}</button>
                                         </div>
                                 </div>

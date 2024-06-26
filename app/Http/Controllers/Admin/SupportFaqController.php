@@ -58,6 +58,12 @@ class SupportFaqController extends Controller
     }
 
 
+    public function delete($id)
+    {
+        SupportFaq::where('id', $id)->delete();
+        return redirect()->to(url('admin/supports/faq'));
+    }
+
     public function update(Request $request, $id)
     {
         $this->validate($request, [

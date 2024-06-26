@@ -495,7 +495,11 @@ class UserController extends Controller
     public function makeNewsletter(Request $request)
     {
         $this->validate($request, [
-            'newsletter_email' => 'required|max:255'
+            'newsletter_email' => ['required', 'max:255', 'regex:/^09\d{9}$/'],
+        ], [
+            'newsletter_email.required' => 'شماره همراه اجباری است',
+            'newsletter_email.max' => 'شماره نامعتبر',
+            'newsletter_email.regex' => 'شماره همراه باید با 09 شروع شود و 11 رقم داشته باشد',
         ]);
 
         $data = $request->all();
