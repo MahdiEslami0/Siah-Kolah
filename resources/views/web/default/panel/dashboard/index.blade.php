@@ -6,7 +6,7 @@
 @endpush
 
 @section('content')
-    <section class="">
+    <section class=" mt-30">
         <div class="d-flex align-items-start align-items-md-center justify-content-between flex-column flex-md-row">
             <h1 class="section-title">{{ trans('panel.dashboard') }}</h1>
 
@@ -33,13 +33,13 @@
 
         <div class="bg-white dashboard-banner-container position-relative px-15 px-ld-35 py-10 panel-shadow rounded-sm">
             <h2 class="font-30 text-primary line-height-1">
-                <span class="d-block">{{ trans('panel.hi') }} {{ $authUser->full_name }},</span>
-                <span
-                    class="font-16 text-secondary font-weight-bold">{{ trans('panel.have_event', ['count' => !empty($unReadNotifications) ? count($unReadNotifications) : 0]) }}</span>
+                <span class="d-block">{{ trans('panel.hi') }} {{ $authUser->full_name }} , خوش آمدید</span>
+                {{-- <span
+                    class="font-16 text-secondary font-weight-bold">{{ trans('panel.have_event', ['count' => !empty($unReadNotifications) ? count($unReadNotifications) : 0]) }}</span> --}}
             </h2>
 
             <ul class="mt-15 unread-notification-lists">
-                @if (!empty($unReadNotifications) and !$unReadNotifications->isEmpty())
+                {{-- @if (!empty($unReadNotifications) and !$unReadNotifications->isEmpty())
                     @foreach ($unReadNotifications->take(5) as $unReadNotification)
                         <li class="font-14 mt-1 text-gray">- {{ $unReadNotification->title }}</li>
                     @endforeach
@@ -47,11 +47,11 @@
                     @if (count($unReadNotifications) > 5)
                         <li>&nbsp;&nbsp;...</li>
                     @endif
-                @endif
+                @endif --}}
             </ul>
-
+{{-- 
             <a href="/panel/notifications"
-                class="mt-15 font-weight-500 text-dark-blue d-inline-block">{{ trans('panel.view_all_events') }}</a>
+                class="mt-15 font-weight-500 text-dark-blue d-inline-block">{{ trans('panel.view_all_events') }}</a> --}}
 
             <div class="dashboard-banner">
                 <img src="{{ getPageBackgroundSettings('dashboard') }}" alt="" class="img-cover">
@@ -94,9 +94,9 @@
                 </div>
             </div> --}}
 
-            <div class="col-12 col-lg-6 mt-35">
+            <div class="col-12 col-lg-12 mt-35">
                 <div class="row">
-                    <div class="col-md-6">
+                    <div class="col-md-4">
                         <a href="@if ($authUser->isUser()) /panel/webinars/purchases @else /panel/meetings/requests @endif"
                             class="dashboard-stats rounded-sm panel-shadow p-10 p-md-20 d-flex align-items-center">
                             <div class="stat-icon requests">
@@ -110,7 +110,7 @@
                             </div>
                         </a>
                     </div>
-                    <div class="col-md-6">
+                    <div class="col-md-4">
                         <a href="@if ($authUser->isUser()) /panel/webinars/my-comments @else /panel/webinars/comments @endif"
                             class="dashboard-stats rounded-sm panel-shadow p-10 p-md-20 d-flex align-items-center mt-xs-30">
                             <div class="stat-icon comments">
@@ -120,6 +120,19 @@
                                 <span
                                     class="font-30 text-secondary">{{ !empty($commentsCount) ? $commentsCount : 0 }}</span>
                                 <span class="font-16 text-gray font-weight-500">{{ trans('panel.comments') }}</span>
+                            </div>
+                        </a>
+                    </div>
+                    <div class="col-md-4">
+                        <a href="@if ($authUser->isUser()) /panel/support/tickets @else /panel/support/tickets @endif"
+                            class="dashboard-stats rounded-sm panel-shadow p-10 p-md-20 d-flex align-items-center mt-xs-30">
+                            <div class="stat-icon tickets">
+                                <img src="/assets/default/img/icons/support.svg" alt="">
+                            </div>
+                            <div class="d-flex flex-column ml-15">
+                                <span
+                                    class="font-30 text-secondary">{{ !empty($supportsCount) ? $supportsCount : 0 }}</span>
+                                <span class="font-16 text-gray font-weight-500">{{ trans('panel.support_tickets') }}</span>
                             </div>
                         </a>
                     </div>

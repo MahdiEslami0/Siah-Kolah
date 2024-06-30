@@ -43,8 +43,8 @@ class DashboardController extends Controller
                 ->get();
 
             $time = time();
-            $firstDayMonth = strtotime(date('Y-m-01', $time));// First day of the month.
-            $lastDayMonth = strtotime(date('Y-m-t', $time));// Last day of the month.
+            $firstDayMonth = strtotime(date('Y-m-01', $time)); // First day of the month.
+            $lastDayMonth = strtotime(date('Y-m-t', $time)); // Last day of the month.
 
             $monthlySales = Sale::where('seller_id', $user->id)
                 ->whereNull('refund_at')
@@ -71,8 +71,8 @@ class DashboardController extends Controller
                 ->get();
 
             $supports = Support::where('user_id', $user->id)
-                ->whereNotNull('webinar_id')
                 ->where('status', 'open')
+                ->orwhere('status', 'replied')
                 ->get();
 
             $comments = Comment::where('user_id', $user->id)
@@ -88,7 +88,6 @@ class DashboardController extends Controller
         }
 
         $data['giftModal'] = $this->showGiftModal($user);
-
         return view(getTemplate() . '.panel.dashboard.index', $data);
     }
 
