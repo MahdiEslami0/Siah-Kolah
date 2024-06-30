@@ -94,30 +94,36 @@
                 </div>
             </div> --}}
 
-            <div class="col-12 col-lg-3 mt-35">
-                <a href="@if ($authUser->isUser()) /panel/webinars/purchases @else /panel/meetings/requests @endif"
-                    class="dashboard-stats rounded-sm panel-shadow p-10 p-md-20 d-flex align-items-center">
-                    <div class="stat-icon requests">
-                        <img src="/assets/default/img/icons/request.svg" alt="">
+            <div class="col-12 col-lg-6 mt-35">
+                <div class="row">
+                    <div class="col-md-6">
+                        <a href="@if ($authUser->isUser()) /panel/webinars/purchases @else /panel/meetings/requests @endif"
+                            class="dashboard-stats rounded-sm panel-shadow p-10 p-md-20 d-flex align-items-center">
+                            <div class="stat-icon requests">
+                                <img src="/assets/default/img/icons/request.svg" alt="">
+                            </div>
+                            <div class="d-flex flex-column ml-15">
+                                <span
+                                    class="font-30 text-secondary">{{ !empty($pendingAppointments) ? $pendingAppointments : (!empty($webinarsCount) ? $webinarsCount : 0) }}</span>
+                                <span
+                                    class="font-16 text-gray font-weight-500">{{ $authUser->isUser() ? trans('panel.purchased_courses') : trans('panel.pending_appointments') }}</span>
+                            </div>
+                        </a>
                     </div>
-                    <div class="d-flex flex-column ml-15">
-                        <span
-                            class="font-30 text-secondary">{{ !empty($pendingAppointments) ? $pendingAppointments : (!empty($webinarsCount) ? $webinarsCount : 0) }}</span>
-                        <span
-                            class="font-16 text-gray font-weight-500">{{ $authUser->isUser() ? trans('panel.purchased_courses') : trans('panel.pending_appointments') }}</span>
+                    <div class="col-md-6">
+                        <a href="@if ($authUser->isUser()) /panel/webinars/my-comments @else /panel/webinars/comments @endif"
+                            class="dashboard-stats rounded-sm panel-shadow p-10 p-md-20 d-flex align-items-center mt-xs-30">
+                            <div class="stat-icon comments">
+                                <img src="/assets/default/img/icons/comment.svg" alt="">
+                            </div>
+                            <div class="d-flex flex-column ml-15">
+                                <span
+                                    class="font-30 text-secondary">{{ !empty($commentsCount) ? $commentsCount : 0 }}</span>
+                                <span class="font-16 text-gray font-weight-500">{{ trans('panel.comments') }}</span>
+                            </div>
+                        </a>
                     </div>
-                </a>
-
-                <a href="@if ($authUser->isUser()) /panel/webinars/my-comments @else /panel/webinars/comments @endif"
-                    class="dashboard-stats rounded-sm panel-shadow p-10 p-md-20 d-flex align-items-center mt-15 mt-md-30">
-                    <div class="stat-icon comments">
-                        <img src="/assets/default/img/icons/comment.svg" alt="">
-                    </div>
-                    <div class="d-flex flex-column ml-15">
-                        <span class="font-30 text-secondary">{{ !empty($commentsCount) ? $commentsCount : 0 }}</span>
-                        <span class="font-16 text-gray font-weight-500">{{ trans('panel.comments') }}</span>
-                    </div>
-                </a>
+                </div>
             </div>
 
 

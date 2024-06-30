@@ -153,7 +153,7 @@
                                     @foreach ($supports as $support)
                                         <tr class="@if (!empty($selectSupport) and $selectSupport->id == $support->id) selected-row @endif">
                                             <td class="text-left">
-                                                <a href="/panel/support/tickets/{{ $support->id }}/conversations"
+                                                {{-- <a href="/panel/support/tickets/{{ $support->id }}/conversations"
                                                     class="">
                                                     <div class="user-inline-avatar d-flex align-items-center">
                                                         <div class="avatar bg-gray200">
@@ -165,6 +165,11 @@
                                                                 class="d-block font-14 text-dark-blue font-weight-500">{{ $support->title }}</span>
                                                         </div>
                                                     </div>
+                                                </a> --}}
+                                                <a href="/panel/support/tickets/{{ $support->id }}/conversations"
+                                                    class="">
+                                                    <span
+                                                        class="d-block font-14 text-dark-blue font-weight-500">{{ $support->title }}</span>
                                                 </a>
                                             </td>
 
@@ -183,8 +188,8 @@
                                                     <span
                                                         class="text-danger font-14 font-weight-500">{{ trans('panel.closed') }}</span>
                                                 @elseif($support->status == 'supporter_replied')
-                                                    <span
-                                                        class="text-primary font-14 font-weight-500">{{ trans('panel.replied') }}</span>
+                                                    <span class="font-14 font-weight-500"
+                                                        style="color: rgb(0, 198, 0)">{{ trans('panel.replied') }}</span>
                                                 @else
                                                     <span
                                                         class="text-warning font-14 font-weight-500">{{ trans('public.waiting') }}</span>
@@ -252,7 +257,7 @@
                                                         @endif
                                                     </div>
                                                 </div>
-                                                <p class="white-space-pre-wrap text-gray mt-15 font-weight-500 font-14">
+                                                <p class="text-gray mt-15 font-weight-500 font-14">
                                                     {{ $conversations->message }}</p>
                                             </div>
                                         @endisset
