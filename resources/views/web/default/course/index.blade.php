@@ -401,10 +401,10 @@
                             </div>
                         </div>
 
-                        <div class="mt-30 text-center">
+                        {{-- <div class="mt-30 text-center">
                             <button type="button" id="webinarReportBtn"
                                 class="font-14 text-gray btn-transparent">{{ trans('webinars.report_this_webinar') }}</button>
-                        </div>
+                        </div> --}}
                     </div>
                 </div>
 

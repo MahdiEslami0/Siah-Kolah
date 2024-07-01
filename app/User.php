@@ -122,27 +122,16 @@ class User extends Authenticatable
 
     public function getAvatar($size = 40)
     {
-        // if (!empty($this->avatar)) {
-        //     $avatarUrl = $this->avatar;
-        // } else {
-        //     $settings = getOthersPersonalizationSettings();
-
-        //     if (!empty($settings) and !empty($settings['user_avatar_style']) and $settings['user_avatar_style'] == "ui_avatar") {
-        //         $avatarUrl = "/getDefaultAvatar?item={$this->id}&name={$this->full_name}&size=$size";
-        //     } else {
-        //         if (!empty($settings) and !empty($settings['default_user_avatar'])) {
-        //             $avatarUrl = $settings['default_user_avatar'];
-        //         } else {
-        //             $avatarUrl = "/assets/default/img/default/avatar-1.png";
-        //         }
-        //     }
-        // }
-
-        if ($this->role_name == 'admin') {
-            $avatarUrl =   "/assets/default/img/default/avatar-support-man-headphone-blue-dotted-line-line-icon-free-vector.jpg";
+        if (!empty($this->avatar)) {
+            $avatarUrl = $this->avatar;
         } else {
-            $avatarUrl = "/assets/default/img/default/avatar-1.png";
+            if ($this->role_name == 'admin') {
+                $avatarUrl =   "/assets/default/img/default/avatar-support-man-headphone-blue-dotted-line-line-icon-free-vector.jpg";
+            } else {
+                $avatarUrl = "/assets/default/img/default/avatar-1.png";
+            }
         }
+
 
 
 

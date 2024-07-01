@@ -376,10 +376,10 @@
 }
 
 .chat-box .chat-content .chat-item .chat-details .chat-text {
-    border-radius: 3px;
+    border-radius: 10px;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.08);
     background-color: #fff;
-    padding: 10px 15px;
+    padding: 0px 15px;
     width: auto;
     display: inline-block;
     font-size: 14px;

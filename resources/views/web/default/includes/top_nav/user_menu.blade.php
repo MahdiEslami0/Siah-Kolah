@@ -60,7 +60,7 @@
                     @endif
 
                     <li class="navbar-auth-user-dropdown-item">
-                        <a href="/panel/support" class="d-flex align-items-center w-100 px-15 py-10 text-gray font-14 bg-transparent">
+                        <a href="/panel/support/tickets" class="d-flex align-items-center w-100 px-15 py-10 text-gray font-14 bg-transparent">
                             <img src="/assets/default/img/icons/user_menu/support.svg" class="icons">
                             <span class="ml-5">{{ trans('panel.support') }}</span>
                         </a>

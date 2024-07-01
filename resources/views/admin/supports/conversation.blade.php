@@ -38,6 +38,30 @@
         </div>
 
 
+        <style>
+            .my-message {
+                width: 51%;
+                float: right;
+            }
+
+            .support-message {
+                width: 51%;
+                float: left;
+                background-color: #248fde;
+                color: white;
+            }
+
+            @media (max-width: 600px) {
+
+                .my-message,
+                .support-message {
+                    width: 80%;
+                    margin: 0 auto;
+                    display: block;
+                }
+            }
+        </style>
+
         <div class="section-body">
 
             <div class="row">
@@ -52,15 +76,15 @@
                                         <img
                                             src="{{ !empty($conversations->sender_id) ? $conversations->sender->getAvatar() : $conversations->supporter->getAvatar() }}">
 
-                                        <div class="chat-details">
+                                        <div class="chat-details"
+                                            style="{{ !empty($conversations->sender_id) ? 'float:right' : 'float:left' }}">
 
                                             <div class="chat-time">
                                                 {{ !empty($conversations->sender_id) ? $conversations->sender->full_name : $conversations->supporter->full_name }}
                                             </div>
 
                                             <div class="chat-text white-space-pre-wrap">
-                                                {{ $conversations->message }}
-
+                                                <p>{{ $conversations->message }}</p>
                                             </div>
 
 
@@ -86,7 +110,7 @@
                                     <div class="chat-item chat-{{ !empty($conversations->sender_id) ? 'right' : 'left' }}">
                                         <img
                                             src="{{ !empty($conversations->sender_id) ? $conversations->sender->getAvatar() : $conversations->supporter->getAvatar() }}">
-                                        <div class="chat-details">
+                                        <div class="chat-details"  style="{{ !empty($conversations->sender_id) ? 'float:right' : 'float:left' }}">
                                             <div class="chat-time">
                                                 {{ !empty($conversations->sender_id) ? $conversations->sender->full_name : $conversations->supporter->full_name }}
                                                 (علت ضمیمه شده)

@@ -293,7 +293,7 @@ class UserController extends Controller
         $query = fromAndToDateFilter($from, $to, $query, 'created_at');
 
         if (!empty($full_name)) {
-            $query->where('full_name', 'like', "%$full_name%");
+            $query->where('full_name', 'like', "%$full_name%")->orwhere('email', 'like', "%$full_name%")->orwhere('mobile', 'like', "%$full_name%");
         }
 
         if (!empty($sort)) {

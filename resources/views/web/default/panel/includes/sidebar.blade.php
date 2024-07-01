@@ -42,7 +42,7 @@
         </div>
     </div>
 
-    <div class="d-flex sidebar-user-stats pb-10 ml-20 pb-lg-20 mt-15 mt-lg-30">
+    {{-- <div class="d-flex sidebar-user-stats pb-10 ml-20 pb-lg-20 mt-15 mt-lg-30">
         <div class="sidebar-user-stat-item d-flex flex-column">
             <strong class="text-center">{{ $authUser->webinars()->count() }}</strong>
             <span class="font-12">{{ trans('panel.classes') }}</span>
@@ -61,7 +61,7 @@
                 <span class="font-12">{{ trans('panel.followers') }}</span>
             </div>
         @endif
-    </div>
+    </div> --}}
 
     <ul id="panel-sidebar-scroll"
         class="sidebar-menu pt-10 without-bottom-image @if (!empty($authUser->userGroup)) has-user-group @endif @if (empty($getPanelSidebarSettings) or empty($getPanelSidebarSettings['background'])) without-bottom-image @endif"

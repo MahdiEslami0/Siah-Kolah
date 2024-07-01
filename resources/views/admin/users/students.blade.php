@@ -83,7 +83,7 @@
                     <div class="row">
                         <div class="col-md-3">
                             <div class="form-group">
-                                <label class="input-label">{{ trans('admin/main.search') }}</label>
+                                <label class="input-label">نام و نام خانوادگی | شماره همراه | ایمیل</label>
                                 <input name="full_name" type="text" class="form-control" value="{{ request()->get('full_name') }}">
                             </div>
                         </div>
