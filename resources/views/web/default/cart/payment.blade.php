@@ -35,7 +35,7 @@
 
         <h2 class="section-title">{{ trans('financial.select_a_payment_gateway') }}</h2>
 
-        <form action="/payments/payment-request" method="post" class=" mt-25">
+        <form action="/payments/payment-request" method="post" class=" mt-25" enctype="multipart/form-data">
             {{ csrf_field() }}
             <input type="hidden" name="order_id" value="{{ $order->id }}">
 

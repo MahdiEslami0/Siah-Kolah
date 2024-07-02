@@ -33,40 +33,104 @@
             </div>
         @endif
 
-        <form action="/list_pay/pay/{{ $sale_link->id }}" method="post" class=" mt-25">
+        <form action="/list_pay/pay/{{ $sale_link->id }}" method="post" enctype="multipart/form-data" class=" mt-25">
+
+
+
             {{ csrf_field() }}
 
             @if (!auth()->user())
                 @if (request()->has('uuid'))
-                    <input type="text" name="uuid" class="form-control" value="{{ request('uuid') }}" hidden>
-                    <input type="text" name="action" class="form-control" value="login" hidden>
-                    <div class="row mb-30 mt-10">
-                        <div class="col-md-6 mb-3">
-                            <label>کد تایید :</label>
-                            <input type="number" name="code" class="form-control" value="{{ old('code') }}">
+                    <div class="alert alert-dark text-white" role="alert">
+                        کد تایید پیامک شده را وارد کنید
+                    </div>
+                    <div style="margin-top: 20px">
+                        <input type="text" name="uuid" class="form-control" value="{{ request('uuid') }}" hidden>
+                        <input type="text" name="action" class="form-control" value="login" hidden>
+                        <div class="row mb-30 mt-10">
+                            <div class="col-md-6 mb-3">
+                                <label>کد تایید :</label>
+                                <input type="number" name="code" class="form-control" value="{{ old('code') }}">
+                            </div>
                         </div>
                     </div>
                 @else
-                    <div class="row mb-30">
+                    <input type="text" name="login_method" id="login_method" hidden>
+                    <div class="d-flex mb-30">
+                        <div class="w-100">
+                            <button class="btn w-100" style="border-radius: 0px 10px 10px 0px;" type="button"
+                                id="by_password">
+                                <span style="font-size: 11px">
+                                    ورود با
+                                    ایمیل
+                                </span>
+                            </button>
+                        </div>
+                        <div class="w-100">
+                            <button class=" btn  w-100" style="border-radius: 10px 0px 0px 10px;" type="button"
+                                id="by_mobile">
+                                <span style="font-size: 11px">
+                                    ورود با
+                                    شماره
+                                    همراه
+                                </span>
+                            </button>
+                        </div>
+                    </div>
+                    <div class="row my-30" id="inputs">
                         <div class="col-md-6 mb-3">
                             <label>نام و نام خانوادگی :</label>
                             <input type="text" name="full_name" value="{{ old('full_name') }}" class="form-control">
                         </div>
-                        {{-- <div class="col-md-6 mb-3">
-                        <label>ایمیل :</label>
-                        <input type="email" name="email" class="form-control" value="{{ old('email') }}">
-                    </div> --}}
-                        <div class="col-md-6 mb-3">
+                        <div class="col-md-6 mb-3" id="emailInput">
+                            <label>ایمیل :</label>
+                            <input type="email" name="email" class="form-control" value="{{ old('email') }}">
+                        </div>
+                        <div class="col-md-6 mb-3" id="passwordInput">
+                            <label>رمزعبور :</label>
+                            <input type="password" name="password" class="form-control">
+                        </div>
+                        <div class="col-md-6 mb-3" id="mobileInput">
                             <label>شماره همراه :</label>
                             <input type="number" name="mobile" class="form-control" value="{{ old('mobile') }}">
                         </div>
-                        {{-- <div class="col-md-6 mb-3">
-                        <label>رمزعبور :</label>
-                        <input type="password" name="password" class="form-control">
-                    </div> --}}
                     </div>
                 @endif
             @endif
+
+
+
+            <script>
+                var loginForm = document.getElementById('loginForm');
+                var mobileInput = document.getElementById('mobileInput');
+                var passwordInput = document.getElementById('passwordInput');
+                var emailInput = document.getElementById('emailInput');
+                var byMobileBtn = document.getElementById('by_mobile');
+                var byPasswordBtn = document.getElementById('by_password');
+
+                function byMobile() {
+                    console.log('byMobile');
+                    document.getElementById('login_method').value = 'by_mobile';
+                    mobileInput.classList.remove('hidden');
+                    passwordInput.classList.add('hidden');
+                    emailInput.classList.add('hidden');
+                    byMobileBtn.classList.add('login-btn-active');
+                    byPasswordBtn.classList.remove('login-btn-active');
+                }
+
+                function byPassword() {
+                    console.log('byPassword');
+                    document.getElementById('login_method').value = 'by_password';
+                    mobileInput.classList.add('hidden');
+                    passwordInput.classList.remove('hidden');
+                    emailInput.classList.remove('hidden');
+                    byMobileBtn.classList.remove('login-btn-active');
+                    byPasswordBtn.classList.add('login-btn-active');
+                }
+                byMobileBtn.addEventListener('click', byMobile);
+                byPasswordBtn.addEventListener('click', byPassword);
+                byMobile()
+            </script>
 
 
 
@@ -76,51 +140,48 @@
             @endisset
 
 
-            @if (isset($sale_link))
-                @php
-                    $products = json_decode($sale_link->products);
-                @endphp
-                @if (count($products) == 1)
-                    <div id="select_pay">
-                        <h2 class="section-title">نوع پرداخت را انتخاب کنید</h2>
-                        <div class="row mt-45">
-                            <div class="col-6">
-                                <a href="/prepay/{{ $products[0] }}">
-                                    <div class="rounded-sm p-20 p-lg-45 d-flex flex-column align-items-center justify-content-center"
-                                        style="border: 3px solid var(--primary);
+            <?php
+            $productString = implode(',', $products);
+            ?>
+
+            <div id="select_pay">
+                <h2 class="section-title">نوع پرداخت را انتخاب کنید</h2>
+                <div class="row mt-45">
+                    <div class="col-6">
+                        <a href="/prepay/{{ $productString }}">
+                            <div class="rounded-sm p-20 p-lg-45 d-flex flex-column align-items-center justify-content-center"
+                                style="border: 3px solid var(--primary);
                                         transition: all 0.3s ease;
                                         box-shadow: 0 10px 30px 0 rgba(119, 122, 120, 0.3);
                                     }">
-                                        <img src="/assets/default/img/no-results/financial.png" width="90"
-                                            height="90">
+                                <img src="/assets/default/img/no-results/financial.png" width="90" height="90">
 
-                                        <p class="mt-30 mt-lg-50 font-weight-500 text-dark-blue">
-                                            پیش واریز
-                                        </p>
-                                    </div>
-                                </a>
+                                <p class="mt-30 mt-lg-50 font-weight-500 text-dark-blue">
+                                    پیش واریز
+                                </p>
                             </div>
-
-                            <div class="col-6">
-                                <a onclick="show_pay_online()">
-                                    <div class="rounded-sm p-20 p-lg-45 d-flex flex-column align-items-center justify-content-center"
-                                        style="border: 3px solid var(--primary);
-                                        transition: all 0.3s ease;
-                                        box-shadow: 0 10px 30px 0 rgba(119, 122, 120, 0.3);
-                                    }">
-                                        <img src="/assets/default/img/no-results/offer.png" width="90" height="90"
-                                            alt="">
-                                        <p class="mt-30 mt-lg-50 font-weight-500 text-dark-blue">
-                                            پرداخت نقدی
-                                        </p>
-                                    </div>
-                                </a>
-                            </div>
-
-                        </div>
+                        </a>
                     </div>
-                @endif
-            @endif
+
+                    <div class="col-6">
+                        <a onclick="show_pay_online()">
+                            <div class="rounded-sm p-20 p-lg-45 d-flex flex-column align-items-center justify-content-center"
+                                style="border: 3px solid var(--primary);
+                                        transition: all 0.3s ease;
+                                        box-shadow: 0 10px 30px 0 rgba(119, 122, 120, 0.3);
+                                    }">
+                                <img src="/assets/default/img/no-results/offer.png" width="90" height="90"
+                                    alt="">
+                                <p class="mt-30 mt-lg-50 font-weight-500 text-dark-blue">
+                                    پرداخت نقدی
+                                </p>
+                            </div>
+                        </a>
+                    </div>
+
+                </div>
+            </div>
+
 
 
             <div id="pay_online">
@@ -128,24 +189,22 @@
                     <div>
                         <h2 class="section-title">یک پرتال پرداخت انتخاب کنید</h2>
                     </div>
-                    @if (count($products) == 1)
-                        @if (count($products) == 1)
-                            <div class="d-flex align-items-center" style="gap: 5px" onclick="show_select_pay()">
-                                <div>
-                                    <a>
-                                        پیش وارزی
-                                    </a>
-                                </div>
-                                <div>
-                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16"
-                                        fill="currentColor" class="bi bi-arrow-left" viewBox="0 0 16 16">
-                                        <path fill-rule="evenodd"
-                                            d="M15 8a.5.5 0 0 0-.5-.5H2.707l3.147-3.146a.5.5 0 1 0-.708-.708l-4 4a.5.5 0 0 0 0 .708l4 4a.5.5 0 0 0 .708-.708L2.707 8.5H14.5A.5.5 0 0 0 15 8" />
-                                    </svg>
-                                </div>
-                            </div>
-                        @endif
-                    @endif
+
+                    <div class="d-flex align-items-center" style="gap: 5px" onclick="show_select_pay()">
+                        <div>
+                            <a>
+                                پیش وارزی
+                            </a>
+                        </div>
+                        <div>
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+                                class="bi bi-arrow-left" viewBox="0 0 16 16">
+                                <path fill-rule="evenodd"
+                                    d="M15 8a.5.5 0 0 0-.5-.5H2.707l3.147-3.146a.5.5 0 1 0-.708-.708l-4 4a.5.5 0 0 0 0 .708l4 4a.5.5 0 0 0 .708-.708L2.707 8.5H14.5A.5.5 0 0 0 15 8" />
+                            </svg>
+                        </div>
+                    </div>
+
                 </div>
 
                 @include('web.default.components.pay_cards')
@@ -161,23 +220,19 @@
 
 
 
-            @if (isset($sale_link))
-                @if (count($products) == 1)
-                    <script>
-                        document.getElementById('pay_online').style.display = 'none';
+            <script>
+                document.getElementById('pay_online').style.display = 'none';
 
-                        function show_pay_online() {
-                            document.getElementById('pay_online').style.display = 'block';
-                            document.getElementById('select_pay').style.display = 'none';
-                        }
+                function show_pay_online() {
+                    document.getElementById('pay_online').style.display = 'block';
+                    document.getElementById('select_pay').style.display = 'none';
+                }
 
-                        function show_select_pay() {
-                            document.getElementById('pay_online').style.display = 'none';
-                            document.getElementById('select_pay').style.display = 'block';
-                        }
-                    </script>
-                @endif
-            @endif
+                function show_select_pay() {
+                    document.getElementById('pay_online').style.display = 'none';
+                    document.getElementById('select_pay').style.display = 'block';
+                }
+            </script>
 
 
 
@@ -295,6 +350,44 @@
     </section>
 @endsection
 
+<style>
+    .login-container {
+        width: 600px;
+    }
+
+    .login-card {
+        padding: 40px 10px;
+    }
+
+    @media (max-width: 767px) {
+        .login-container {
+            width: 100%;
+        }
+
+        .login-card {
+            padding: 40px 10px;
+        }
+    }
+
+    .login-btn {
+        padding: 10px;
+        border: #000000 solid 1px !important;
+        color: #000000 !important;
+        border: none;
+    }
+
+    .login-btn-active {
+        background-color: #000000 !important;
+        color: white !important;
+    }
+
+    .hidden {
+        display: none;
+    }
+</style>
+
 @push('scripts_bottom')
     <script src="/assets/default/js/parts/payment.min.js"></script>
+
+  
 @endpush

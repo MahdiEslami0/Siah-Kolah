@@ -33,10 +33,33 @@ use Illuminate\Validation\ValidationException;
 use Illuminate\Support\Facades\Cookie;
 use Http;
 use Illuminate\Support\Facades\Http as FacadesHttp;
+use Illuminate\Support\Facades\Storage;
+use Intervention\Image\Facades\Image;
 
 class PaymentController extends Controller
 {
     protected $order_session_key = 'payment.order_id';
+
+    private function handleUploadAttachment($user, $file)
+    {
+        $storage = Storage::disk('public');
+
+        $path = '/' . $user->id . '/offlinePayments';
+
+        if (!$storage->exists($path)) {
+            $storage->makeDirectory($path);
+        }
+
+        $img = Image::make($file);
+        $name = time() . '.' . $file->getClientOriginalExtension();
+
+        $path = $path . '/' . $name;
+
+        $storage->put($path, (string)$img->encode());
+
+        return $name;
+    }
+
 
     protected function offline($request, $amount, $type, $type_id)
     {
@@ -46,11 +69,12 @@ class PaymentController extends Controller
             'account' => 'required',
             'referral_code' => 'required',
             'date' => 'required',
+            'attachment' => 'image|mimes:jpeg,png,jpg|max:10240'
         ];
 
-        if (!empty($request->file('attachment'))) {
-            $rules['attachment'] = 'image|mimes:jpeg,png,jpg|max:10240';
-        }
+        // if (!empty($request->file('attachment'))) {
+        //     $rules['attachment'] = 'image|mimes:jpeg,png,jpg|max:10240';
+        // }
 
         $this->validate($request, $rules);
 
@@ -87,23 +111,36 @@ class PaymentController extends Controller
 
     public function prepay(Request $request)
     {
-        $Webinar = Webinar::where('id', $request->webinar_id)->first();
+        $webinarIds = json_decode($request->input('webinar_id')[0]);
+        $Webinars = Webinar::WhereIn('id', $webinarIds)->get();
+        $price = 0;
+        foreach ($Webinars as $Webinar) {
+            $price += $Webinar->price;
+        }
         if ($request->gateway == 'cart') {
             $gateway = 'payment_channel';
         } else {
             $gateway = $request->gateway;
         }
-        if ($Webinar->price * 0.1 <= $request->amount) {
+        if ('50000' <= $request->amount) {
             $order = order::create([
                 'user_id' => auth()->user()->id,
                 'status' => 'pending',
                 'payment_method' => $gateway,
-                'amount' => $Webinar->price,
+                'amount' => $price,
                 'total_amount' => $request->amount,
-                'webinar_id' => $request->webinar_id,
                 'prepay' => 'pending',
                 'created_at' => time()
             ]);
+            foreach ($Webinars as $Webinar) {
+                OrderItem::create([
+                    'user_id' => auth()->user()->id,
+                    'order_id' => $order->id,
+                    'webinar_id' => $Webinar->id,
+                    'amount' => $Webinar->price,
+                    'total_amount' => $Webinar->price
+                ]);
+            }
             return $this->paymentRequest($request, $request->gateway, $order->id, 'prepay', $request->webinar_id);
         } else {
             return redirect()->back();
@@ -118,18 +155,31 @@ class PaymentController extends Controller
             $gateway = $request->gateway;
         }
         $prepay = prepayment::where('id', $request->prepay_id)->first();
-        $Webinar = Webinar::where('id', $request->webinar_id)->first();
+        $webinarIds = json_decode($request->input('webinar_id')[0]);
+        $Webinars = Webinar::WhereIn('id', $webinarIds)->get();
+        $price = 0;
+        foreach ($Webinars as $Webinar) {
+            $price += $Webinar->price;
+        }
         $order = order::create([
             'user_id' => auth()->user()->id,
             'status' => 'pending',
             'payment_method' =>  $gateway,
-            'amount' => $Webinar->price - $prepay->amount,
-            'total_amount' => $Webinar->price -  $prepay->amount,
-            'webinar_id' => $request->webinar_id,
+            'amount' => $price - $prepay->amount,
+            'total_amount' => $price  -  $prepay->amount,
             'prepay' => 'complete',
             'prepay_id' => $request->prepay_id,
             'created_at' => time()
         ]);
+        foreach ($Webinars as $Webinar) {
+            OrderItem::create([
+                'user_id' => auth()->user()->id,
+                'order_id' => $order->id,
+                'webinar_id' => $Webinar->id,
+                'amount' => $Webinar->price,
+                'total_amount' => $Webinar->price
+            ]);
+        }
         return $this->paymentRequest($request, $request->gateway, $order->id, 'complete_prepay', $request->prepay_id);
     }
 
@@ -158,92 +208,146 @@ class PaymentController extends Controller
         if (auth()->user()) {
             $user_id = auth()->user()->id;
         } else {
-            if (isset($request->uuid)) {
-                $otp =  otp::where('key', $request->uuid)->first();
-                if ($request->action == 'login') {
-                    $user = User::where('id', $otp->user_id)->first();
-                    if ($request->code == $otp->code) {
-                        Auth::login($user);
-                        $otp->delete();
-                        $user_id = $user->id;
+            if (isset($request->login_method)) {
+                if ($request->login_method == 'by_password') {
+                    $check_user_email = user::where('email', $request->email)->first();
+                    if (isset($check_user_email)) {
+                        $rules = [
+                            'full_name' => 'required',
+                            'email' => 'required|email',
+                            'password' => 'required',
+                        ];
+                        $validator = Validator::make($request->all(), $rules);
+                        if ($validator->fails()) {
+                            throw new ValidationException($validator);
+                        }
+                        $credentials = $request->only('email', 'password');
+                        if (Auth::attempt($credentials)) {
+                            $user = $check_user_email;
+                        } else {
+                            $toastData = [
+                                'title' => trans('public.request_failed'),
+                                'msg' => 'حساب کاربری با این ایمیل وجود دارد , ولی رمزعبور اشتباه است',
+                                'status' => 'danger'
+                            ];
+                            return redirect()->back()->with(['toast' => $toastData]);
+                        }
                     } else {
-                        $otp->try =  $otp->try + 1;
-                        $otp->save();
-                        $toastData = [
-                            'title' => trans('public.request_failed'),
-                            'msg' => 'کد تایید اشتباه است',
-                            'status' => 'danger'
+                        $rules = [
+                            'full_name' => 'required',
+                            'email' => 'required|email',
+                            'password' => 'required|min:8',
                         ];
-                        return redirect()->back()->with(['toast' => $toastData]);
+                        $validator = Validator::make($request->all(), $rules);
+                        if ($validator->fails()) {
+                            throw new ValidationException($validator);
+                        }
+                        $user =  User::create([
+                            'full_name' => $request->full_name,
+                            'email' => $request->email,
+                            'role_id' => 1,
+                            'role_name' => 'user',
+                            'created_at' => time()
+                        ]);
+                        Auth::login($user);
+                        $user_id = $user->id;
                     }
-                } else {
-                    if ($otp->try >= 3) {
-                        $otp->delete();
-                        $toastData = [
-                            'title' => 'خطا',
-                            'msg' => 'تلاش بیش ازحد مجاز',
-                            'status' => 'danger'
-                        ];
-                        return redirect(url('/list_pay/' . $id))->with(['toast' => $toastData]);
+                } elseif ($request->login_method == 'by_mobile') {
+                    if (isset($request->uuid)) {
+                        $otp = Otp::where('key', $request->uuid)->first();
+                        if ($request->action == 'login') {
+                            $user = User::where('id', $otp->user_id)->first();
+                            if ($request->code == $otp->code) {
+                                Auth::login($user);
+                                $otp->delete();
+                                $user_id = $user->id;
+                                return redirect()->intended('/dashboard');
+                            } else {
+                                $otp->try = $otp->try + 1;
+                                $otp->save();
+                                $toastData = [
+                                    'title' => trans('public.request_failed'),
+                                    'msg' => 'کد تایید اشتباه است',
+                                    'status' => 'danger'
+                                ];
+                                return redirect()->back()->with(['toast' => $toastData]);
+                            }
+                        } else {
+                            if ($otp->try >= 3) {
+                                $otp->delete();
+                                $toastData = [
+                                    'title' => 'خطا',
+                                    'msg' => 'تلاش بیش ازحد مجاز',
+                                    'status' => 'danger'
+                                ];
+                                return redirect(url('/list_pay/' . $id))->with(['toast' => $toastData]);
+                            }
+                        }
+                    } else {
+                        $check_user = User::where('mobile', $request->mobile)->first();
+                        if (isset($check_user)) {
+                            $otp = Otp::where('user_id', $check_user->id)->first();
+                            $key = uuid_create();
+                            $code = rand(1000, 9999);
+                            if ($otp && $otp->created_at->diffInMinutes(now()) < 3) {
+                                $toastData = [
+                                    'title' => 'کد قبلا ارسال شده است',
+                                    'msg' => ($otp->created_at->diffInMinutes(now()) - 3) * -1 . ' دقیقه دیگر دوباره تلاش کنید ',
+                                    'status' => 'error'
+                                ];
+                            } else {
+                                if (isset($otp)) {
+                                    $otp->delete();
+                                }
+                                Otp::create([
+                                    'code' =>  $code,
+                                    'key' => $key,
+                                    'user_id' => $check_user->id,
+                                    'try' => 0
+                                ]);
+                                $toastData = [
+                                    'title' => "موفق",
+                                    'msg' => 'کد تایید برای شما پیامک شد',
+                                    'status' => 'success'
+                                ];
+                                // Send SMS with verification code (replace with your SMS provider)
+                                // Example: Kavenegar SMS API
+                                FacadesHttp::get('http://api.kavenegar.com/v1/2F4E5079575663783031503968356E4E516851634C2F566C6B435A5A7254532B434E3676596443563068733D/verify/lookup.json', [
+                                    'receptor' =>  $request->mobile,
+                                    'token' => $code,
+                                    'template' => 'verify'
+                                ]);
+                            }
+                            return redirect()->to(url('/list_pay/' . $id . '?uuid=' . $key))->with(['toast' => $toastData]);
+                        } else {
+                            $rules = [
+                                'full_name' => 'required',
+                                'mobile' => 'required|numeric|regex:/^[0][9][0-9]{9}$/',
+                            ];
+                            $validator = Validator::make($request->all(), $rules);
+                            if ($validator->fails()) {
+                                throw new ValidationException($validator);
+                            }
+
+                            $user =  User::create([
+                                'full_name' => $request->full_name,
+                                'mobile' => $request->mobile,
+                                'role_id' => 1,
+                                'role_name' => 'user',
+                                'created_at' => time()
+                            ]);
+                            Auth::login($user);
+                            $user_id = $user->id;
+                        }
                     }
                 }
             } else {
-                $check_user = User::where('mobile', $request->mobile)->first();
-                if (isset($check_user)) {
-                    $otp =  otp::where('user_id',  $check_user->id)->first();
-                    $key = uuid_create();
-                    $code = rand(1000, 9999);
-                    if ($otp && $otp->created_at->diffInMinutes(now()) < 3) {
-                        $toastData = [
-                            'title' => 'کد قبلا ارسال شده است',
-                            'msg' => ($otp->created_at->diffInMinutes(now()) - 3) * -1 . ' دقیقه دیگر دوباره تلاش کنید ',
-                            'status' => 'error'
-                        ];
-                    } else {
-                        if (isset($otp)) {
-                            $otp->delete();
-                        }
-                        otp::create([
-                            'code' =>  $code,
-                            'key' => $key,
-                            'user_id' => $check_user->id,
-                            'try' => 0
-                        ]);
-                        $toastData = [
-                            'title' => "موفق",
-                            'msg' => 'کد تایید برای شما پیامک شد',
-                            'status' => 'success'
-                        ];
-                        FacadesHttp::get('http://api.kavenegar.com/v1/2F4E5079575663783031503968356E4E516851634C2F566C6B435A5A7254532B434E3676596443563068733D/verify/lookup.json', [
-                            'receptor' =>  $request->mobile,
-                            'token' => $code,
-                            'template' => 'verify'
-                        ]);
-                    }
-                    return redirect()->to(url('/list_pay/' . $id . '?uuid=' . $key))->with(['toast' => $toastData]);;
-                } else {
-                    $rules = [
-                        'full_name' => 'required',
-                        // 'email' => 'required_without:mobile|email|unique:users',
-                        // 'password' => 'required|min:8',
-                        'mobile' => 'required|numeric|regex:/^[0][9][0-9]{9,9}$/',
-                    ];
-                    $Validator =  Validator::make($request->all(), $rules);
-                    if ($Validator->fails()) {
-                        throw new ValidationException($Validator);
-                    }
-                    $user =  User::create([
-                        'full_name' => $request->full_name,
-                        // 'email' => $request->email,
-                        'mobile' => $request->mobile,
-                        'role_id' => 1,
-                        'role_name' => 'user',
-                        // 'password' => Hash::make($request->password) ?? null,
-                        'created_at' => time()
-                    ]);
-                    Auth::login($user);
-                    $user_id = $user->id;
-                }
+                $toastData = [
+                    'title' => 'خطا',
+                    'msg' => 'روش ورود مشخص نشده است',
+                    'status' => 'danger'
+                ];
+                return redirect()->back()->with(['toast' => $toastData]);
             }
         }
         $order = order::create([
@@ -255,6 +359,16 @@ class PaymentController extends Controller
             'created_at' => time(),
             'list_id' => $id
         ]);
+        foreach ($products as $product) {
+            $Webinar = Webinar::where('id', $product)->first();
+            OrderItem::create([
+                'user_id' => auth()->user()->id,
+                'order_id' => $order->id,
+                'webinar_id' => $Webinar->id,
+                'amount' => $Webinar->price,
+                'total_amount' => $Webinar->price
+            ]);
+        }
         return $this->paymentRequest($request, $request->gateway, $order->id, 'list_pay', $id);
     }
 
@@ -404,6 +518,7 @@ class PaymentController extends Controller
 
     private function paymentOrderAfterVerify($order)
     {
+        // dd('sadasd');
         if (!empty($order)) {
             if ($order->status == Order::$paying) {
                 $this->setPaymentAccounting($order);
@@ -442,14 +557,11 @@ class PaymentController extends Controller
             $cashbackAccounting->rechargeWallet($order);
         } else {
             foreach ($order->orderItems as $orderItem) {
-                $sale = Sale::createSales($orderItem, $order->payment_method);
+                // $sale = Sale::createSales($orderItem, $order->payment_method);
 
                 if (!empty($orderItem->reserve_meeting_id)) {
                     $reserveMeeting = ReserveMeeting::where('id', $orderItem->reserve_meeting_id)->first();
-                    $reserveMeeting->update([
-                        'sale_id' => $sale->id,
-                        'reserved_at' => time()
-                    ]);
+
 
                     $reserver = $reserveMeeting->user;
 
@@ -484,7 +596,7 @@ class PaymentController extends Controller
                 } elseif (!empty($orderItem->installment_payment_id)) {
                     Accounting::createAccountingForInstallmentPayment($orderItem, $type);
 
-                    $this->updateInstallmentOrder($orderItem, $sale);
+                    // $this->updateInstallmentOrder($orderItem, $sale);
                 } else {
                     // webinar and meeting and product and bundle
 
@@ -492,7 +604,7 @@ class PaymentController extends Controller
                     TicketUser::useTicket($orderItem);
 
                     if (!empty($orderItem->product_id)) {
-                        $this->updateProductOrder($sale, $orderItem);
+                        // $this->updateProductOrder($sale, $orderItem);
                     }
                 }
             }
@@ -510,30 +622,16 @@ class PaymentController extends Controller
             $orderId = session()->get($this->order_session_key);
             session()->forget($this->order_session_key);
         } else {
-            $orderId = $request->get('order_id', null);
+            return redirect()->to('/panel');
         }
         $order = Order::where('id', $orderId)
             ->where('user_id', auth()->user()->id)
             ->first();
+        $orderItems = OrderItem::where('order_id', $order->id)->get();
         if (!empty($order)) {
             if (isset($order->list_id)) {
-                $list_pay = sale_link::where('id', $order->list_id)->first();
-                $products = json_decode($list_pay->products);
-                foreach ($products as $product) {
-                    $Webinar = Webinar::where('id', $product)->first();
-                    Sale::updateOrCreate(
-                        [
-                            'webinar_id' => $Webinar->id,
-                            'buyer_id' => auth()->user()->id,
-                        ],
-                        [
-                            'order_id' => $order->id,
-                            'type' => 'webinar',
-                            'amount' => $Webinar->price,
-                            'total_amount' => $Webinar->price,
-                            'created_at' => time(),
-                        ]
-                    );
+                foreach ($orderItems as  $orderItem) {
+                    Sale::createSales($orderItem, $order->payment_method);
                 }
                 $button = 'مشاهده دوره ها';
                 $href = "/panel/webinars/purchases";
@@ -564,19 +662,9 @@ class PaymentController extends Controller
                 $prepayment->pay =  $order->total_amount;
                 $prepayment->save();
                 $total_amount = $prepayment->amount + $order->total_amount;
-                Sale::updateOrCreate(
-                    [
-                        'webinar_id' => $order->webinar_id,
-                        'buyer_id' => auth()->user()->id,
-                    ],
-                    [
-                        'order_id' => $order->id,
-                        'type' => 'webinar',
-                        'amount' => $total_amount,
-                        'total_amount' => $total_amount,
-                        'created_at' => time(),
-                    ]
-                );
+                foreach ($orderItems as  $orderItem) {
+                    Sale::createSales($orderItem, $order->payment_method);
+                }
                 if ($order->payment_method == 'credit') {
                     Accounting::create([
                         'user_id' => auth()->user()->id,

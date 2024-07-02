@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Web;
 
 use App\Http\Controllers\Controller;
 use App\Models\OfflineBank;
+use App\Models\OrderItem;
 use App\Models\PaymentChannel;
 use App\Models\prepayment;
 use App\Models\Webinar;
@@ -15,22 +16,22 @@ class PrePaymentController extends Controller
 {
     public function index($id)
     {
-        $webinar = Webinar::where('id', $id)->first();
-        $user = Auth::user();
+        $productIds = explode(',', $id);
+        $webinars = Webinar::whereIn('id', $productIds)->get();
+        $user = auth()->user();
         $paymentChannels = PaymentChannel::where('status', 'active')->get();
-        foreach ($paymentChannels as $paymentChannel) {
-            if ($paymentChannel->class_name == 'Razorpay' and (!$isMultiCurrency or in_array(currency(), $paymentChannel->currencies))) {
-                $razorpay = true;
-            }
-        }
         $offlinebanks =  OfflineBank::get();
+        $price = 0;
+        foreach ($webinars as $webinar) {
+            $price += $webinar->price;
+        }
         $data = [
             'pageTitle' => 'پیش واریز',
-            'webinar' => $webinar,
+            'webinar' => $webinars,
             'userCharge' => $user->getAccountingCharge(),
             'paymentChannels' =>  $paymentChannels,
             'action' => 'prepay',
-            'price' => $webinar->price * 0.1,
+            'price' => $price * 0.1,
             'offlineBanks' => $offlinebanks
         ];
         return view(getTemplate() . '.prepay.index', $data);
@@ -38,15 +39,18 @@ class PrePaymentController extends Controller
 
     public function pay(prepayment $prepayment)
     {
-        $webinar = Webinar::where('id', $prepayment->webinar_id)->first();
+        $order_items = OrderItem::where('order_id', $prepayment->order_id)->get();
         $user = FacadesAuth::user();
         $paymentChannels = PaymentChannel::where('status', 'active')->get();
-        foreach ($paymentChannels as $paymentChannel) {
-            if ($paymentChannel->class_name == 'Razorpay' and (!$isMultiCurrency or in_array(currency(), $paymentChannel->currencies))) {
-                $razorpay = true;
-            }
-        }
+
         $offlinebanks =  OfflineBank::get();
+        $price = 0;
+        $webinars = [];
+        foreach ($order_items as $order_item) {
+            $webinar = Webinar::where('id', $order_item->webinar_id)->first();
+            $webinars[] =  $webinar;
+            $price += $webinar->price;
+        }
         $data = [
             'pageTitle' => 'تکمیل واریز',
             'webinar' => $webinar,
@@ -54,8 +58,9 @@ class PrePaymentController extends Controller
             'paymentChannels' =>  $paymentChannels,
             'action' => 'complete_prepay',
             'prepay_id' => $prepayment->id,
-            'price' => $webinar->price - $prepayment->amount,
-            'offlineBanks' => $offlinebanks
+            'price' =>  $price - $prepayment->amount,
+            'offlineBanks' => $offlinebanks,
+            'webinar' =>  $webinars
         ];
         return view(getTemplate() . '.prepay.index', $data);
     }

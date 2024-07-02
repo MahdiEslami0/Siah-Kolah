@@ -58,7 +58,8 @@ class PayListController extends Controller
             'id' => $id,
             'webinars' => $webinars,
             'offlineBanks' => $offlineBanks,
-            'sale_link' => $sale_link
+            'sale_link' => $sale_link,
+            'products' => $products
         ];
         return view(getTemplate() . '.list_pay.index', $data);
     }

@@ -50,18 +50,13 @@
                 </div>
             </div>
         </div>
-        {{-- <div class="col-md-4">
+        <div class="col-md-4">
             <div class="form-group">
                 <label class="input-label">{{ trans('update.attach_the_payment_photo') }}</label>
 
-                <label for="attachmentFile" id="attachmentFileLabel" class="custom-upload-input-group">
-                    <div class="custom-upload-input"></div>
-                    <span class="custom-upload-icon text-white">
-                        <i data-feather="upload" width="18" height="18" class="text-white"></i>
-                    </span>
-                </label>
+            
                 <input type="file" name="attachment" id="attachmentFile"
-                    class="form-control h-auto invisible-file-input @error('attachment') is-invalid @enderror"
+                    class="form-control  @error('attachment') is-invalid @enderror"
                     value="" />
                 @error('attachment')
                     <div class="invalid-feedback">
@@ -69,7 +64,7 @@
                     </div>
                 @enderror
             </div>
-        </div> --}}
+        </div>
     </div>
     <div>
         @foreach ($offlineBanks as $offlineBank)

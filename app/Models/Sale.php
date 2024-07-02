@@ -33,30 +33,30 @@ class Sale extends Model
             if ($sale->notgen != 1) {
                 $webinar = Webinar::findOrFail($sale->webinar_id);
                 $user = User::where('id', $sale->buyer_id)->first();
-                if ($webinar->spotplayer == 'active') {
-                    $jsonData = [
-                        "course" => [$webinar->spotplayer_key],
-                        "name" =>  $user->full_name,
-                        "watermark" => [
-                            "texts" => [
-                                ["text" => $user->full_name]
-                            ]
-                        ]
-                    ];
-                    $response = Http::withHeaders([
-                        '$API' => env('SPOTPLAYER_KEY'),
-                        '$LEVEL' => "-1"
-                    ])->post('https://panel.spotplayer.ir/license/edit/', $jsonData);
-                    if ($response->successful()) {
-                        $responseData = $response->json();
-                        spotplayer::create([
-                            'user_id' =>  $user->id,
-                            'webinar_id' => $sale->webinar_id,
-                            'key' => $responseData['key'],
-                            'sale_id' => $sale->id
-                        ]);
-                    }
-                }
+                // if ($webinar->spotplayer == 'active') {
+                //     $jsonData = [
+                //         "course" => [$webinar->spotplayer_key],
+                //         "name" =>  $user->full_name,
+                //         "watermark" => [
+                //             "texts" => [
+                //                 ["text" => $user->full_name]
+                //             ]
+                //         ]
+                //     ];
+                //     $response = Http::withHeaders([
+                //         '$API' => env('SPOTPLAYER_KEY'),
+                //         '$LEVEL' => "-1"
+                //     ])->post('https://panel.spotplayer.ir/license/edit/', $jsonData);
+                //     if ($response->successful()) {
+                //         $responseData = $response->json();
+                //         spotplayer::create([
+                //             'user_id' =>  $user->id,
+                //             'webinar_id' => $sale->webinar_id,
+                //             'key' => $responseData['key'],
+                //             'sale_id' => $sale->id
+                //         ]);
+                //     }
+                // }
             }
         });
     }
@@ -134,6 +134,7 @@ class Sale extends Model
 
     public static function createSales($orderItem, $payment_method)
     {
+        
         $orderType = Order::$webinar;
         if (!empty($orderItem->reserve_meeting_id)) {
             $orderType = Order::$meeting;
@@ -156,7 +157,6 @@ class Sale extends Model
         }
 
         $seller_id = OrderItem::getSeller($orderItem);
-
         $sale = Sale::create([
             'buyer_id' => $orderItem->user_id,
             'seller_id' => $seller_id,

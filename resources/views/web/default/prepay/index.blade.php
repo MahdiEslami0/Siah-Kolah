@@ -5,9 +5,15 @@
 
 @section('content')
     <section class="cart-banner position-relative text-center">
-        <h1 class="font-30 text-white font-weight-bold"> برای {{ $pageTitle }} {{ $webinar->title }}</h1>
-        <span class="payment-hint font-20 text-white d-block">{{ handlePrice($price) }}
+        <h1 class="font-30 text-white font-weight-bold" style="margin-bottom: 10px"> برای {{ $pageTitle }}
+        </h1>
+        <span style="font-size: 12px;" class="text-white">(
+            @foreach ($webinar as $item)
+                <a href="/course/{{ $item->slug }}" target="_blank" class="text-danger">{{ $item->title }}</a> ,
+            @endforeach)
         </span>
+        {{-- <span class="payment-hint font-20 text-white d-block">{{ handlePrice($price) }}
+        </span> --}}
     </section>
     <section class="container mt-45">
         @if ($errors->any())
@@ -22,21 +28,29 @@
 
 
         <h2 class="section-title">یک پرتال پرداخت انتخاب کنید</h2>
-        <form action="/payments/{{ $action }}" method="post" class="mt-25">
+        <form action="/payments/{{ $action }}" method="post" class="mt-25" enctype="multipart/form-data">
             {{ csrf_field() }}
 
             @if ($action != 'complete_prepay')
                 <div class="row mb-30">
                     <div class="col-md-4">
-                        <label>مبلغ : <small class="text-danger">(حداقل : {{ handlePrice($price) }}) </small>
+                        <label>مبلغ : <small class="text-danger">(حداقل : 50,000 تومان) </small>
                         </label>
-                        <input type="number" min="{{ $price }}" onkeyup="imposeMinMax(this)"
-                            value="{{ $price }}" class="form-control" name="amount">
+                        <input type="number" min="50000" onkeyup="imposeMinMax(this)"
+                            value="50000" class="form-control" name="amount">
                     </div>
                 </div>
             @endif
 
-            <input type="text" name="webinar_id" value="{{ $webinar->id }}" hidden>
+            @php
+                $ids = [];
+                foreach ($webinar as $item) {
+                    $ids[] = $item->id;
+                }
+            @endphp
+
+            <input type="text" name="webinar_id[]" value="{{ json_encode($ids) }}" hidden>
+
             @isset($prepay_id)
                 <input type="text" name="prepay_id" value="{{ $prepay_id }}" hidden>
             @endisset
