@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Api\SnapPayController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -14,13 +15,18 @@ use Illuminate\Support\Facades\Route;
 */
 
 
+Route::post('/snappay', [SnapPayController::class, 'sale_info']);
+
+Route::post('/snappay/confirm_pay', [SnapPayController::class, 'confirm_pay']);
+
+
 Route::group(['prefix' => '/development'], function () {
 
     Route::get('/', function () {
         return 'api test';
     });
 
-    Route::middleware('api') ->group(base_path('routes/api/auth.php'));
+    Route::middleware('api')->group(base_path('routes/api/auth.php'));
 
     Route::namespace('Web')->group(base_path('routes/api/guest.php'));
 
@@ -31,8 +37,4 @@ Route::group(['prefix' => '/development'], function () {
     });
 
     Route::prefix('instructor')->middleware(['api.auth', 'api.level-access:teacher'])->namespace('Instructor')->group(base_path('routes/api/instructor.php'));
-
-
-
-
 });
